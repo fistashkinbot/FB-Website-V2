@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fistashkin</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="icon"
+      href="assets/fistashkin.ico"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.11/typed.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
+    />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+        integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+        crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="./aos/aos.css" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Fistashkin" />
+    <meta
+      property="og:description"
+      content="Простой многоцелевой бот Discord."
+    />
+    <meta property="og:image" content="https://cdn.discordapp.com/avatars/884467910494535741/bc234bcaa657eb4ecdf8f56a13c9cf9a.png?size=1024"/>
+    <meta name="theme-color" content="#a53143" />
+  </head>
+
+  <body>
+    <div id="particles-js"></div>
+
+    <div class="scroll-up-btn">
+      <i class="fas fa-angle-up"></i>
+    </div>
+
+    <nav class="navbar">
+      <div class="max-width">
+        <div class="logo">
+          <a href="#home">Fistashkin<span></span></a>
+        </div>
+
+        <ul class="menu">
+          <li><a href="#home" class="menu-btn"><i class="fas fa-home active"></i> Главная</a></li>
+          <li><a href="#features" class="menu-btn" class="menu-btn"><i class="fas fa-tools active"></i> Возможности</a></li>
+          <li><a href="#contributors" class="menu-btn"><i class="fas fa-users active"></i> Команда</a></li>
+          <li><a href="https://www.patreon.com/FistashkinBot" class="menu-btn"><i class="fab fa-patreon"></i></a></li>
+          <li><a href="https://www.github.com/riverya4life" class="menu-btn"><i class="fab fa-github"></i></a></li>
+          <li><a href="https://www.discord.gg/H9XCZSReMj" class="menu-btn"><i class="fab fa-discord"></i></a></li>
+        </ul>
+
+        <div class="menu-btn">
+          <i class="fas fa-bars"></i>
+        </div>
+      </div>
+    </nav>
+
+    <section class="home" id="home">
+      <div class="max-width">
+        <div class="home-content">
+          <div class="text-1">Привет, меня зовут</div>
+
+          <div class="text-2">Фисташкин</div>
+
+          <div class="text-3">И я <span class="typing"></span></div>
+
+          <a class="this-is-pain" href="https://discord.com/api/oauth2/authorize?client_id=991338113630752928&permissions=8&scope=applications.commands%20bot"><i class="fab fa-discord"></i> Пригласить</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="features" id="features">
+      <div
+        data-aos="fade-down"
+        data-aos-duration="1000"
+      >
+      <div class="max-width">
+        <h2 class="title"><i class="fas fa-tools"></i> Мои возможности</h2>
+
+        <div class="features-content">
+
+          <div class="card">
+            <div class="box">
+              <i class="fas fa-beer"></i>
+
+              <div class="text">🍻 Развлечения</div>
+
+              <p>
+                С фисташкинскими развлечениями никогда не бывает скучно! Даже с его базовыми командами, Фисташкин становится классным ботом для развлечений. Будь-то ударить, поцеловать, обнять, шар и много чего прочего!
+              </p>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="box">
+              <i class="fas fa-leaf"></i>
+
+              <div class="text">🍃 Экономика</div>
+
+              <p>
+                Вы можете развивать свою экономику в гильдии, делиться деньгами с участниками, покупать роли с магазина ролей, стать самым богатым в гильдии! и много чего прочего...
+              </p>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="box">
+              <i class="fas fa-user-shield"></i>
+
+              <div class="text">🔰 Lite - Модерация</div>
+
+              <p>
+                Fistashkin поставляется с простой, но эффективной системой модерации. Да, нынешняя система хороша. Те-же команды Мьют, Кик, Бан, Очистить идеально подходят для многих серверов Discord! Обеспечьте безопасность своей Discord-гильдии с помощью Фисташкина!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="contributors" id="contributors">
+      <div
+        data-aos="fade-down"
+        data-aos-duration="1000"
+      >
+      <div class="max-width">
+          <h2 class="title">
+              <i class="fas fa-users"></i> Команда
+          </h2>
+          <div class="carousel owl-carousel">
+
+              <div class="cardd">
+                  <div class="boxx">
+                      <img src="https://cdn.discordapp.com/avatars/668453200457760786/71170576abc14e24a4231453c18370a2.png" alt>
+                      <div class="text">@riverya4life</div>
+                      <p>
+                          <button class="badges owner"><i class="fas fa-user-check"></i> Владелец</button>
+                          <button class="badges developer"><i class="fas fa-terminal"></i> Разработчик</button>
+                          <button class="badges tester"><i class="fas fa-tools"></i> Бета тестер</button>
+                      </p>
+                  </div>
+              </div>
+        
+      <div class="cardd">
+        <div class="boxx">
+            <img src="https://cdn.discordapp.com/avatars/649932848379461632/63a6d33f8d73d358e1d1b6291e895d28.png" alt>
+            <div class="text">@virgil8410</div>
+            
+            <p>
+              <button class="badges helper"><i class="fas fa-headset"></i> Помощник</button>
+              <button class="badges friend"><i class="fas fa-user-friends"></i> Друг</button>
+            </p>
+        </div>
+    </div>
+
+          <div class="cardd">
+            <div class="boxx">
+                <img src="https://cdn.discordapp.com/avatars/1012493886926630972/2a8792697eee500b12a2b2d649359be8.png" alt>
+                <div class="text">@sigmamale
+               </div>
+                <p>
+                    <button class="badges tester"><i class="fas fa-tools"></i> Бета тестер</button>
+                    <button class="badges friend"><i class="fas fa-user-friends"></i> Друг</button>
+                </p>
+            </div>
+        </div>
+
+        <div class="cardd">
+          <div class="boxx">
+              <img src="https://i.imgur.com/TsbBCP4.png" alt>
+              <div class="text">@fistashkindev</div>
+              
+              <p>
+                <button class="badges helper"><i class="fas fa-headset"></i> Помощник</button>
+                <button class="badges developer"><i class="fas fa-terminal"></i> Разработчик</button>
+              </p>
+          </div>
+      </div>
+
+        <div class="cardd">
+          <div class="boxx">
+              <img src="https://cdn.discordapp.com/avatars/665887300076568585/3862705851541d26e2844fb6e741665c.png" alt>
+              <div class="text">@borovichok
+              </div>
+              <p>
+                  <button class="badges supporter"><i class="fas fa-user"></i> Сторонник</button>
+                  <button class="badges tester"><i class="fas fa-tools"></i> Бета тестер</button>
+              </p>
+          </div>
+      </div>
+
+              <div class="cardd">
+                  <div class="boxx">
+                      <img src="https://cdn.discordapp.com/avatars/775827750438567956/270e62830effc68571636f0b8b901e65.png" alt>
+                      <div class="text">@wheelysampo</div>
+                      
+                      <p>
+                          <button class="badges supporter"><i class="fas fa-user"></i> Сторонник</button>
+                          <button class="badges tester"><i class="fas fa-tools"></i> Бета тестер</button>
+                      </p>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section>
+
+
+
+    <div class="loader-wrapper">
+      <div class="longfazers">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+
+    <footer>
+      <a
+        style="display: none;"
+        href="//www.dmca.com/Protection/Status.aspx?ID=04da08e3-40f5-4320-8093-86b1c519bf13"
+        title="DMCA.com Protection Status"
+        class="dmca-badge"
+      >
+        <img
+          src="https://images.dmca.com/Badges/dmca-badge-w150-5x1-07.png?ID=04da08e3-40f5-4320-8093-86b1c519bf13"
+          alt="DMCA.com Protection Status"
+      /></a>
+      <script src="https://images.dmca.com/Badges/DMCABadgeHelper.min.js"></script>
+
+      <a
+        style="display: none;"
+        href="https://www.dmca.com/compliance/Fistashkin.gq"
+        title="DMCA Compliance information for Fistashkin.gq"
+        ><img src="https://www.dmca.com/img/dmca-compliant-grayscale.png"
+      /></a>
+
+      <span
+        >Made with 💖 by
+        <a href="https://github.com/riverya4life" target="_blank">Riverya4life <i class="fab fa-github"></i></a
+        ><br />Copyright <span class="far fa-copyright"></span> Riverya4life <3 2023</span
+      >
+    </footer>
+
+    <script src="./aos/aos.js"></script>
+
+    <script type="text/javascript">
+      AOS.init({
+        duration: 1000
+      });
+    </script>
+
+    <script src="script.js"></script>
+
+    <script src="stats.js"></script>
+
+    <script>
+      $(window).on("load", function() {
+        $(".loader-wrapper").fadeOut("slow");
+      });
+    </script>
+
+    <script src="./particles/particles.js"></script>
+
+    <script src="./particles/app.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+      AOS.init();
+    </script>
+  </body>
+</html>
