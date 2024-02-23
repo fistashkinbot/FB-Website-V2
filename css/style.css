@@ -280,6 +280,8 @@ section .title::after {
   border-color: black;
   border-radius: 5px;
   font-family: 'Poppins', sans-serif;
+  margin-left: 25px;
+  margin-top: 25px;
 }
 .badges.owner {
   background: #C0694E;
