@@ -281,28 +281,34 @@ section .title::after {
   border-radius: 5px;
   font-family: 'Poppins', sans-serif;
   margin-left: 25px;
-  margin-top: 25px;
 }
 .badges.owner {
   background: #C0694E;
+  margin-bottom: 25px;
 }
 .badges.developer {
   background: orange;
+  margin-bottom: 25px;
 }
 .badges.supporter {
   background: #ff1476;
+  margin-bottom: 25px;
 }
 .badges.designer {
   background: #315dd4;
+  margin-bottom: 25px;
 }
 .badges.helper {
   background: #7289DA;
+  margin-bottom: 25px;
 }
 .badges.tester {
   background: #58a6a7;
+  margin-bottom: 25px;
 }
 .badges.friend {
   background: #c1ff98;
+  margin-bottom: 25px;
 }
 
 .owl-dots {
