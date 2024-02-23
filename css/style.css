@@ -283,31 +283,31 @@ section .title::after {
 }
 .badges.owner {
   background: #C0694E;
-  margin-left: 5px;
+  margin-left: 2px;
 }
 .badges.developer {
   background: orange;
-  margin-left: 5px;
+  margin-left: 2px;
 }
 .badges.supporter {
   background: #ff1476;
-  margin-left: 5px;
+  margin-left: 2px;
 }
 .badges.designer {
   background: #315dd4;
-  margin-left: 5px;
+  margin-left: 2px;
 }
 .badges.helper {
   background: #7289DA;
-  margin-left: 5px;
+  margin-left: 2px;
 }
 .badges.tester {
   background: #58a6a7;
-  margin-left: 5px;
+  margin-left: 2px;
 }
 .badges.friend {
   background: #c1ff98;
-  margin-left: 5px;
+  margin-left: 2px;
 }
 
 .owl-dots {
