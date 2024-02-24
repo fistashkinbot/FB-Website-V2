@@ -275,12 +275,11 @@ section .title::after {
   border-color: #fff;
 }
 .badges {
-  padding: 5px 10px;
+  padding: 15px 10px;
   border: 1px solid;
   border-color: black;
   border-radius: 5px;
   font-family: 'Poppins', sans-serif;
-  margin-top: 2px;
 }
 .badges.owner {
   background: #C0694E;
@@ -299,7 +298,6 @@ section .title::after {
 }
 .badges.tester {
   background: #58a6a7;
-  margin-top: 2px;
 }
 .badges.friend {
   background: #c1ff98;
