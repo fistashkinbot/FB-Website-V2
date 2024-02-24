@@ -280,34 +280,28 @@ section .title::after {
   border-color: black;
   border-radius: 5px;
   font-family: 'Poppins', sans-serif;
+  margin-top: 2px;
 }
 .badges.owner {
   background: #C0694E;
-  margin-top: 2px;
 }
 .badges.developer {
   background: orange;
-  margin-top: 2px;
 }
 .badges.supporter {
   background: #ff1476;
-  margin-top: 2px;
 }
 .badges.designer {
   background: #315dd4;
-  margin-top: 2px;
 }
 .badges.helper {
   background: #7289DA;
-  margin-top: 2px;
 }
 .badges.tester {
   background: #58a6a7;
-  margin-top: 2px;
 }
 .badges.friend {
   background: #c1ff98;
-  margin-top: 2px;
 }
 
 .owl-dots {
