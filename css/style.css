@@ -299,6 +299,7 @@ section .title::after {
 }
 .badges.tester {
   background: #58a6a7;
+  margin-top: 2px;
 }
 .badges.friend {
   background: #c1ff98;
