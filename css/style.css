@@ -325,23 +325,6 @@ section .title::after {
   background: #C0694E!important;
 }
 
-footer {
-  font-family: 'Poppins', sans-serif;
-  background: #121212;
-  padding: 20px 23px;
-  color: #fff;
-  text-align: center;
-}
-footer span a {
-  color: #C0694E;
-  text-decoration: none;
-}
-footer span a:hover {
-  text-decoration: underline;
-}
-
-
-
 /* haha responsiveness kill me pain halp me pls kthxbai */
 
 @media (max-width: 1100px) {
@@ -517,3 +500,4 @@ footer span a:hover {
     opacity: 0;
  }
 }
+
