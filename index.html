@@ -1,454 +1,300 @@
 <!DOCTYPE html>
-
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport" />
-    <title>FistashkinBot</title>
-    <link rel="stylesheet" href="./css/style.css" />
-    <link rel="stylesheet" href="./css/footer.css"
-    <link
-      rel="icon"
-      href="assets/fistashkin.ico"
-    />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.11/typed.min.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
-    />
-
-    <!-- Font Awesome -->
-
-    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v6.0.0-beta3/css/all.css"
-        ntegrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA=="
-        crossorigin="anonymous" referrerpolicy="no-referrer">
-
-    <link rel="stylesheet" type="text/css" href="./js/aos/aos.css" />
-
-    <!-- Meta -->
-    <meta name="theme-color" content="#C0694E" />
-
-    <meta property="og:site_name" content="FistashkinBot" />
-    <meta property="og:title" content="Fistashkin — Дискорд Бот!" />
-    <meta property="og:type" content="website" />
-    <meta property="og:description" content="Простой многоцелевой бот Discord созданный с любовью. Рейтинг, Автомод, Музыка и многое другое~" />
-    <meta property="og:url" content="/" />
-    <meta property="og:image" content="/assets/fistashkin.png" />
-
-  </head>
-
-  <body>
-    <div id="particles-js"></div>
-
-    <div class="scroll-up-btn">
-      <i class="fas fa-angle-up"></i>
-    </div>
-
-    <nav class="navbar">
-      <div class="max-width">
-        <div class="logo">
-          <a href="#home">Fistashkin<span></span></a>
-        </div>
-
-        <ul class="menu">
-          <li><a href="#home" class="menu-btn"><i class="fas fa-home active"></i> Главная</a></li>
-          <li><a href="#features" class="menu-btn" class="menu-btn"><i class="fas fa-tools active"></i> Возможности</a></li>
-          <li><a href="#contributors" class="menu-btn"><i class="fas fa-users active"></i> Команда</a></li>
-          <li><a href="https://docs.fistashkinbot.xyz/" class="menu-btn"><i class="fas fa-book active"></i> Доки</a></li>
-        </ul>
-
-        <div class="menu-btn">
-          <i class="fas fa-bars"></i>
-        </div>
+   <head>
+      <meta charset="utf-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+      <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport" />
+      <title>FistashkinBot</title>
+      <link rel="stylesheet" href="./css/style.css" />
+      <link rel="stylesheet" href="./css/footer.css"
+      <link
+         rel="icon"
+         href="assets/fistashkin.ico"
+         />
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.11/typed.min.js"></script>
+      <link
+         rel="stylesheet"
+         href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
+         />
+      <!-- Font Awesome -->
+      <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v6.0.0-beta3/css/all.css"
+         ntegrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA=="
+         crossorigin="anonymous" referrerpolicy="no-referrer">
+      <link rel="stylesheet" type="text/css" href="./js/aos/aos.css" />
+      <!-- Meta -->
+      <meta name="theme-color" content="#C0694E" />
+      <meta property="og:site_name" content="FistashkinBot" />
+      <meta property="og:title" content="Fistashkin — Дискорд Бот!" />
+      <meta property="og:type" content="website" />
+      <meta property="og:description" content="Простой многоцелевой бот Discord созданный с любовью. Рейтинг, Автомод, Музыка и многое другое~" />
+      <meta property="og:url" content="/" />
+      <meta property="og:image" content="/assets/fistashkin.png" />
+   </head>
+   <body>
+      <div id="particles-js"></div>
+      <div class="scroll-up-btn">
+         <i class="fas fa-angle-up"></i>
       </div>
-    </nav>
-
-    <section class="home" id="home">
-      <div class="max-width">
-        <div class="home-content">
-          <div class="text-1">Привет, меня зовут</div>
-
-          <div class="text-2">Фисташкин</div>
-
-          <div class="text-3">И я <span class="typing"></span></div>
-
-          <button class="this-is-pain" onclick="openNewWindow()" ><i class="fab fa-discord"></i> Добавить в Discord</button>
-        </div>
-      </div>
-    </section>
-
-    <section class="features" id="features">
-      <div
-        data-aos="fade-down"
-        data-aos-duration="1000"
-        data-aos-once="true"
-      >
-      <div class="max-width">
-        <h2 class="title"><i class="fas fa-tools"></i> Мои возможности</h2>
-
-        <div class="features-content">
-
-          <div class="card">
-            <div class="box">
-
-              <div class="text">🎀 Утилиты</div>
-
-              <p>
-                Со стандартным набором команд Вы можете посмотреть информацию про участников сервера и про сам сервер, посмотреть аватар пользователя и саму информацию о боте, установить уникальный текст в свой профиль!
-              </p>
+      <nav class="navbar">
+         <div class="max-width">
+            <div class="logo">
+               <a href="#home">Fistashkin<span></span></a>
             </div>
-          </div>
-
-          <div class="card">
-            <div class="box">
-
-              <div class="text">✨ Экономика</div>
-
-              <p>
-                Вы можете стать аристократом по балансу или лидером в топе по уровню среди участников просто общаясь! Если хотите потратить свои сбережения - для вас есть настраиваемый магазин с ролями, но для азартных игроков тоже найдётся местечко!
-              </p>
+            <ul class="menu">
+               <li><a href="#home" class="menu-btn"><i class="fas fa-home active"></i><span data-i18n="menu_btn_home"></span></a></li>
+               <li><a href="#features" class="menu-btn" class="menu-btn"><i class="fas fa-tools active"></i><span data-i18n="menu_btn_features"></span></a></li>
+               <li><a href="#contributors" class="menu-btn"><i class="fas fa-users active"></i><span data-i18n="menu_btn_contributors"></span></a></li>
+               <li><a href="https://docs.fistashkinbot.xyz/" class="menu-btn"><i class="fas fa-book active"></i><span data-i18n="menu_btn_docs"></span></a></li>
+               <li>
+                  <a href="#" id="lang-switcher-menu" class="menu-btn">
+                        <i class="fas fa-globe"></i> 
+                        <span data-i18n="menu_btn_change_lang"></span>
+                  </a>
+               </li>
+            </ul>
+            <div class="menu-btn">
+               <i class="fas fa-bars"></i>
             </div>
-          </div>
-
-          <div class="card">
-            <div class="box">
-
-              <div class="text">🛡️ Модерация</div>
-
-              <p>
-                Бот поддерживает AutoMod, с помощью которого создаёт автоматически правила для автомодерации (фильтр запрещённых слов, обычного спама и упоминаний и т.д.), что значительно упрощает модерацию сервера. Кроме этого имеются стандартные команды бан, кик, таймаут и прочее.
-              </p>
+         </div>
+      </nav>
+      <section class="home" id="home">
+         <div class="blob-outer-container">
+            <div class="blob-inner-container">
+               <div class="blob"></div>
             </div>
-          </div>
-
-          <div class="card">
-            <div class="box">
-
-              <div class="text">🎭 Развлечение</div>
-
-              <p>
-                Есть несколько небольших забавных команд, которыми вы можете покормить, погладить, обнять, поцеловать, либо же узнать свою судьбу в шаре-гадалке и посмотреть милые картинки собачек с котиками!
-              </p>
+         </div>
+         <div class="max-width">
+            <div class="home-content">
+               <div class="text-1"><span data-i18n="home_content_text_1"></span></div>
+               <div class="text-2"><span data-i18n="home_content_text_2"></span></div>
+               <div class="text-3"><span data-i18n="home_content_text_3"></span><span class="typing"></span></div>
+               <button class="this-is-pain" onclick="openNewWindow()" ><i class="fab fa-discord"></i><span data-i18n="home_cta_button"></span></button>
             </div>
-          </div>
-
-          <div class="card">
-            <div class="box">
-
-              <div class="text">🎵 Музыка</div>
-
-              <p>
-                Музыка в бета тесте, но вы всё так же можете насладиться прослушиванием музыки с YouTube и Spotify!
-              </p>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="box">
-
-              <div class="text">🤖 Слэш команды</div>
-
-              <p>
-                Бот поддерживает слэш команды, чтобы облегчить использование бота.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="contributors" id="contributors">
-      <div
-        data-aos="fade-down"
-        data-aos-duration="1000"
-        data-aos-once="true"
-      >
-      <div class="max-width">
-          <h2 class="title">
-              <i class="fas fa-users"></i> Команда
-          </h2>
-          <div class="carousel owl-carousel">
-
-              <div class="cardd">
-                  <div class="boxx">
-                      <img src="https://github.com/riverya4life.png" alt>
-                      <div class="text">@riverya4life</div>
-                      <p>
-                          <button class="badges owner"><i class="fas fa-user-check"></i> Владелец</button>
-                          <button class="badges developer"><i class="fas fa-terminal"></i> Разработчик</button>
-                      </p>
+         </div>
+      </section>
+      <section class="features" id="features">
+         <div
+            data-aos="fade-down"
+            data-aos-duration="1000"
+            data-aos-once="true"
+            >
+         <div class="max-width">
+            <h2 class="title"><i class="fas fa-tools"></i> <span data-i18n="features_title"></span></h2>
+            <div class="features-content">
+               <div class="card">
+                  <div class="box">
+                     <div class="text" data-i18n="features_card1_title"></div>
+                     <p data-i18n="features_card1_text"></p>
                   </div>
-              </div>
-
-            <div class="cardd">
-          <div class="boxx">
-              <img src="https://github.com/TheMek0.png" alt>
-              <div class="text">@themeko
-              </div>
-              <p>
-                  <button class="badges helper"><i class="fas fa-headset"></i> Помощник</button>
-                  <button class="badges tester"><i class="fas fa-tools"></i> Бета тестер</button>
-              </p>
-          </div>
-      </div>
-
-            <div class="cardd">
-          <div class="boxx">
-              <img src="assets/fistashkindev.jpg" alt>
-              <div class="text">@fistashkindev</div>
-              
-              <p>
-                <button class="badges helper"><i class="fas fa-headset"></i> Помощник</button>
-                <button class="badges developer"><i class="fas fa-terminal"></i> Разработчик</button>
-              </p>
-          </div>
-      </div>
-        
-      <div class="cardd">
-        <div class="boxx">
-            <img src="assets/virgil8410.jpg" alt>
-            <div class="text">@virgil8410</div>
-            
-            <p>
-              <button class="badges helper"><i class="fas fa-headset"></i> Помощник</button>
-              <button class="badges friend"><i class="fas fa-user-friends"></i> Друг</button>
-            </p>
-        </div>
-    </div>
-
-          <div class="cardd">
-            <div class="boxx">
-                <img src="assets/sigmamale.jpg" alt>
-                <div class="text">@sigmamale
                </div>
-                <p>
-                    <button class="badges tester"><i class="fas fa-tools"></i> Бета тестер</button>
-                    <button class="badges friend"><i class="fas fa-user-friends"></i> Друг</button>
-                </p>
+               <div class="card">
+                  <div class="box">
+                     <div class="text" data-i18n="features_card2_title"></div>
+                     <p data-i18n="features_card2_text"></p>
+                  </div>
+               </div>
+               <div class="card">
+                  <div class="box">
+                     <div class="text" data-i18n="features_card3_title"></div>
+                     <p data-i18n="features_card3_text"></p>
+                  </div>
+               </div>
+               <div class="card">
+                  <div class="box">
+                     <div class="text" data-i18n="features_card4_title"></div>
+                     <p data-i18n="features_card4_text"></p>
+                  </div>
+               </div>
+               <div class="card">
+                  <div class="box">
+                     <div class="text" data-i18n="features_card5_title"></div>
+                     <p data-i18n="features_card5_text"></p>
+                  </div>
+               </div>
+               <div class="card">
+                  <div class="box">
+                     <div class="text" data-i18n="features_card6_title"></div>
+                     <p data-i18n="features_card6_text"></p>
+                  </div>
+               </div>
             </div>
-        </div>
-
-      <div class="cardd">
-          <div class="boxx">
-              <img src="https://github.com/Scuiss.png" alt>
-              <div class="text">@scuiss</div>
-              
-              <p>
-                  <button class="badges supporter"><i class="fas fa-user"></i> Сторонник</button>
-                  <button class="badges tester"><i class="fas fa-tools"></i> Бета тестер</button>
-              </p>
-          </div>
+         </div>
+      </section>
+      <section class="contributors" id="contributors">
+         <div
+            data-aos="fade-down"
+            data-aos-duration="1000"
+            data-aos-once="true"
+            >
+         <div class="max-width">
+         <h2 class="title">
+            <i class="fas fa-users"></i> <span data-i18n="contributors_title"></span>
+         </h2>
+         <div class="carousel owl-carousel">
+         <div class="cardd">
+            <div class="boxx">
+               <img src="https://github.com/riverya4life.png" alt>
+               <div class="text">@riverya4life</div>
+               <p>
+                  <button class="badges owner"><i class="fas fa-user-check"></i> <span data-i18n="contributor_role_owner"></span></button>
+                  <button class="badges developer"><i class="fas fa-terminal"></i> <span data-i18n="contributor_role_developer"></span></button>
+               </p>
+            </div>
+         </div>
+         <div class="cardd">
+            <div class="boxx">
+               <img src="assets/virgil8410.jpg" alt>
+               <div class="text">@daastolfo09</div>
+               <p>
+                  <button class="badges helper"><i class="fas fa-headset"></i> <span data-i18n="contributor_role_helper"></span></button>
+                  <button class="badges friend"><i class="fas fa-user-friends"></i> <span data-i18n="contributor_role_friend"></span></button>
+               </p>
+            </div>
+         </div>
+         <div class="cardd">
+            <div class="boxx">
+               <img src="assets/sigmamale.jpg" alt>
+               <div class="text">@Dvärg
+               </div>
+               <p>
+                  <button class="badges tester"><i class="fas fa-tools"></i> <span data-i18n="contributor_role_tester"></span></button>
+                  <button class="badges friend"><i class="fas fa-user-friends"></i> <span data-i18n="contributor_role_friend"></span></button>
+               </p>
+            </div>
+         </div>
+         <div class="cardd">
+            <div class="boxx">
+               <img src="https://github.com/Scuiss.png" alt>
+               <div class="text">@scuiss</div>
+               <p>
+                  <button class="badges supporter"><i class="fas fa-user"></i> <span data-i18n="contributor_role_supporter"></span></button>
+                  <button class="badges tester"><i class="fas fa-tools"></i> <span data-i18n="contributor_role_tester"></span></button>
+               </p>
+            </div>
+         </div>
+      </section>
+      <div class="loader-wrapper">
+         <div class="longfazers">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+         </div>
       </div>
-  </section>
-
-
-
-    <div class="loader-wrapper">
-      <div class="longfazers">
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    </div>
-<!--
-    <footer>
-      <a
-        style="display: none;"
-        href="//www.dmca.com/Protection/Status.aspx?ID=04da08e3-40f5-4320-8093-86b1c519bf13"
-        title="DMCA.com Protection Status"
-        class="dmca-badge"
-      >
-        <img
-          src="https://images.dmca.com/Badges/dmca-badge-w150-5x1-07.png?ID=04da08e3-40f5-4320-8093-86b1c519bf13"
-          alt="DMCA.com Protection Status"
-      /></a>
-      <script src="https://images.dmca.com/Badges/DMCABadgeHelper.min.js"></script>
-
-      <a
-        style="display: none;"
-        href="https://www.dmca.com/compliance/Fistashkin.gq"
-        title="DMCA Compliance information for Fistashkin.gq"
-        ><img src="https://www.dmca.com/img/dmca-compliant-grayscale.png"
-      /></a>
-
-      <span>
-        <a href="https://www.patreon.com/FistashkinBot" target="_blank"><i class="fab fa-patreon active"></i></a> •
-        <a href="https://www.discord.gg/H9XCZSReMj" target="_blank"><i class="fab fa-discord"></i></a> •
-        <a href="https://github.com/fistashkinbot" target="_blank"><i class="fab fa-github"></i></a>
-        <br />
-        © 2022-2024 — Riverya4life • Все права защищены
-      </span>
-
-    </footer>
--->
-
-<footer>
-
-  <div class="footer-top">
-    <div class="container">
-
-      <div class="footer-brand">
-
-        <!-- <a href="#" class="logo">
-          <img src="assets/logo.svg" alt="NAFT logo">
-        </a> -->
-
-        <p class="footer-brand-text">
-          Мы не являемся аффилированным лицом компании Discord Inc.
-        </p>
-
-        <h3 class="h4 social-title">Присоединяйтесь к сообществу</h3>
-
-        <ul class="social-list">
-
-          <li>
-            <a href="https://github.com/fistashkinbot" class="social-link">
-              <i class="fab fa-github active"></i>
-            </a>
-          </li>
-
-          <li>
-            <a href="https://x.com/likeriverya" class="social-link">
-              <i class="fab fa-x active"></i>
-            </a>
-          </li>
-
-          <li>
-            <a href="https://www.instagram.com/riverya4life/" class="social-link">
-              <i class="fab fa-patreon active"></i>
-            </a>
-          </li>
-
-          <li>
-            <a href="https://www.discord.gg/H9XCZSReMj" class="social-link">
-              <i class="fab fa-discord active"></i>
-            </a>
-          </li>
-
-        </ul>
-
-      </div>
-
-      <div class="footer-link-box">
-
-        <ul class="footer-list">
-
-          <li>
-            <h3 class="h3 footer-item-title">Партнёры</h3>
-          </li>
-
-	  <li class="footer-item">
-            <a href="https://discord.gg/AgBr6ryAw3" class="footer-link">Yumiko</a>
-          </li>
-
-          <li class="footer-item">
-            <a href="https://bots.server-discord.com/991338113630752928" class="footer-link">SD.C</a>
-          </li>
-
-          <li class="footer-item">
-            <a href="https://top.gg/bot/991338113630752928" class="footer-link">Top.gg</a>
-          </li>
-
-	  <li class="footer-item">
-            <a href="https://boticord.top/bot/991338113630752928" class="footer-link">BotiCord</a>
-          </li>
-
-        </ul>
-
-        <ul class="footer-list">
-
-          <li>
-            <h3 class="h3 footer-item-title">Документация</h3>
-          </li>
-
-          <li class="footer-item">
-            <a href="https://docs.fistashkinbot.xyz/first-steps/stored-data" class="footer-link">Хранящиеся данные</a>
-          </li>
-
-          <li class="footer-item">
-            <a href="https://docs.fistashkinbot.xyz/first-steps/permissions-to-use-commands" class="footer-link">Разрешения на использования команд</a>
-          </li>
-
-        
-        </ul>
-
-        <ul class="footer-list">
-
-          <li>
-            <h3 class="h3 footer-item-title">Поддержка</h3>
-          </li>
-
-          <li class="footer-item">
-            <a href="https://www.patreon.com/FistashkinBot" class="footer-link"><i class="fab fa-patreon active"></i> Patreon</a>
-          </li>
-
-          <li class="footer-item">
-            <a href="https://www.discord.gg/H9XCZSReMj" class="footer-link"><i class="fa-brands fa-discord active"></i> Сервер поддержки</a>
-          </li>
-
-       
-        </ul>
-
-      </div>
-
-    </div>
-  </div>
-
-  <div class="footer-bottom">
-    <div class="container">
-
-      <p class="copyright">
-        &copy; 2022-2025 <a href="https://github.com/riverya4life">@riverya4life</a> Все права защищены
-      </p>
-
-      <div class="footer-bottom-links">
-        <a href="https://docs.fistashkinbot.xyz/first-steps/privacy">Конфиденциальность</a>
-        <a href="https://docs.fistashkinbot.xyz/first-steps/terms-of-use">Условия использования</a>
-      </div>
-
-    </div>
-  </div>
-
-</footer>
-
-    <script src="./js/aos/aos.js"></script>
-
-    <script type="text/javascript">
-      AOS.init({
-        duration: 1000
-      });
-    </script>
-
-    <script src="./js/script.js"></script>
-
-    <script src="stats.js"></script>
-
-    <script>
-      $(window).on("load", function() {
-        $(".loader-wrapper").fadeOut("slow");
-      });
-    </script>
-
-    <script>
-      function openNewWindow() {
-        var url = "https://discord.com/api/oauth2/authorize?client_id=991338113630752928&permissions=8&scope=applications.commands%20bot";
-        window.open(url, "_blank", "width=450, height=625");
-      }
-    </script>
-
-    <script src="./js/particles.js"></script>
-
-    <script src="./js/app.js"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-      AOS.init();
-    </script>
+      <footer>
+         <div class="footer-top">
+            <div class="container">
+               <div class="footer-brand">
+                  <!-- <a href="#" class="logo">
+                     <img src="assets/logo.svg" alt="NAFT logo">
+                     </a> -->
+                  <p class="footer-brand-text" data-i18n="footer_not_affiliated"></p>
+                  <h3 class="h4 social-title" data-i18n="footer_social_title"></h3>
+                  <ul class="social-list">
+                     <li>
+                        <a href="https://github.com/fistashkinbot" class="social-link">
+                        <i class="fab fa-github active"></i>
+                        </a>
+                     </li>
+                     <li>
+                        <a href="https://x.com/likeriverya" class="social-link">
+                        <i class="fab fa-x active"></i>
+                        </a>
+                     </li>
+                     <li>
+                        <a href="https://www.instagram.com/riverya4life/" class="social-link">
+                        <i class="fab fa-patreon active"></i>
+                        </a>
+                     </li>
+                     <li>
+                        <a href="https://www.discord.gg/H9XCZSReMj" class="social-link">
+                        <i class="fab fa-discord active"></i>
+                        </a>
+                     </li>
+                  </ul>
+               </div>
+               <div class="footer-link-box">
+                  <ul class="footer-list">
+                     <li>
+                        <h3 class="h3 footer-item-title" data-i18n="footer_partners_title"></h3>
+                     </li>
+                     <li class="footer-item">
+                        <a href="https://bots.server-discord.com/991338113630752928" class="footer-link">SD.C</a>
+                     </li>
+                     <li class="footer-item">
+                        <a href="https://top.gg/bot/991338113630752928" class="footer-link">Top.gg</a>
+                     </li>
+                     <li class="footer-item">
+                        <a href="https://boticord.top/bot/991338113630752928" class="footer-link">BotiCord</a>
+                     </li>
+                  </ul>
+                  <ul class="footer-list">
+                     <li>
+                        <h3 class="h3 footer-item-title" data-i18n="footer_docs_title"></h3>
+                     </li>
+                     <li class="footer-item">
+                        <a href="https://docs.fistashkinbot.xyz/first-steps/stored-data" class="footer-link" data-i18n="footer_stored_data"></a>
+                     </li>
+                     <li class="footer-item">
+                        <a href="https://docs.fistashkinbot.xyz/first-steps/permissions-to-use-commands" class="footer-link" data-i18n="footer_permissions"></a>
+                     </li>
+                  </ul>
+                  <ul class="footer-list">
+                     <li>
+                        <h3 class="h3 footer-item-title" data-i18n="footer_support_title"></h3>
+                     </li>
+                     <li class="footer-item">
+                        <a href="https://www.patreon.com/FistashkinBot" class="footer-link"><i class="fab fa-patreon active"></i> <span data-i18n="footer_patreon"></span></a>
+                     </li>
+                     <li class="footer-item">
+                        <a href="https://www.discord.gg/H9XCZSReMj" class="footer-link"><i class="fa-brands fa-discord active"></i> <span data-i18n="footer_support_server"></span></a>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+         </div>
+         <div class="footer-bottom">
+            <div class="container">
+               <p class="copyright">
+                  &copy; 2022-2026 <a href="https://github.com/riverya4life">@riverya4life</a> <span data-i18n="footer_copyright"></span>
+               </p>
+               <div class="footer-bottom-links">
+                  <a href="https://docs.fistashkinbot.xyz/first-steps/privacy" data-i18n="footer_privacy"></a>
+                  <a href="https://docs.fistashkinbot.xyz/first-steps/terms-of-use" data-i18n="footer_terms"></a>
+               </div>
+            </div>
+         </div>
+      </footer>
+      <script src="./js/i18n.js"></script>
+      <script src="./js/aos/aos.js"></script>
+      <script type="text/javascript">
+         AOS.init({
+           duration: 1000
+         });
+      </script>
+      <script src="./js/script.js"></script>
+      <script src="stats.js"></script>
+      <script>
+         $(window).on("load", function() {
+           $(".loader-wrapper").fadeOut("slow");
+         });
+      </script>
+      <script>
+         function openNewWindow() {
+           var url = "https://discord.com/api/oauth2/authorize?client_id=991338113630752928&permissions=8&scope=applications.commands%20bot";
+           window.open(url, "_blank", "width=450, height=625");
+         }
+      </script>
+      <script src="./js/particles.js"></script>
+      <script src="./js/app.js"></script>
+      <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+      <script>
+         AOS.init();
+      </script>
       <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
       <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-  </body>
+   </body>
 </html>

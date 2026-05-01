@@ -21,22 +21,6 @@ $(document).ready(function() {
     $('.menu-btn i').toggleClass("active");
   })
 
-  var typed = new Typed('.typing', {
-    strings: [
-      "простой",
-      "мощный",
-      "лёгкий в использовании",
-      "милый",
-      "«сделан с любовью»",
-      "горячий",
-      "«хорошо развитый»",
-      "хороший",
-    ],
-    typeSpeed: 120,
-    backSpeed: 80,
-    loop: true,
-  })
-
   // this is really cool
   // but you should vote Mikuni first
 
