@@ -18,6 +18,7 @@ const translations = {
         home_content_text_2: "Фисташкин",
         home_content_text_3: "и я ",
         home_cta_button: " Добавить в Discord",
+        home_cta_button_back: " На главную",
 
         // Секция возможностей
         features_title: "Мои возможности",
@@ -71,7 +72,12 @@ const translations = {
             "хороший",
             "крутой",
             "классный"
-        ]
+        ],
+
+        not_found_error_heading: "Ой... Страница потерялась",
+        not_found_error_message: "Фисташкин немного заблудился... Мы уже ищем его. Попробуйте зайти позже.",
+        internal_server_error_heading: "Внутренняя ошибка сервера",
+        internal_server_error_message: "Фисташкин немного перегрелся... Мы уже чиним. Попробуй зайти позже."
     },
     uk: {
         // Мета-теги
@@ -91,6 +97,7 @@ const translations = {
         home_content_text_2: "Фісташкін",
         home_content_text_3: "і я ",
         home_cta_button: " Додати в Discord",
+        home_cta_button_back: " На головну",
 
         // Секция возможностей
         features_title: "Мої можливості",
@@ -144,7 +151,12 @@ const translations = {
             "хороший",
             "крутий",
             "класний"
-        ]
+        ],
+
+        not_found_error_heading: "Ой... Сторінка загубилася",
+        not_found_error_message: "Фісташкін трохи заблукав... Ми вже шукаємо його. Спробуйте зайти пізніше.",
+        internal_server_error_heading: "Внутрішня помилка сервера",
+        internal_server_error_message: "Фисташкин трохи перегрівся... Ми вже чинимо. Спробуйте зайти пізніше."
     },
     en: {
         // Meta tags
@@ -163,6 +175,7 @@ const translations = {
         home_content_text_2: "Fistashkin",
         home_content_text_3: "and I am ",
         home_cta_button: " Add to Discord",
+        home_cta_button_back: " Back to Home",
 
         // Features section
         features_title: "My Features",
@@ -216,7 +229,12 @@ const translations = {
             "nice",
             "cool",
             "awesome"
-        ]
+        ],
+
+        not_found_error_heading: "Oops... Page got lost",
+        not_found_error_message: "Fistashkin got a bit lost... We're already looking for him. Try visiting later.",
+        internal_server_error_heading: "Internal Server Error",
+        internal_server_error_message: "Fistashkin got a bit overheated... We're already fixing it. Try visiting later."
     }
 };
 
@@ -291,7 +309,7 @@ function showLanguageToast(lang) {
         position: fixed; 
         bottom: 20px; 
         right: 20px; 
-        background: rgba(192, 105, 78, 0.2);
+        background: rgba(0, 0, 0, 0);
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
         color: white; 

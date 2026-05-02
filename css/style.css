@@ -290,7 +290,7 @@ section .title::after {
 
 .features::before {
 	top: -60px;   /* было -120px */
-  opacity: 0.6;
+  	opacity: 0.6;
 }
 
 /* ✨ СИЯНИЕ ОТ BLOB */
@@ -304,7 +304,6 @@ section .title::after {
 	width: 1400px;
 	height: 400px;
 	filter: blur(120px);
-	/* можно оставить или убрать */
 	mix-blend-mode: screen;
 
 	opacity: 0.7;
