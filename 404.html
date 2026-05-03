@@ -28,7 +28,7 @@
             </ul>
         </div>
     </nav>
-
+    <div class="loader-wrapper"><div class="longfazers"></div></div>
     <section class="home" style="height: 100vh; display: flex; align-items: center; justify-content: center;">
         <div style="position: relative; z-index: 2; text-align: center; width: 100%; max-width: 800px; margin: 0 auto;">
             <h1 style="font-size: 140px; font-weight: 700; margin: 0; line-height: 1; color: #C0694E; text-shadow: 0 0 40px rgba(192, 105, 78, 0.5);">
@@ -50,5 +50,10 @@
     <script src="./js/i18n.js"></script>
     <script src="./js/particles.js"></script>
     <script src="./js/app.js"></script>
+    <script>
+        $(window).on("load", function() {
+            $(".loader-wrapper").fadeOut("slow");
+        });
+    </script>
 </body>
 </html>
