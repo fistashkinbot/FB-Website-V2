@@ -44,11 +44,19 @@
                <li><a href="#features" class="menu-btn" class="menu-btn"><i class="fas fa-tools active"></i><span data-i18n="menu_btn_features"></span></a></li>
                <li><a href="#contributors" class="menu-btn"><i class="fas fa-users active"></i><span data-i18n="menu_btn_contributors"></span></a></li>
                <li><a href="https://docs.fistashkinbot.xyz/" class="menu-btn"><i class="fas fa-book active"></i><span data-i18n="menu_btn_docs"></span></a></li>
-               <li>
-                  <a href="#" id="lang-switcher-menu" class="menu-btn">
-                        <i class="fas fa-globe"></i> 
-                        <span data-i18n="menu_btn_change_lang"></span>
-                  </a>
+               <li class="language-switcher-container">
+                  <div class="language-switcher" id="language-switcher">
+                     <div class="switcher-button" id="lang-button">
+                        <div class="flag" id="current-flag"></div>
+                        <span class="arrow">
+                           <svg data-v-5cfaa274="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="16" height="16" fill="currentColor" class="header-lang__caret">
+                              <g><path d="M216.49,104.49l-80,80a12,12,0,0,1-17,0l-80-80a12,12,0,0,1,17-17L128,159l71.51-71.52a12,12,0,0,1,17,17Z"></path></g>
+                           </svg>
+                        </span>
+                     </div>
+
+                     <div class="language-dropdown" id="lang-dropdown"></div>
+                  </div>
                </li>
             </ul>
             <div class="menu-btn">
@@ -178,8 +186,8 @@
             <div class="container">
                <div class="footer-brand">
                   <a href="#" class="logo">
-                     <img src="assets/logo.svg" alt="NAFT logo">
-                     </a>
+                     <img src="assets/logo.svg" alt="FistashkinBot Logo">
+                  </a>
                   <p class="footer-brand-text" data-i18n="footer_not_affiliated"></p>
                   <h3 class="h4 social-title" data-i18n="footer_social_title"></h3>
                   <ul class="social-list">

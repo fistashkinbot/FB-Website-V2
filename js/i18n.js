@@ -240,35 +240,35 @@ const translations = {
 
 // === Обновление мета-тегов ===
 function updateMetaTags(lang) {
-    if (!translations[lang]) return;
+    const t = translations[lang];
+    if (!t) return;
 
-    // Title
-    const titleEl = document.querySelector('title');
-    if (titleEl && translations[lang].meta_title) {
-        titleEl.textContent = translations[lang].meta_title;
-    }
+    const map = {
+        'title': ['textContent', t.meta_title],
+        'meta[property="og:title"]': ['content', t.meta_og_title],
+        'meta[property="og:description"]': ['content', t.meta_og_description],
+    };
 
-    // og:title
-    const ogTitleEl = document.querySelector('meta[property="og:title"]');
-    if (ogTitleEl && translations[lang].meta_og_title) {
-        ogTitleEl.setAttribute('content', translations[lang].meta_og_title);
-    }
-
-    // og:description
-    const ogDescEl = document.querySelector('meta[property="og:description"]');
-    if (ogDescEl && translations[lang].meta_og_description) {
-        ogDescEl.setAttribute('content', translations[lang].meta_og_description);
-    }
+    Object.entries(map).forEach(([selector, [attr, value]]) => {
+        const el = document.querySelector(selector);
+        if (el && value) {
+            attr === 'textContent'
+                ? el.textContent = value
+                : el.setAttribute(attr, value);
+        }
+    });
 }
 
 // === Основная функция перевода ===
 function translatePage(lang) {
+    const t = translations[lang];
+    if (!t) return;
+
     document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (translations[lang] && translations[lang][key] !== undefined) {
-            el.textContent = translations[lang][key];
-        }
+        const key = el.dataset.i18n;
+        if (key in t) el.textContent = t[key];
     });
+
     initTyped(lang);
     updateMetaTags(lang);
 }
@@ -278,31 +278,23 @@ function setLanguage(lang) {
     if (!translations[lang]) return;
 
     document.documentElement.lang = lang;
-    document.documentElement.setAttribute('data-lang', lang);
+    document.documentElement.dataset.lang = lang;
 
     translatePage(lang);
     localStorage.setItem('siteLanguage', lang);
 }
 
-// === Уведомление о смене языка ===
+// === Toast ===
 let currentToast = null;
+
+const toastMessages = {
+    ru: '<img src="./assets/flags/flag-russia.svg" width="24"> Язык изменён на Русский',
+    uk: '<img src="./assets/flags/flag-ukraine.svg" width="24"> Мову змінено на Українську',
+    en: '<img src="./assets/flags/flag-united-states.svg" width="24"> Language changed to English'
+};
 
 function showLanguageToast(lang) {
     if (currentToast) currentToast.remove();
-    let message = '';
-    switch (lang) {
-        case 'ru':
-            message = '<img src="./assets/flags/flag-russia.svg" alt="RU" width="24" style="display:block;"> Язык изменён на Русский';
-            break;
-        case 'uk':
-            message = '<img src="./assets/flags/flag-ukraine.svg" alt="UK" width="24" style="display:block;"> Мову змінено на Українську';
-            break;
-        case 'en':
-            message = '<img src="./assets/flags/flag-united-states.svg" alt="EN" width="24" style="display:block;"> Language changed to English';
-            break;
-        default:
-            message = 'Language changed';
-    }
 
     const toast = document.createElement('div');
     toast.style.cssText = `
@@ -311,23 +303,22 @@ function showLanguageToast(lang) {
         right: 20px; 
         background: rgba(0, 0, 0, 0);
         backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
         color: white; 
         padding: 14px 22px; 
         border-radius: 10px; 
         font-size: 15px; 
         z-index: 10000;
         box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-        border: 1px solid rgba(255,255,255,0.1);
+        border: 1px solid rgba(255, 255, 255, 0.1);
         opacity: 0;
         transition: all 0.3s ease;
-
-        display: flex;              /* 👈 ВАЖНО */
-        align-items: center;       /* 👈 ВАЖНО */
-        gap: 10px;                 /* 👈 отступ между флагом и текстом */
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: 'Poppins', sans-serif;
     `;
 
-    toast.innerHTML = message; // важно!, так как в сообщении может быть HTML (флаг)
+    toast.innerHTML = toastMessages[lang] || 'Language changed';
     document.body.appendChild(toast);
     currentToast = toast;
 
@@ -350,62 +341,203 @@ function showLanguageToast(lang) {
     }, 2600);
 }
 
-// === Инициализация ===
-document.addEventListener('DOMContentLoaded', () => {
-    const savedLang = localStorage.getItem('siteLanguage') || 'en';
-
-    translatePage(savedLang);
-
-    // Кнопки в lang-switcher
-    const langButtons = document.querySelectorAll('.lang-switcher button');
-    langButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const selectedLang = btn.dataset.lang;
-            setLanguage(selectedLang);
-            showLanguageToast(selectedLang);
-        });
-    });
-
-    // Переключение через пункт меню
-    const langMenuItem = document.getElementById('lang-switcher-menu');
-    if (langMenuItem) {
-        langMenuItem.addEventListener('click', function(e) {
-            e.preventDefault();
-
-            const currentLang = localStorage.getItem('siteLanguage') || 'en';
-            let newLang;
-
-            // Цикл: ru → uk → en → ru
-            if (currentLang === 'ru') newLang = 'uk';
-            else if (currentLang === 'uk') newLang = 'en';
-            else newLang = 'ru';
-
-            setLanguage(newLang);
-            showLanguageToast(newLang);
-        });
-    }
-});
-
-// === Typed instance ===
+// === Typed ===
 let typedInstance = null;
 
 function initTyped(lang) {
     const el = document.querySelector('.typing');
-    if (!el) return;
-
     const strings = translations[lang]?.strings_typing;
-    if (!strings) return;
+    if (!el || !strings) return;
 
-    // Удаляем старый Typed
-    if (typedInstance) {
-        typedInstance.destroy();
-    }
+    if (typedInstance) typedInstance.destroy();
 
-    // Создаём новый
     typedInstance = new Typed(el, {
-        strings: strings,
+        strings,
         typeSpeed: 120,
         backSpeed: 80,
         loop: true,
     });
 }
+
+// === INIT (основной) ===
+document.addEventListener('DOMContentLoaded', () => {
+    const savedLang = localStorage.getItem('siteLanguage') || 'en';
+    translatePage(savedLang);
+
+    document.querySelectorAll('.lang-switcher button').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const lang = btn.dataset.lang;
+            setLanguage(lang);
+            showLanguageToast(lang);
+        });
+    });
+
+    const langMenuItem = document.getElementById('lang-switcher-menu');
+    if (langMenuItem) {
+        langMenuItem.addEventListener('click', e => {
+            e.preventDefault();
+
+            const current = localStorage.getItem('siteLanguage') || 'en';
+            const cycle = { ru: 'uk', uk: 'en', en: 'ru' };
+
+            const next = cycle[current] || 'ru';
+            setLanguage(next);
+            showLanguageToast(next);
+        });
+    }
+});
+
+// === Language Switcher ===
+const languages = {
+    ru: { name: "Русский", flag: "./assets/flags/flag-russia.svg" },
+    uk: { name: "Українська", flag: "./assets/flags/flag-ukraine.svg" },
+    en: { name: "English", flag: "./assets/flags/flag-united-states.svg" }
+};
+
+let currentDropdown = null;
+let isDropdownOpen = false;
+let currentButton = null;
+let rafId = null;
+
+function createLanguageDropdown() {
+    currentDropdown?.remove();
+
+    const dropdown = document.createElement('div');
+    dropdown.className = 'language-dropdown-js';
+    dropdown.style.cssText = `
+        position: fixed;
+        backdrop-filter: blur(10px);
+    `;
+
+    Object.entries(languages).forEach(([key, data]) => {
+        const option = document.createElement('div');
+        option.className = 'language-option';
+        option.dataset.lang = key;
+
+        option.style.cssText = `
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 18px; cursor: pointer;
+            color: #ddd; transition: 0.2s;
+        `;
+
+        option.innerHTML = `
+            <img src="${data.flag}" style="
+                width: 24px;
+                height: 16px;
+                object-fit: cover;
+                border-radius: 4px;
+                display: block;
+                box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+            ">
+            <span>${data.name}</span>
+        `;
+
+        option.onclick = e => {
+            e.stopPropagation();
+            setLanguage(key);
+            showLanguageToast(key);
+            updateLanguageSwitcher(key);
+            closeDropdown();
+        };
+
+        option.onmouseenter = () => {
+            option.style.background = 'rgba(192, 105, 78, 0.25)';
+            option.style.color = '#fff';
+        };
+        option.onmouseleave = () => {
+            option.style.background = '';
+            option.style.color = '#ddd';
+        };
+
+        dropdown.appendChild(option);
+    });
+
+    document.body.appendChild(dropdown);
+    return currentDropdown = dropdown;
+}
+
+// === Позиция ===
+function positionDropdown() {
+    if (!currentDropdown || !currentButton) return;
+    const rect = currentButton.getBoundingClientRect();
+
+    currentDropdown.style.top = `${rect.bottom + 8}px`;
+    currentDropdown.style.left = `${rect.left + rect.width / 2}px`;
+}
+
+// === Tracking ===
+function startTracking() {
+    const loop = () => {
+        if (!isDropdownOpen) return;
+        positionDropdown();
+        rafId = requestAnimationFrame(loop);
+    };
+    loop();
+}
+
+function stopTracking() {
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = null;
+}
+
+// === OPEN / CLOSE ===
+function openDropdown(button) {
+    if (!currentDropdown) createLanguageDropdown();
+
+    currentButton = button;
+    isDropdownOpen = true;
+    button.classList.add('active');
+
+    positionDropdown();
+    startTracking();
+
+    setTimeout(() => {
+        currentDropdown.style.opacity = '1';
+        currentDropdown.style.visibility = 'visible';
+        currentDropdown.style.transform = 'translateX(-50%) translateY(0)';
+    }, 10);
+}
+
+function closeDropdown() {
+    if (!currentDropdown) return;
+
+    isDropdownOpen = false;
+    stopTracking();
+    currentButton?.classList.remove('active');
+
+    currentDropdown.style.opacity = '0';
+    currentDropdown.style.transform = 'translateX(-50%) translateY(8px)';
+
+    setTimeout(() => {
+        if (!isDropdownOpen) currentDropdown.style.visibility = 'hidden';
+    }, 250);
+}
+
+function updateLanguageSwitcher(lang) {
+    const el = document.getElementById('current-flag');
+    if (el && languages[lang]) {
+        el.innerHTML = `<img src="${languages[lang].flag}" style="width:100%; height:100%">`;
+    }
+}
+
+// === INIT SWITCHER ===
+function initLanguageSwitcher() {
+    const button = document.getElementById('lang-button');
+    if (!button) return;
+
+    document.getElementById('lang-dropdown')?.remove();
+
+    button.onclick = e => {
+        e.stopPropagation();
+        isDropdownOpen ? closeDropdown() : openDropdown(button);
+    };
+
+    document.addEventListener('click', e => {
+        if (currentDropdown && !button.contains(e.target)) closeDropdown();
+    });
+
+    const savedLang = localStorage.getItem('siteLanguage') || 'ru';
+    updateLanguageSwitcher(savedLang);
+}
+
+document.addEventListener('DOMContentLoaded', initLanguageSwitcher);
