@@ -467,12 +467,9 @@ function positionDropdown() {
 
 // === Tracking ===
 function startTracking() {
-    const loop = () => {
-        if (!isDropdownOpen) return;
-        positionDropdown();
-        rafId = requestAnimationFrame(loop);
-    };
-    loop();
+    // FIX: убран RAF-loop — позиция считается один раз при открытии
+    // Это экономит CPU на каждом кадре пока дропдаун открыт
+    positionDropdown();
 }
 
 function stopTracking() {
