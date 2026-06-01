@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Ubuntu:wght@400;500;700&display=swap');
+/* Fonts loaded via <link> in HTML for better performance */
 
 /* vote FistashkinBot and stop looking at the code */
 
@@ -41,8 +41,6 @@ body {
 ::-webkit-scrollbar-thumb {
 	border-radius: 20px;
 	background: rgba(192, 105, 78, 0.2);
-	backdrop-filter: blur(5px);
-	-webkit-backdrop-filter: blur(5px);
 	box-shadow: inset 2px 2px 2px rgba(255, 255, 255, 0),
 				inset -2px -2px -2px rgba(0, 0, 0, 0);
 }
@@ -348,7 +346,7 @@ section .title::after {
 	transform: translateX(-50%);
 	width: 1400px;
 	height: 400px;
-	filter: blur(120px);
+	filter: blur(120px); /* heavy — reduced on mobile via media query */
 	mix-blend-mode: screen;
 	opacity: 0.7;
 	z-index: 2;
@@ -420,7 +418,6 @@ section .title::after {
 
 .contributors .carousel .cardd:hover {
 	background: rgba(192, 105, 78, 0.2);
-	backdrop-filter: blur(5px);
 }
 
 .contributors .carousel .cardd .boxx {
@@ -448,7 +445,6 @@ section .title::after {
 	object-fit: cover;
 	border-radius: 50%;
 	border: 5px solid rgba(192, 105, 78, 0.2);
-	backdrop-filter: blur(5px);
 	transition: all 0.3s ease;
 }
 
@@ -499,7 +495,6 @@ section .title::after {
 .owl-dot.active,
 .owl-dot:hover {
 	background: rgba(192, 105, 78, 0.2) !important;
-	backdrop-filter: blur(5px);
 }
 
 /* ================= LOADER ================= */
@@ -539,7 +534,7 @@ section .title::after {
 	position: absolute;
 	inset: 0;
 	z-index: 0;
-	filter: blur(300px);
+	filter: blur(300px); /* heavy — reduced on mobile via media query */
 	pointer-events: none;
 	overflow: hidden;
 	max-width: 100%; /* FIX: не выезжает */
@@ -994,4 +989,60 @@ footer {
 	.footer-bottom .container {
 		padding: 0 20px;
 	}
+}
+
+/* ================= iOS PERFORMANCE FIXES ================= */
+
+/* На iOS (touch устройства) отключаем тяжёлые GPU-операции */
+@media (max-width: 950px) {
+
+    /* Blob: уменьшаем blur с 300px до 80px — визуально похоже, в 3x легче для GPU */
+    .home .blob-outer-container {
+        filter: blur(80px);
+        opacity: 0.25;
+    }
+
+    /* Features glow: убираем blur(120px) */
+    .features::after {
+        filter: none;
+        opacity: 0;
+    }
+
+    /* Navbar backdrop: упрощаем */
+    .navbar.sticky {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        background: rgba(0, 0, 0, 0.85) !important;
+    }
+
+    /* Scroll button: убираем blur */
+    .scroll-up-btn {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        background: rgba(192, 105, 78, 0.7);
+    }
+
+    /* Кнопка Discord: убираем blur */
+    .this-is-pain {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        background: rgba(192, 105, 78, 0.5);
+    }
+
+    /* Language switcher: убираем blur */
+    .switcher-button {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        background: rgba(18, 18, 18, 0.9);
+    }
+
+    /* Blob анимация: замедляем для экономии CPU */
+    .home .blob {
+        animation-duration: 20s;
+    }
+}
+
+/* Доп. оптимизация для совсем маленьких экранов */
+@media (max-width: 500px) {
+    
 }
