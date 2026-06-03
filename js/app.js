@@ -5,8 +5,8 @@ var isMobile = window.innerWidth < 768;
 particlesJS('particles-js', {
     "particles": {
         "number": {
-            // На мобильном 25 частиц вместо 60 — в 2.4x меньше работы
-            "value": isMobile ? 25 : 60,
+            // На мобильном 30 частиц вместо 60 — в 2x меньше работы
+            "value": isMobile ? 30 : 60,
             "density": {
                 "enable": true,
                 "value_area": 800
