@@ -1,21 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script>
-// Редирект на iOS-версию для Safari и Chrome на iOS
-(function() {
-  var ua = navigator.userAgent;
-  var isIOS = /iPhone|iPad|iPod/i.test(ua);
-  var isSafari = /Safari/i.test(ua) && !/Chrome/i.test(ua);
-  var isChromeiOS = /CriOS/i.test(ua);
-  if (isIOS && (isSafari || isChromeiOS)) {
-    // Не редиректим если уже пришли с ios страницы
-    if (!document.referrer.includes('index-ios')) {
-      window.location.replace('./index-ios.html');
-    }
-  }
-})();
-</script>
 <meta charset="utf-8" />
 <!-- Preconnect: браузер заранее устанавливает соединения с CDN -->
 <link rel="preconnect" href="https://code.jquery.com">
