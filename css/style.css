@@ -548,7 +548,7 @@ section .title::after {
 	margin: auto;
 	border-radius: 99999px;
 	overflow: hidden;
-	background-color: #fff;
+	background-color: transparent;
 	transform: scale(0.8);
 }
 
