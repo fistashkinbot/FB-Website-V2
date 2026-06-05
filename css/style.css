@@ -460,6 +460,7 @@ section .title::after {
 	border: 1px solid black;
 	border-radius: 5px;
 	font-family: 'Poppins', sans-serif;
+	color: #fff;
 }
 
 .badges.owner     { background: #C0694E; }
@@ -468,7 +469,7 @@ section .title::after {
 .badges.designer  { background: #315dd4; }
 .badges.helper    { background: #7289DA; }
 .badges.tester    { background: #58a6a7; }
-.badges.friend    { background: #c1ff98; }
+.badges.friend    { background: #4a7c3f; color: #fff; }
 
 /* ================= CAROUSEL ================= */
 
