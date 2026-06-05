@@ -20,14 +20,11 @@
 html {
 	scroll-behavior: smooth;
 	overflow-x: hidden; /* FIX: горизонтальный скролл */
-	height: -webkit-fill-available; /* FIX: iOS Safari */
 }
 
 body {
 	overflow-x: hidden; /* FIX: горизонтальный скролл */
 	width: 100%;
-	min-height: 100vh;
-	min-height: -webkit-fill-available; /* FIX: iOS Safari */
 }
 
 .max-width {
@@ -159,7 +156,6 @@ body {
 
 #particles-js {
 	height: 100vh;
-	height: -webkit-fill-available; /* FIX: iOS Safari — 100vh включает адресную строку */
 	width: 100%;
 	position: absolute;
 	top: 0;
@@ -185,7 +181,6 @@ body {
 	background-size: cover;
 	background-attachment: fixed;
 	height: 100vh;
-	height: -webkit-fill-available; /* FIX: iOS Safari — убирает белую полосу снизу */
 	color: #fff;
 	min-height: 500px;
 	font-family: 'Ubuntu', sans-serif;
@@ -553,7 +548,7 @@ section .title::after {
 	margin: auto;
 	border-radius: 99999px;
 	overflow: hidden;
-	background-color: #fff;
+	background-color: transparent;
 	transform: scale(0.8);
 }
 
