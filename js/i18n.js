@@ -145,7 +145,7 @@ const translations = {
             "потужний",
             "легкий у використанні",
             "милий",
-            "«зроблений з любов’ю»",
+            "«зроблений з любов'ю»",
             "гарячий",
             "«добре розвинений»",
             "хороший",
@@ -170,6 +170,7 @@ const translations = {
         menu_btn_contributors: " Team",
         menu_btn_docs: " Docs",
         menu_btn_change_lang: " Language",
+
         // Home section
         home_content_text_1: "Hello, my name is",
         home_content_text_2: "Fistashkin",
@@ -359,34 +360,6 @@ function initTyped(lang) {
     });
 }
 
-// === INIT (основной) ===
-document.addEventListener('DOMContentLoaded', () => {
-    const savedLang = localStorage.getItem('siteLanguage') || 'en';
-    translatePage(savedLang);
-
-    document.querySelectorAll('.lang-switcher button').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const lang = btn.dataset.lang;
-            setLanguage(lang);
-            showLanguageToast(lang);
-        });
-    });
-
-    const langMenuItem = document.getElementById('lang-switcher-menu');
-    if (langMenuItem) {
-        langMenuItem.addEventListener('click', e => {
-            e.preventDefault();
-
-            const current = localStorage.getItem('siteLanguage') || 'en';
-            const cycle = { ru: 'uk', uk: 'en', en: 'ru' };
-
-            const next = cycle[current] || 'ru';
-            setLanguage(next);
-            showLanguageToast(next);
-        });
-    }
-});
-
 // === Language Switcher ===
 const languages = {
     ru: { name: "Русский", flag: "./assets/flags/flag-russia.svg" },
@@ -520,7 +493,6 @@ function updateLanguageSwitcher(lang) {
     }
 }
 
-// === INIT SWITCHER ===
 function initLanguageSwitcher() {
     const button = document.getElementById('lang-button');
     if (!button) return;
@@ -535,9 +507,37 @@ function initLanguageSwitcher() {
     document.addEventListener('click', e => {
         if (currentDropdown && !button.contains(e.target)) closeDropdown();
     });
-
-    const savedLang = localStorage.getItem('siteLanguage') || 'ru';
-    updateLanguageSwitcher(savedLang);
 }
 
-document.addEventListener('DOMContentLoaded', initLanguageSwitcher);
+// === INIT ===
+// Скрипт подключён с defer — DOMContentLoaded уже сработал к этому моменту,
+// поэтому используем прямой вызов вместо listener'а.
+(function init() {
+    const savedLang = localStorage.getItem('siteLanguage') || 'ru';
+
+    translatePage(savedLang);
+    initLanguageSwitcher();
+    updateLanguageSwitcher(savedLang);
+
+    document.querySelectorAll('.lang-switcher button').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const lang = btn.dataset.lang;
+            setLanguage(lang);
+            showLanguageToast(lang);
+            updateLanguageSwitcher(lang);
+        });
+    });
+
+    const langMenuItem = document.getElementById('lang-switcher-menu');
+    if (langMenuItem) {
+        langMenuItem.addEventListener('click', e => {
+            e.preventDefault();
+            const current = localStorage.getItem('siteLanguage') || 'ru';
+            const cycle = { ru: 'uk', uk: 'en', en: 'ru' };
+            const next = cycle[current] || 'ru';
+            setLanguage(next);
+            showLanguageToast(next);
+            updateLanguageSwitcher(next);
+        });
+    }
+})();
