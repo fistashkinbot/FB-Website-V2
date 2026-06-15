@@ -25,6 +25,7 @@ html {
 body {
 	overflow-x: hidden; /* FIX: горизонтальный скролл */
 	width: 100%;
+	background: #121212;
 }
 
 .max-width {
