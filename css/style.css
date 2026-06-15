@@ -457,6 +457,7 @@ section .title::after {
 
 .badges {
 	padding: 5px 10px;
+	color: black;
 	border: 1px solid black;
 	border-radius: 5px;
 	font-family: 'Poppins', sans-serif;
