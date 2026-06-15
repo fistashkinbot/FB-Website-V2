@@ -1144,7 +1144,7 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background: #121212; /* чтобы не было белого */
+    background: #0d0d0d; /* чтобы не было белого */
 }
 
 footer {
