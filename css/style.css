@@ -25,7 +25,6 @@ html {
 body {
 	overflow-x: hidden; /* FIX: горизонтальный скролл */
 	width: 100%;
-	background: #121212;
 }
 
 .max-width {
@@ -1133,4 +1132,38 @@ footer {
 		padding: 10px 26px;
 		white-space: nowrap;
 	}
+}
+
+/* ================= FIX: УБРАТЬ БЕЛУЮ ПУСТОТУ ПОД ФУТЕРОМ НА IOS ================= */
+
+html {
+    height: 100%;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #121212; /* чтобы не было белого */
+}
+
+footer {
+    margin-top: auto;
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* Убрать возможные отступы у последнего элемента перед футером */
+body > :last-child:not(footer) {
+    margin-bottom: 0;
+}
+
+/* Дополнительная страховка для iOS */
+@supports (-webkit-touch-callout: none) {
+    body {
+        min-height: -webkit-fill-available;
+    }
+    html {
+        height: -webkit-fill-available;
+    }
 }
