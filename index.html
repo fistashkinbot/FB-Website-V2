@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="utf-8" />
 <!-- Preconnect: браузер заранее устанавливает соединения с CDN -->
@@ -230,7 +230,9 @@
 <script>
   function hideLoader() {
     var lw = document.querySelector('.loader-wrapper');
-    if (lw) lw.style.display = 'none';
+    if (lw && !lw.classList.contains('loader-hidden')) {
+      lw.classList.add('loader-hidden');
+    }
   }
   window.addEventListener('load', hideLoader);
   window.addEventListener('pageshow', hideLoader);

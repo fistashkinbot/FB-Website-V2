@@ -460,7 +460,6 @@ section .title::after {
 	border: 1px solid black;
 	border-radius: 5px;
 	font-family: 'Poppins', sans-serif;
-	color: #fff;
 }
 
 .badges.owner     { background: #C0694E; }
@@ -469,7 +468,7 @@ section .title::after {
 .badges.designer  { background: #315dd4; }
 .badges.helper    { background: #7289DA; }
 .badges.tester    { background: #58a6a7; }
-.badges.friend    { background: #4a7c3f; color: #fff; }
+.badges.friend    { background: #c1ff98; }
 
 /* ================= CAROUSEL ================= */
 
@@ -501,32 +500,26 @@ section .title::after {
 /* ================= LOADER ================= */
 
 .loader-wrapper {
-	width: 100%;
-	height: 100%;
-	top: 0;
-	left: 0;
-	background-color: #222;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	flex-direction: column;
-	position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: #222;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: fixed;
+  z-index: 9999;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+  opacity: 1;
+  visibility: visible;
 }
 
-/* ================= ANIMATION ================= */
-
-.longfazers {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	overflow: hidden; /* FIX: не выезжает */
-}
-
-.longfazers span {
-	position: absolute;
-	height: 4px;
-	width: 20%;
-	background: #C0694E;
+.loader-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 /* ================= BLOB ================= */
@@ -1046,4 +1039,96 @@ footer {
 /* Доп. оптимизация для совсем маленьких экранов */
 @media (max-width: 500px) {
     
+}
+
+/* ================= ERROR PAGES (404 / 500) ================= */
+
+.error-section {
+	height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.error-content {
+	position: relative;
+	z-index: 2;
+	text-align: center;
+	width: 100%;
+	max-width: 800px;
+	margin: 0 auto;
+	padding: 0 20px;
+}
+
+.error-code {
+	font-size: 140px;
+	font-weight: 700;
+	margin: 0;
+	line-height: 1;
+	color: #C0694E;
+	text-shadow: 0 0 40px rgba(192, 105, 78, 0.5);
+}
+
+.error-heading {
+	font-size: 38px;
+	margin: 25px 0 15px;
+	color: #fff;
+}
+
+.error-message {
+	font-size: 21px;
+	color: #ddd;
+	max-width: 650px;
+	margin: 0 auto 40px;
+}
+
+.error-actions {
+	display: flex;
+	justify-content: center;
+}
+
+.error-actions .this-is-pain {
+	font-size: 24px;
+	padding: 16px 50px;
+}
+
+@media (max-width: 690px) {
+	.error-code {
+		font-size: 90px;
+	}
+
+	.error-heading {
+		font-size: 28px;
+		margin: 15px 0 10px;
+	}
+
+	.error-message {
+		font-size: 17px;
+		margin: 0 auto 30px;
+	}
+
+	.error-actions .this-is-pain {
+		font-size: 18px;
+		padding: 12px 32px;
+	}
+}
+
+@media (max-width: 500px) {
+	.error-code {
+		font-size: 64px;
+	}
+
+	.error-heading {
+		font-size: 22px;
+	}
+
+	.error-message {
+		font-size: 15px;
+	}
+
+	.error-actions .this-is-pain {
+		font-size: 16px;
+		padding: 10px 26px;
+		white-space: nowrap;
+	}
 }
