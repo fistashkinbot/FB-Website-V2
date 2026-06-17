@@ -288,10 +288,12 @@ function setLanguage(lang) {
 // === Toast ===
 let currentToast = null;
 
+const flagStyle = 'width:24px;height:16px;border-radius:4px;object-fit:cover;display:block;box-shadow:0 1px 4px rgba(0,0,0,0.5);flex-shrink:0;';
+
 const toastMessages = {
-    ru: '<img src="./assets/flags/flag-russia.svg" width="24"> Язык изменён на Русский',
-    uk: '<img src="./assets/flags/flag-ukraine.svg" width="24"> Мову змінено на Українську',
-    en: '<img src="./assets/flags/flag-united-states.svg" width="24"> Language changed to English'
+    ru: `<img src="./assets/flags/flag-russia.svg" style="${flagStyle}"> Язык изменён на Русский`,
+    uk: `<img src="./assets/flags/flag-ukraine.svg" style="${flagStyle}"> Мову змінено на Українську`,
+    en: `<img src="./assets/flags/flag-united-states.svg" style="${flagStyle}"> Language changed to English`
 };
 
 function showLanguageToast(lang) {
@@ -304,6 +306,7 @@ function showLanguageToast(lang) {
         right: 20px; 
         background: rgba(0, 0, 0, 0);
         backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
         color: white; 
         padding: 14px 22px; 
         border-radius: 10px; 
@@ -380,6 +383,7 @@ function createLanguageDropdown() {
     dropdown.style.cssText = `
         position: fixed;
         backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
     `;
 
     Object.entries(languages).forEach(([key, data]) => {
@@ -489,7 +493,7 @@ function closeDropdown() {
 function updateLanguageSwitcher(lang) {
     const el = document.getElementById('current-flag');
     if (el && languages[lang]) {
-        el.innerHTML = `<img src="${languages[lang].flag}" style="width:100%; height:100%">`;
+        el.innerHTML = `<img src="${languages[lang].flag}" style="width:100%; height:100%; display:block; object-fit:cover;">`;
     }
 }
 
