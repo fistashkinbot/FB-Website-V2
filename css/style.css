@@ -1109,50 +1109,35 @@ footer {
 	}
 }
 
-/* ================= FIX: УБРАТЬ БЕЛУЮ ПУСТОТУ ПОД ФУТЕРОМ НА IOS + DYNAMIC ISLAND ================= */
+/* ================= FIX: УБРАТЬ БЕЛУЮ ПУСТОТУ ПОД ФУТЕРОМ НА IOS ================= */
 
 html {
     height: 100%;
-    /* Для Dynamic Island и notch */
-    height: -webkit-fill-available;
 }
 
 body {
-    min-height: 100vh;                    /* fallback */
-    min-height: 100dvh;                   /* современный динамический высота (лучше для Dynamic Island) */
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background: #0d0d0d;
-    /* Учитываем safe area (Dynamic Island + home indicator) */
-    padding-bottom: env(safe-area-inset-bottom);
-    padding-top: env(safe-area-inset-top);   /* если нужно для хедера */
+    background: #0d0d0d; /* чтобы не было белого */
 }
 
-/* Основной контент растягивается */
-main, .content-wrapper {
-    flex: 1 0 auto;   /* или просто flex: 1; */
-}
-
-/* Футер всегда внизу */
 footer {
     margin-top: auto;
     margin-bottom: 0 !important;
     padding-bottom: 0 !important;
-    /* Дополнительная страховка для home indicator */
-    padding-bottom: calc(0.5rem + env(safe-area-inset-bottom)) !important;
 }
 
-/* Убираем лишние отступы у последнего элемента перед футером */
+/* Убрать возможные отступы у последнего элемента перед футером */
 body > :last-child:not(footer) {
     margin-bottom: 0;
 }
 
-/* Дополнительная поддержка старых iOS + Dynamic Island */
+/* Дополнительная страховка для iOS */
 @supports (-webkit-touch-callout: none) {
     body {
         min-height: -webkit-fill-available;
     }
-    
     html {
         height: -webkit-fill-available;
     }
