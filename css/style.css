@@ -160,7 +160,7 @@ body {
 	position: absolute;
 	top: 0;
 	left: 0;
-	z-index: 2; /* FIX: частицы видны поверх overlay */
+	z-index: 1; /* FIX: частицы видны поверх overlay */
 	pointer-events: none;
 	overflow: hidden;
 	max-width: 100%; /* FIX: не выезжает за экран */
