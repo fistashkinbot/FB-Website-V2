@@ -106,12 +106,12 @@
     <div class="max-width">
       <h2 class="title"><i class="fas fa-tools"></i> <span data-i18n="features_title"></span></h2>
       <div class="features-content">
-        <div class="card"><div class="box"><div class="text" data-i18n="features_card1_title"></div><p data-i18n="features_card1_text"></p></div></div>
-        <div class="card"><div class="box"><div class="text" data-i18n="features_card2_title"></div><p data-i18n="features_card2_text"></p></div></div>
-        <div class="card"><div class="box"><div class="text" data-i18n="features_card3_title"></div><p data-i18n="features_card3_text"></p></div></div>
-        <div class="card"><div class="box"><div class="text" data-i18n="features_card4_title"></div><p data-i18n="features_card4_text"></p></div></div>
-        <div class="card"><div class="box"><div class="text" data-i18n="features_card5_title"></div><p data-i18n="features_card5_text"></p></div></div>
-        <div class="card"><div class="box"><div class="text" data-i18n="features_card6_title"></div><p data-i18n="features_card6_text"></p></div></div>
+        <div class="card dm-glow-card glow-music"><div class="box"><div class="text" data-i18n="features_card1_title"></div><p data-i18n="features_card1_text"></p></div></div>
+        <div class="card dm-glow-card glow-chatbot"><div class="box"><div class="text" data-i18n="features_card2_title"></div><p data-i18n="features_card2_text"></p></div></div>
+        <div class="card dm-glow-card glow-moderation"><div class="box"><div class="text" data-i18n="features_card3_title"></div><p data-i18n="features_card3_text"></p></div></div>
+        <div class="card dm-glow-card glow-reactions"><div class="box"><div class="text" data-i18n="features_card4_title"></div><p data-i18n="features_card4_text"></p></div></div>
+        <div class="card dm-glow-card glow-games"><div class="box"><div class="text" data-i18n="features_card5_title"></div><p data-i18n="features_card5_text"></p></div></div>
+        <div class="card dm-glow-card glow-utils"><div class="box"><div class="text" data-i18n="features_card6_title"></div><p data-i18n="features_card6_text"></p></div></div>
       </div>
     </div>
   </div>
@@ -124,7 +124,7 @@
         <i class="fas fa-users"></i> <span data-i18n="contributors_title"></span>
       </h2>
       <div class="carousel owl-carousel">
-        <div class="cardd">
+        <div class="cardd glow-owner">
           <div class="boxx">
             <img src="https://github.com/riverya4life.png" alt="riverya4life">
             <div class="text">@riverya4life</div>
@@ -134,7 +134,7 @@
             </p>
           </div>
         </div>
-        <div class="cardd">
+        <div class="cardd glow-helper">
           <div class="boxx">
             <img src="assets/virgil8410.jpg" alt="daastolfo09">
             <div class="text">@daastolfo09</div>
@@ -144,7 +144,7 @@
             </p>
           </div>
         </div>
-        <div class="cardd">
+        <div class="cardd glow-tester">
           <div class="boxx">
             <img src="assets/sigmamale.jpg" alt="Dvärg">
             <div class="text">@Dvärg</div>
@@ -154,7 +154,7 @@
             </p>
           </div>
         </div>
-        <div class="cardd">
+        <div class="cardd glow-supporter">
           <div class="boxx">
             <img src="https://github.com/Scuiss.png" alt="scuiss">
             <div class="text">@scuiss</div>
@@ -262,6 +262,20 @@
 </script>
 
 <!-- FIX: ionicons убраны (unpkg медленный) — иконки уже покрыты Font Awesome -->
+
+<!-- Glow Cards -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const glowEls = document.querySelectorAll('.dm-glow-card, .cardd');
+    glowEls.forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        card.style.setProperty('--xPos', `${e.clientX - rect.left}px`);
+        card.style.setProperty('--yPos', `${e.clientY - rect.top}px`);
+      });
+    });
+  });
+</script>
 
 </body>
 </html>

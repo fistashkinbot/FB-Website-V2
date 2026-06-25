@@ -364,61 +364,133 @@ section .title::after {
 }
 
 .card {
-	background: #222;
-	text-align: center;
-	border-radius: 6px;
-	padding: 32px 24px;
+	background: #121212;
+	border-radius: 12px;
+	padding: 28px 24px;
 	cursor: pointer;
-	transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+	transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 	display: flex;
 	flex-direction: column;
 	height: 100%;
+	border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .card:hover {
-	background: rgba(192, 105, 78, 0.2);
-	transform: translateY(-8px);
-}
-
-.card:hover i {
-	color: #fff;
+	transform: translateY(-6px);
+	border-color: rgba(255, 255, 255, 0.1);
 }
 
 .card .box {
 	transition: all 0.3s ease;
 }
 
-.card:hover .box {
-	transform: scale(1.05);
-}
-
 .card i {
-	font-size: 52px;
-	color: #C0694E;
-	transition: color 0.3s ease;
-	margin-bottom: 16px;
+	display: none;
 }
 
 .card .text {
-	font-size: 25px;
-	font-weight: 500;
-	margin: 12px 0 10px;
+	font-size: 20px;
+	font-weight: 700;
+	margin: 0 0 12px;
 	color: #fff;
-	line-height: 1.2;
+	line-height: 1.3;
 }
+
+.card p {
+	font-size: 14px;
+	color: rgba(255, 255, 255, 0.55);
+	line-height: 1.65;
+	margin: 0;
+}
+
+/* ================= GLOW CARDS ================= */
+
+.dm-glow-card {
+	position: relative;
+}
+
+/* Псевдоэлемент — сам градиент. opacity анимируется плавно */
+.dm-glow-card::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	opacity: 0;
+	transition: opacity 0.5s ease;
+	pointer-events: none;
+	border-radius: inherit;
+	z-index: 0;
+	clip-path: inset(0 round 12px);
+	background: radial-gradient(
+		300px circle at var(--xPos, 50%) var(--yPos, 50%),
+		var(--glow-color),
+		transparent 80%
+	);
+}
+
+.dm-glow-card:hover::before {
+	opacity: 1;
+}
+
+/* Контент поверх псевдоэлемента */
+.dm-glow-card .box {
+	position: relative;
+	z-index: 1;
+}
+
+/* Цвета свечения для каждой карточки */
+.dm-glow-card.glow-music     { --glow-color: rgba(168, 85,  247, 0.22); }
+.dm-glow-card.glow-chatbot   { --glow-color: rgba(59,  130, 246, 0.22); }
+.dm-glow-card.glow-moderation{ --glow-color: rgba(239, 68,  68,  0.22); }
+.dm-glow-card.glow-reactions { --glow-color: rgba(236, 72,  153, 0.22); }
+.dm-glow-card.glow-games     { --glow-color: rgba(34,  197, 94,  0.22); }
+.dm-glow-card.glow-utils     { --glow-color: rgba(192, 105, 78,  0.30); }
 
 /* ================= CONTRIBUTORS ================= */
 
 .contributors .carousel .cardd {
-	background: #222;
-	border-radius: 6px;
+	background: #121212;
+	border-radius: 12px;
 	padding: 25px 35px;
-	transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+	border: 1px solid rgba(255, 255, 255, 0.05);
+	transition: border-color 0.4s ease;
+	position: relative;
+	/* overflow: hidden убран — режет края при анимации owl-carousel */
+	/* glow обрезается через mask-image на ::before */
+}
+
+.contributors .carousel .cardd::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	opacity: 0;
+	transition: opacity 0.5s ease;
+	pointer-events: none;
+	z-index: 0;
+	border-radius: 12px;
+	-webkit-mask-image: radial-gradient(white 100%, black 100%);
+	mask-image: radial-gradient(white 100%, black 100%);
+	clip-path: inset(0 round 12px);
+	background: radial-gradient(
+		300px circle at var(--xPos, 50%) var(--yPos, 50%),
+		var(--glow-color, rgba(192, 105, 78, 0.25)),
+		transparent 80%
+	);
+}
+
+.contributors .carousel .cardd:hover::before {
+	opacity: 1;
 }
 
 .contributors .carousel .cardd:hover {
-	background: rgba(192, 105, 78, 0.2);
+	border-color: rgba(255, 255, 255, 0.1);
 }
+
+/* Цвета свечения по первому бейджику */
+.contributors .carousel .cardd.glow-owner     { --glow-color: rgba(192, 105, 78,  0.30); }
+.contributors .carousel .cardd.glow-supporter { --glow-color: rgba(255, 20,  118, 0.25); }
+.contributors .carousel .cardd.glow-helper    { --glow-color: rgba(114, 137, 218, 0.25); }
+.contributors .carousel .cardd.glow-tester    { --glow-color: rgba(88,  166, 167, 0.25); }
+
 
 .contributors .carousel .cardd .boxx {
 	display: flex;
@@ -426,11 +498,12 @@ section .title::after {
 	align-items: center;
 	justify-content: center;
 	text-align: center;
-	transition: all 0.3s ease;
+	position: relative;
+	z-index: 1;
 }
 
 .contributors .carousel .cardd:hover .boxx {
-	transform: scale(1.05);
+	/* убран scale — карточка теперь двигается целиком */
 }
 
 .contributors .carousel .cardd .text {
@@ -472,6 +545,10 @@ section .title::after {
 .badges.friend    { background: #c1ff98; }
 
 /* ================= CAROUSEL ================= */
+
+.contributors .carousel {
+	padding: 16px 4px;
+}
 
 .owl-dots {
 	text-align: center;

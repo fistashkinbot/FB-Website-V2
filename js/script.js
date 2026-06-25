@@ -32,7 +32,7 @@ $(document).ready(function() {
   });
 
   $('.carousel').owlCarousel({
-    margin: 20,
+    margin: 9.9,
     loop: true,
     autoplay: false,        // FIX: отключён autoplay — карусель не грузит CPU вхолостую
     autoplayHoverPause: true,
