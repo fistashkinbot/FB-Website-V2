@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <title>Документация — FistashkinBot</title>
+
+    <!-- Глобальные стили (фон, эффекты, шрифты) -->
+    <link rel="stylesheet" href="./css/style.css" />
+
+    <!-- Стили документации -->
+    <link rel="stylesheet" href="./css/docs.css" />
+
+    <!-- Шрифты -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Ubuntu:wght@400;500;700&display=swap"
+    />
+
+    <!-- Дополнительные библиотеки -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+
+    <link rel="icon" href="assets/fistashkin.ico" />
+    <meta name="theme-color" content="#C0694E" />
+    <meta property="og:site_name" content="Документация FistashkinBot" />
+    <meta property="og:title" content=" Документация FistashkinBot" />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:description"
+      content="Простой многоцелевой бот Discord созданный с любовью. Рейтинг, Автомод, Музыка и многое другое~"
+    />
+    <meta property="og:url" content="/" />
+    <meta property="og:image" content="assets/fistashkin.png" />
+  </head>
+
+  <body class="docs-page">
+    <div class="loader-wrapper" id="loader">
+      <div class="loader-ring"></div>
+    </div>
+
+    <!-- ── НАВБАР ── -->
+    <nav class="docs-navbar">
+      <div class="max-width">
+        <div class="logo">
+          <a href="./index.html">Fistashkin<span></span></a>
+        </div>
+        <div class="docs-mob-toggle">
+          <button
+            onclick="toggleDocSidebar()"
+            style="
+              background: none;
+              border: 1px solid rgba(255, 255, 255, 0.15);
+              color: #fff;
+              padding: 5px 9px;
+              border-radius: 5px;
+              cursor: pointer;
+              font-size: 14px;
+              margin-left: 130px;
+            "
+            title="Меню документации"
+          >
+            <i class="fas fa-book"></i>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ── ПОИСКОВЫЙ МОДАЛ ── -->
+    <div class="doc-search-overlay" id="doc-search-overlay">
+      <div class="doc-search-modal">
+        <div class="doc-search-row">
+          <svg
+            width="16"
+            height="16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" />
+          </svg>
+          <input
+            id="doc-s-inp"
+            type="text"
+            placeholder="Поиск в документации..."
+            data-i18n-placeholder="docs_input_search_placeholder"
+            autocomplete="off"
+          />
+        </div>
+        <div class="doc-search-res" id="doc-s-res">
+          <div class="doc-s-empty">
+            <span data-i18n="docs_input_search_empty"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="doc-sb-overlay"
+      id="doc-sb-overlay"
+      onclick="toggleDocSidebar()"
+    ></div>
+
+    <!-- ── ЛЕЙАУТ ДОКУМЕНТАЦИИ ── -->
+    <div class="docs-layout">
+
+      <!-- САЙДБАР -->
+      <aside class="docs-sidebar" id="docs-sidebar">
+        <div class="sb-search-wrap">
+          <div class="sb-search-box" onclick="openDocSearch()">
+            <svg
+              width="14"
+              height="14"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.35-4.35" />
+            </svg>
+            <span data-i18n="docs_search_placeholder">Поиск...</span>
+            <kbd>/</kbd>
+          </div>
+        </div>
+        <div class="sb-nav-body" id="sb-nav-body"></div>
+        <div class="sb-footer">
+          <a href="./index.html" class="sb-powered">
+            <img src="assets/logo.svg" alt="FistashkinBot Logo" />
+            <span data-i18n="docs_sidebar_made_with"></span>
+          </a>
+        </div>
+      </aside>
+
+      <!-- ОСНОВНОЙ КОНТЕНТ -->
+      <main class="docs-main" id="docs-main">
+        <div class="doc-toolbar" id="doc-toolbar" style="display: none">
+          <button class="doc-toolbar-btn" id="doc-copy-btn">
+            <svg
+              width="13"
+              height="13"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <rect x="9" y="9" width="13" height="13" rx="2" />
+              <path
+                d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+              />
+            </svg>
+            <span data-i18n="docs_btn_copy">Копировать</span>
+          </button>
+        </div>
+
+        <div id="doc-content"><div class="doc-spinner"></div></div>
+
+        <div
+          class="doc-last-updated"
+          id="doc-last-updated"
+          style="display: none"
+        >
+          <span data-i18n="docs_last_updated">Последнее обновление:</span>
+          <span id="doc-lu-text"></span>
+        </div>
+        <nav class="page-nav" id="doc-pnav" style="display: none"></nav>
+      </main>
+
+      <!-- TOC -->
+      <aside class="docs-toc" id="docs-toc">
+        <div class="toc-head">
+          <svg
+            width="12"
+            height="12"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="15" y2="12" />
+            <line x1="3" y1="18" x2="18" y2="18" />
+          </svg>
+          <span data-i18n="docs_toc_title">ON THIS PAGE</span>
+        </div>
+        <ul class="toc-list" id="doc-toc-list"></ul>
+      </aside>
+
+    </div>
+
+    <!-- ── БИБЛИОТЕКИ ── -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="./js/i18n.js" defer></script>
+
+    <!-- ── ЛОГИКА ДОКУМЕНТАЦИИ ── -->
+    <script src="./js/docs.js"></script>
+  </body>
+</html>

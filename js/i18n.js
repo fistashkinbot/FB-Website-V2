@@ -77,7 +77,31 @@ const translations = {
         not_found_error_heading: "Ой... Страница потерялась",
         not_found_error_message: "Фисташкин немного заблудился... Мы уже ищем его. Попробуйте зайти позже.",
         internal_server_error_heading: "Внутренняя ошибка сервера",
-        internal_server_error_message: "Фисташкин немного перегрелся... Мы уже чиним. Попробуй зайти позже."
+        internal_server_error_message: "Фисташкин немного перегрелся... Мы уже чиним. Попробуй зайти позже.",
+
+        docs_btn_copy: "Копировать",
+        docs_btn_copy_copied: "Скопировано!",
+        docs_search_placeholder: "Поиск...",
+        docs_input_search_placeholder: "Поиск в документации...",
+        docs_input_search_empty: "Начните вводить текст для поиска...",
+        docs_search_no_results: "Ничего не найдено",
+
+        docs_btn_page_nav_prev: "Предыдущая страница",
+        docs_btn_page_nav_next: "Следующая страница",
+        docs_page_nav_not_found: "Страница не найдена",
+
+        docs_toc_title: "НА ЭТОЙ СТРАНИЦЕ",
+        docs_last_updated: "Последнее обновление:",
+        docs_sidebar_made_with: "Made with ❤️",
+        docs_load_error_heading: "Ошибка загрузки",
+        docs_load_error_message: "Не удалось загрузить SUMMARY.md. Убедитесь, что файл существует в папке",
+        docs_page_not_found_heading: "Страница не найдена",
+        docs_page_not_found_message: "Файл не найден в папке",
+        docs_reltime_today: "сегодня",
+        docs_reltime_days: "дн. назад",
+        docs_reltime_months: "мес. назад",
+        docs_reltime_years: "г. назад",
+        docs_reltime_unknown: "неизвестно",
     },
     uk: {
         // Мета-теги
@@ -156,7 +180,29 @@ const translations = {
         not_found_error_heading: "Ой... Сторінка загубилася",
         not_found_error_message: "Фісташкін трохи заблукав... Ми вже шукаємо його. Спробуйте зайти пізніше.",
         internal_server_error_heading: "Внутрішня помилка сервера",
-        internal_server_error_message: "Фисташкин трохи перегрівся... Ми вже чинимо. Спробуйте зайти пізніше."
+        internal_server_error_message: "Фисташкин трохи перегрівся... Ми вже чинимо. Спробуйте зайти пізніше.",
+
+        docs_btn_copy: "Копіювати",
+        docs_btn_copy_copied: "Скопійовано!",
+        docs_search_placeholder: "Пошук...",
+        docs_input_search_placeholder: "Пошук у документації...",
+        docs_input_search_empty: "Почніть вводити текст для пошуку...",
+        docs_search_no_results: "Нічого не знайдено",
+        docs_btn_page_nav_prev: "Попередня сторінка",
+        docs_btn_page_nav_next: "Наступна сторінка",
+        docs_page_nav_not_found: "Сторінку не знайдено",
+        docs_toc_title: "НА ЦІЙ СТОРІНЦІ",
+        docs_last_updated: "Останнє оновлення:",
+        docs_sidebar_made_with: "Made with ❤️",
+        docs_load_error_heading: "Помилка завантаження",
+        docs_load_error_message: "Не вдалося завантажити SUMMARY.md. Переконайтеся, що файл існує в папці",
+        docs_page_not_found_heading: "Сторінку не знайдено",
+        docs_page_not_found_message: "Файл не знайдено в папці",
+        docs_reltime_today: "сьогодні",
+        docs_reltime_days: "дн. тому",
+        docs_reltime_months: "міс. тому",
+        docs_reltime_years: "р. тому",
+        docs_reltime_unknown: "невідомо",
     },
     en: {
         // Meta tags
@@ -235,7 +281,29 @@ const translations = {
         not_found_error_heading: "Oops... Page got lost",
         not_found_error_message: "Fistashkin got a bit lost... We're already looking for him. Try visiting later.",
         internal_server_error_heading: "Internal Server Error",
-        internal_server_error_message: "Fistashkin got a bit overheated... We're already fixing it. Try visiting later."
+        internal_server_error_message: "Fistashkin got a bit overheated... We're already fixing it. Try visiting later.",
+
+        docs_btn_copy: "Copy",
+        docs_btn_copy_copied: "Copied!",
+        docs_search_placeholder: "Search...",
+        docs_input_search_placeholder: "Search documentation...",
+        docs_input_search_empty: "Start typing to search...",
+        docs_search_no_results: "Nothing found",
+        docs_btn_page_nav_prev: "Previous page",
+        docs_btn_page_nav_next: "Next page",
+        docs_page_nav_not_found: "Page not found",
+        docs_toc_title: "ON THIS PAGE",
+        docs_last_updated: "Last updated:",
+        docs_sidebar_made_with: "Made with ❤️",
+        docs_load_error_heading: "Load Error",
+        docs_load_error_message: "Failed to load SUMMARY.md. Make sure the file exists in the folder",
+        docs_page_not_found_heading: "Page not found",
+        docs_page_not_found_message: "File not found in folder",
+        docs_reltime_today: "today",
+        docs_reltime_days: "days ago",
+        docs_reltime_months: "months ago",
+        docs_reltime_years: "years ago",
+        docs_reltime_unknown: "unknown",
     }
 };
 
@@ -270,6 +338,19 @@ function translatePage(lang) {
         if (key in t) el.textContent = t[key];
     });
 
+    // Плейсхолдеры для input-полей
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.dataset.i18nPlaceholder;
+        if (key in t) el.placeholder = t[key];
+    });
+
+    // Обновляем динамические части docs, если они уже отрендерены
+    const copyBtn = document.getElementById('doc-copy-btn');
+    if (copyBtn && t.docs_btn_copy) {
+        const span = copyBtn.querySelector('span[data-i18n="docs_btn_copy"]');
+        if (span) span.textContent = t.docs_btn_copy;
+    }
+
     initTyped(lang);
     updateMetaTags(lang);
 }
@@ -283,6 +364,11 @@ function setLanguage(lang) {
 
     translatePage(lang);
     localStorage.setItem('siteLanguage', lang);
+
+    // Хук для перезагрузки документации при смене языка
+    if (typeof window.__onDocLangChange === 'function') {
+        window.__onDocLangChange(lang);
+    }
 }
 
 // === Toast ===
@@ -305,8 +391,8 @@ function showLanguageToast(lang) {
         bottom: 20px; 
         right: 20px; 
         background: rgba(0, 0, 0, 0);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
         color: white; 
         padding: 14px 22px; 
         border-radius: 10px; 
@@ -382,8 +468,8 @@ function createLanguageDropdown() {
     dropdown.className = 'language-dropdown-js';
     dropdown.style.cssText = `
         position: fixed;
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
     `;
 
     Object.entries(languages).forEach(([key, data]) => {

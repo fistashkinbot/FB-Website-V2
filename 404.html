@@ -1,17 +1,29 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="utf-8" />
     <!-- Preconnect -->
-    <link rel="preconnect" href="https://code.jquery.com">
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Ubuntu:wght@400;500;700&display=swap" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Ubuntu:wght@400;500;700&display=swap"></noscript>
+    <link rel="preconnect" href="https://code.jquery.com" />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Ubuntu:wght@400;500;700&display=swap"
+      media="print"
+      onload="this.media = 'all'"
+    />
+    <noscript
+      ><link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Ubuntu:wght@400;500;700&display=swap"
+    /></noscript>
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport" />
+    <meta
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+      name="viewport"
+    />
     <title>404 — FistashkinBot</title>
     <link rel="stylesheet" href="./css/style.css" />
     <link rel="stylesheet" href="./css/footer.css" />
@@ -20,52 +32,81 @@
     <!-- FIX: jquery с defer -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
     <!-- FIX: pro.fontawesome.com -> cdnjs (быстрее, без про-аккаунта) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
 
     <meta name="theme-color" content="#C0694E" />
     <meta property="og:title" content="404 — FistashkinBot" />
-</head>
-<body>
+  </head>
+
+  <body>
+    <div class="loader-wrapper" id="loader">
+      <div class="loader-ring"></div>
+    </div>
     <div id="particles-js"></div>
 
     <nav class="navbar">
-        <div class="max-width">
-            <div class="logo">
-                <a href="./index.html">Fistashkin<span></span></a>
-            </div>
-            <ul class="menu">
-                <li><a href="./index.html" class="menu-btn"><i class="fas fa-home"></i> <span data-i18n="menu_btn_home"></span></a></li>
-                <li class="language-switcher-container">
-                  <div class="language-switcher" id="language-switcher">
-                     <div class="switcher-button" id="lang-button">
-                        <div class="flag" id="current-flag"></div>
-                        <span class="arrow">
-                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="16" height="16" fill="currentColor" class="header-lang__caret">
-                              <g><path d="M216.49,104.49l-80,80a12,12,0,0,1-17,0l-80-80a12,12,0,0,1,17-17L128,159l71.51-71.52a12,12,0,0,1,17,17Z"></path></g>
-                           </svg>
-                        </span>
-                     </div>
-
-                     <div class="language-dropdown" id="lang-dropdown"></div>
-                  </div>
-               </li>
-            </ul>
+      <div class="max-width">
+        <div class="logo">
+          <a href="./index.html">Fistashkin<span></span></a>
         </div>
+        <ul class="menu">
+          <li>
+            <a href="./index.html" class="menu-btn"
+              ><i class="fas fa-home"></i>
+              <span data-i18n="menu_btn_home"></span
+            ></a>
+          </li>
+          <li class="language-switcher-container">
+            <div class="language-switcher" id="language-switcher">
+              <div class="switcher-button" id="lang-button">
+                <div class="flag" id="current-flag"></div>
+                <span class="arrow">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 256 256"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="header-lang__caret"
+                  >
+                    <g>
+                      <path
+                        d="M216.49,104.49l-80,80a12,12,0,0,1-17,0l-80-80a12,12,0,0,1,17-17L128,159l71.51-71.52a12,12,0,0,1,17,17Z"
+                      ></path>
+                    </g>
+                  </svg>
+                </span>
+              </div>
+
+              <div class="language-dropdown" id="lang-dropdown"></div>
+            </div>
+          </li>
+        </ul>
+      </div>
     </nav>
-    <div class="loader-wrapper"><div class="longfazers"></div></div>
 
     <section class="home error-section">
-        <div class="error-content">
-            <h1 class="error-code">404</h1>
-            <h2 class="error-heading"><span data-i18n="not_found_error_heading"></span></h2>
-            <p class="error-message"><span data-i18n="not_found_error_message"></span></p>
+      <div class="error-content">
+        <h1 class="error-code">404</h1>
+        <h2 class="error-heading">
+          <span data-i18n="not_found_error_heading"></span>
+        </h2>
+        <p class="error-message">
+          <span data-i18n="not_found_error_message"></span>
+        </p>
 
-            <div class="error-actions">
-                <a href="./index.html" class="this-is-pain">
-                    <i class="fas fa-home"></i> <span data-i18n="home_cta_button_back"></span>
-                </a>
-            </div>
+        <div class="error-actions">
+          <a href="./index.html" class="this-is-pain">
+            <i class="fas fa-home"></i>
+            <span data-i18n="home_cta_button_back"></span>
+          </a>
         </div>
+      </div>
     </section>
 
     <!-- FIX: defer на скриптах -->
@@ -75,15 +116,18 @@
 
     <!-- FIX: лоадер -->
     <script>
-        function hideLoader() {
-            var lw = document.querySelector('.loader-wrapper');
-            if (lw && !lw.classList.contains('loader-hidden')) {
-                lw.classList.add('loader-hidden');
-            }
+      function hideLoader() {
+        var l = document.getElementById("loader");
+        if (l) {
+          l.classList.add("hidden");
+          setTimeout(function () {
+            l.style.display = "none";
+          }, 400);
         }
-        window.addEventListener('load', hideLoader);
-        window.addEventListener('pageshow', hideLoader);
-        setTimeout(hideLoader, 3000);
+      }
+      window.addEventListener("load", hideLoader);
+      window.addEventListener("pageshow", hideLoader);
+      setTimeout(hideLoader, 3500);
     </script>
-</body>
+  </body>
 </html>
