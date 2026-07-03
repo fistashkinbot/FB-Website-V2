@@ -1,5 +1,5 @@
 /* =================================================================================
-   docs.js — Логика документации FistashkinBot
+   docs.js — Логика документации FistashkinBot (ФИНАЛЬНАЯ ВЕРСИЯ)
    ================================================================================= */
 
 // ─── МОБИЛЬНОЕ МЕНЮ ───
@@ -99,7 +99,10 @@ async function initDocs(lang) {
     const t = (typeof translations !== "undefined" && translations[lang]) || {};
     document.getElementById("doc-content").innerHTML = `
       <h1>${t.docs_load_error_heading || "Ошибка загрузки"}</h1>
-      <div class="hint danger">Не удалось загрузить документацию.</div>
+      <div class="gitbook-hint hint-danger">
+        <div class="hint-icon"><i class="fa-solid fa-exclamation-triangle"></i></div>
+        <div class="hint-content"><p>Не удалось загрузить документацию.</p></div>
+      </div>
     `;
   }
 }
@@ -162,12 +165,14 @@ function toggleDocSidebar() {
   document.getElementById("doc-sb-overlay").classList.toggle("open");
 }
 
-// ─── РЕНДЕРИНГ ───
-const ICON_PATHS = {
-  info: `<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>`,
-  warning: `<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4M12 17h.01"/>`,
-  danger: `<circle cx="12" cy="12" r="10"/><path d="m15 9-6 6M9 9l6 6"/>`,
-  success: `<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>`,
+// ─── РЕНДЕРИНГ ХИНТОВ (ТОЧНО ПО ТРЕБОВАНИЮ) ───
+const HINT_ICONS = {
+  info: 'fa-info-circle',
+  tip: 'fa-lightbulb',
+  danger: 'fa-exclamation-triangle',
+  working: 'fa-wrench',
+  success: 'fa-check-circle',
+  warning: 'fa-exclamation-circle'
 };
 
 function renderInline(text) {
@@ -234,16 +239,27 @@ function renderHintBody(raw) {
 
 function renderDocMd(raw) {
   const placeholders = [];
+  
   raw = raw.replace(/\{%\s*hint\s+style="(\w+)"\s*%\}([\s\S]*?)\{%\s*endhint\s*%\}/g, (_, style, body) => {
-    const s = ["info","success","warning","danger"].includes(style) ? style : "info";
-    const icon = `<svg class="hint-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${ICON_PATHS[s]}</svg>`;
+    const allowed = ["info", "success", "warning", "danger", "tip", "working"];
+    const s = allowed.includes(style) ? style : "info";
+    
+    const iconClass = HINT_ICONS[s] || 'fa-info-circle';
+    const icon = `<div class="hint-icon"><i class="fa-solid ${iconClass}"></i></div>`;
+    
     const ph = `\x00H${placeholders.length}\x00`;
-    placeholders.push(`<div class="hint ${s}">${icon}<div class="hint-body">${renderHintBody(body)}</div></div>`);
+    // Точная структура как в примере пользователя
+    placeholders.push(`<div class="gitbook-hint hint-${s}">${icon}<div class="hint-content">${renderHintBody(body)}</div></div>`);
     return ph;
   });
+  
   marked.setOptions({ breaks: true, gfm: true });
   let html = marked.parse(raw);
-  placeholders.forEach((h, i) => html = html.replace(`<p>\x00H${i}\x00</p>`, h).replace(`\x00H${i}\x00`, h));
+  
+  placeholders.forEach((h, i) => {
+    html = html.replace(`<p>\x00H${i}\x00</p>`, h).replace(`\x00H${i}\x00`, h);
+  });
+  
   return html;
 }
 
@@ -289,6 +305,7 @@ async function loadDocPage(file, lang) {
 
   doc.innerHTML = renderDocMd(raw);
 
+  // Якоря для заголовков
   doc.querySelectorAll("h1,h2,h3,h4").forEach((h) => {
     h.id = h.textContent.trim()
       .toLowerCase()
@@ -297,6 +314,7 @@ async function loadDocPage(file, lang) {
       .substring(0, 64);
   });
 
+  // Кнопки копирования кода
   doc.querySelectorAll("pre").forEach(pre => {
     const btn = document.createElement("button");
     btn.className = "code-copy";
@@ -346,7 +364,7 @@ function buildDocTOC() {
   headings.forEach(h => tocObserver.observe(h));
 }
 
-// ─── ПАГИНАЦИЯ (полная версия с переводом) ───
+// ─── ПАГИНАЦИЯ ───
 function buildDocPageNav(file) {
   const i = ALL.findIndex((p) => p.file === file);
   const prev = i > 0 ? ALL[i - 1] : null;
@@ -362,22 +380,15 @@ function buildDocPageNav(file) {
   const lblNext = t.docs_btn_page_nav_next || "Next";
   nav.style.display = "flex";
   nav.innerHTML = `
-    ${
-      prev
-        ? `<div class="page-nav-btn" onclick="loadDocPage('${prev.file}')">
+    ${prev ? `<div class="page-nav-btn" onclick="loadDocPage('${prev.file}')">
         <div class="pnav-label"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> ${lblPrev}</div>
         <div class="pnav-title">${prev.title}</div>
-      </div>`
-        : "<div></div>"
-    }
-    ${
-      next
-        ? `<div class="page-nav-btn right" onclick="loadDocPage('${next.file}')">
+      </div>` : "<div></div>"}
+    ${next ? `<div class="page-nav-btn right" onclick="loadDocPage('${next.file}')">
         <div class="pnav-label">${lblNext} <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
         <div class="pnav-title">${next.title}</div>
-      </div>`
-        : "<div></div>"
-    }`;
+      </div>` : "<div></div>"}
+  `;
 }
 
 // ─── ПОИСК ───
