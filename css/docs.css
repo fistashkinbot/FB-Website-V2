@@ -574,7 +574,7 @@
   margin-bottom: 8px;
 }
 #doc-content p {
-  margin-bottom: 14px;
+  margin-bottom: 4px;
   color: #c9cdd4;
 }
 #doc-content a {
@@ -709,146 +709,162 @@ pre:hover .code-copy {
   color: #fff;
 }
 
-/* ─── ХИНТЫ ─── */
-.hint {
+/* ============================================
+   GitBook-style Hints (обновлённые, modern dark)
+   Замена старых .hint на .gitbook-hint + поддержка tip/working
+   ============================================ */
+
+/* ─── ХИНТЫ (новый GitBook стиль) ─── */
+.gitbook-hint {
   display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 13px 18px;
-  border-radius: 8px;
-  margin: 18px 0;
-  font-size: 14.5px;
-  line-height: 1.45;
-  border-left: 4px solid;
-  font-family: "Poppins", sans-serif;
+  gap: 16px;
+  padding: 16px 24px;
+  border-radius: 12px;
+  margin: 16px 0;
+  border-left-width: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: "Poppins", "Inter", system_ui, sans-serif;
 }
+
+.gitbook-hint:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+  transform: translateY(-1px);
+}
+
 .hint-icon {
   flex-shrink: 0;
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
-  line-height: 1;
+  font-size: 18px;
+  margin-top: 2px;
 }
-.hint-body {
+
+.hint-content {
+  flex: 1;
   min-width: 0;
+  font-size: 15px;
+  margin-top: 2px;
 }
-.hint-body > *:first-child {
-  margin-top: 0;
+
+.hint-content p {
+  margin-bottom: 12px;
 }
-.hint-body > *:last-child {
+
+.hint-content p:last-child {
   margin-bottom: 0;
 }
-.hint-body p {
-  margin: 0 0 6px;
+
+.hint-content ul,
+.hint-content ol {
+  margin: 12px 0;
+  padding-left: 20px;
 }
-.hint-body p:last-child {
-  margin-bottom: 0;
+
+.hint-content li {
+  margin-bottom: 4px;
 }
-.hint-body h4 {
-  font-size: 14px;
-  font-weight: 600;
-  margin: 0 0 6px;
-  line-height: 1.5;
-  font-family: "Ubuntu", sans-serif;
-}
-.hint-body ul,
-.hint-body ol {
-  padding-left: 18px;
-  margin: 0 0 6px;
-}
-.hint-body ul:last-child,
-.hint-body ol:last-child {
-  margin-bottom: 0;
-}
-.hint-body li {
-  margin-bottom: 3px;
-}
-.hint-body code {
-  font-family: "JetBrains Mono", "Fira Code", monospace;
-  font-size: 0.82em;
-  background: rgba(0, 0, 0, 0.25);
-  border-radius: 3px;
-  padding: 1px 5px;
-}
-.hint-body strong {
+
+.hint-content strong {
   font-weight: 600;
 }
-.hint-body em {
-  font-style: italic;
-}
-.hint-body a {
-  text-decoration: underline;
-  opacity: 0.9;
-}
-.hint-body a:hover {
-  opacity: 1;
-}
-.hint-body img {
-  max-width: 100%;
+
+.hint-content code {
+  background-color: rgba(255, 255, 255, 0.08);
+  padding: 2px 6px;
   border-radius: 4px;
-  display: inline;
-  vertical-align: middle;
-}
-.hint-body mark {
-  background: rgba(255, 220, 0, 0.3);
-  color: inherit;
-  border-radius: 2px;
-  padding: 0 2px;
+  font-size: 13px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
-.hint.danger {
-  background: #1f1315;
-  color: #d4c4c4;
-  border-left-color: #c0392b;
-}
-.hint.danger .hint-icon {
-  color: #c0392b;
-}
-.hint.danger .hint-body h4,
-.hint.danger strong {
-  color: #e8d8d8;
+.hint-content h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 0 0 10px;
+  line-height: 1.5;
+  font-family: "Ubuntu", "Poppins", sans-serif;
 }
 
-.hint.warning {
-  background: #1d1508;
-  color: #d4c8a0;
-  border-left-color: #c49a1a;
-}
-.hint.warning .hint-icon {
-  color: #c49a1a;
-}
-.hint.warning .hint-body h4,
-.hint.warning strong {
-  color: #e8dbb8;
-}
-
-.hint.info {
-  background: #0f1825;
+/* Hint Type Styles - Dark theme adapted from modern GitBook */
+.gitbook-hint.hint-info {
+  background-color: #0f1825;
+  border-color: #3b82f6;
   color: #b8cce0;
-  border-left-color: #3a7bc8;
 }
-.hint.info .hint-icon {
-  color: #3a7bc8;
+.gitbook-hint.hint-info .hint-icon {
+  color: #60a5fa;
 }
-.hint.info .hint-body h4,
-.hint.info strong {
-  color: #ccddf0;
+.gitbook-hint.hint-info .hint-content h4,
+.gitbook-hint.hint-info strong {
+  color: #dbeafe;
 }
 
-.hint.success {
-  background: #0f1f14;
-  color: #b0d0bc;
-  border-left-color: #27a055;
+.gitbook-hint.hint-tip {
+  background-color: #0a1f17;
+  border-color: #10b981;
+  color: #a7f3d0;
 }
-.hint.success .hint-icon {
-  color: #27a055;
+.gitbook-hint.hint-tip .hint-icon {
+  color: #34d399;
 }
-.hint.success .hint-body h4,
-.hint.success strong {
-  color: #c8e8d4;
+.gitbook-hint.hint-tip .hint-content h4,
+.gitbook-hint.hint-tip strong {
+  color: #d1fae5;
+}
+
+.gitbook-hint.hint-danger {
+  background-color: #1f1315;
+  border-color: #ef4444;
+  color: #fecaca;
+}
+.gitbook-hint.hint-danger .hint-icon {
+  color: #f87171;
+}
+.gitbook-hint.hint-danger .hint-content h4,
+.gitbook-hint.hint-danger strong {
+  color: #fee2e2;
+}
+
+.gitbook-hint.hint-working {
+  background-color: #1e1b4b;
+  border-color: #8b5cf6;
+  color: #c4b5fd;
+}
+.gitbook-hint.hint-working .hint-icon {
+  color: #a78bfa;
+}
+.gitbook-hint.hint-working .hint-content h4,
+.gitbook-hint.hint-working strong {
+  color: #e0e7ff;
+}
+
+.gitbook-hint.hint-success {
+  background-color: #0f1f14;
+  border-color: #10b981;
+  color: #a7f3d0;
+}
+.gitbook-hint.hint-success .hint-icon {
+  color: #34d399;
+}
+.gitbook-hint.hint-success .hint-content h4,
+.gitbook-hint.hint-success strong {
+  color: #d1fae5;
+}
+
+.gitbook-hint.hint-warning {
+  background-color: #1d1508;
+  border-color: #eab308;
+  color: #fde047;
+}
+.gitbook-hint.hint-warning .hint-icon {
+  color: #facc15;
+}
+.gitbook-hint.hint-warning .hint-content h4,
+.gitbook-hint.hint-warning strong {
+  color: #fef08c;
 }
 
 /* ─── СПИННЕР ─── */
