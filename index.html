@@ -40,7 +40,7 @@
     <!-- FIX: Font Awesome — заменён pro.fontawesome.com на быстрый cdnjs (в 2-3x быстрее) -->
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
@@ -74,7 +74,7 @@
     <meta property="og:image" content="assets/fistashkin.png" />
   </head>
 
-  <body>
+  <body class="dark">
     <!-- LOADER -->
     <div class="loader-wrapper" id="loader">
       <div class="loader-ring"></div>
@@ -116,34 +116,51 @@
               ><span data-i18n="menu_btn_docs"></span
             ></a>
           </li>
-          <li class="language-switcher-container">
-            <div class="language-switcher" id="language-switcher">
-              <div class="switcher-button" id="lang-button">
-                <div class="flag" id="current-flag"></div>
-                <span class="arrow">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 256 256"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    class="header-lang__caret"
-                  >
-                    <g>
-                      <path
-                        d="M216.49,104.49l-80,80a12,12,0,0,1-17,0l-80-80a12,12,0,0,1,17-17L128,159l71.51-71.52a12,12,0,0,1,17,17Z"
-                      ></path>
-                    </g>
-                  </svg>
-                </span>
-              </div>
-
-              <div class="language-dropdown" id="lang-dropdown"></div>
-            </div>
-          </li>
         </ul>
-        <div class="menu-btn">
-          <i class="fas fa-bars"></i>
+
+        <div class="dropdown-wrapper">
+          <button id="dropdown-trigger" class="btn">
+            <i id="dropdown-icon" class="fa-solid fa-bars"></i>
+          </button>
+
+          <div id="dropdown-menu" class="dropdown">
+            <!-- Пункты навигации: видны только на мобильном (см. .dropdown-mobile-nav
+                 в style.css), на десктопе скрыты — там навигация уже видна в .navbar .menu -->
+            <div class="dropdown-mobile-nav">
+              <a href="#home" class="dropdown-item">
+                <i class="fas fa-home"></i>
+                <span data-i18n="menu_btn_home"></span>
+              </a>
+              <a href="#features" class="dropdown-item">
+                <i class="fas fa-tools"></i>
+                <span data-i18n="menu_btn_features"></span>
+              </a>
+              <a href="#contributors" class="dropdown-item">
+                <i class="fas fa-users"></i>
+                <span data-i18n="menu_btn_contributors"></span>
+              </a>
+              <a href="./docs.html" class="dropdown-item">
+                <i class="fas fa-book"></i>
+                <span data-i18n="menu_btn_docs"></span>
+              </a>
+            </div>
+            <div class="dropdown-separator dropdown-mobile-nav-sep"></div>
+
+            <div class="dropdown-item" id="lang-switcher-menu" data-keep-open="true">
+              <i class="fa-solid fa-globe"></i>
+              <span id="lang-switcher-label" data-i18n="dropdown_language"></span>
+              <svg class="lang-caret" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+            </div>
+
+            <div class="lang-inline-list" id="lang-inline-list">
+              <div class="lang-inline-list-inner" id="lang-inline-list-inner"></div>
+            </div>
+
+            <div class="dropdown-item" id="theme-toggle-item" data-keep-open="true">
+              <i id="theme-toggle-icon" class="fa-solid fa-moon"></i>
+              <span id="theme-toggle-text" data-i18n="dropdown_theme_light"></span>
+            </div>
+          </div>
         </div>
       </div>
     </nav>
@@ -245,64 +262,40 @@
                   alt="riverya4life"
                 />
                 <div class="text">@riverya4life</div>
-                <p>
-                  <button class="badges owner">
-                    <i class="fas fa-user-check"></i>
-                    <span data-i18n="contributor_role_owner"></span>
-                  </button>
-                  <button class="badges developer">
-                    <i class="fas fa-terminal"></i>
-                    <span data-i18n="contributor_role_developer"></span>
-                  </button>
-                </p>
+                <div class="badge-row">
+                  <span class="badge badge-red"><span data-i18n="contributor_role_owner"></span></span>
+                  <span class="badge badge-purple"><span data-i18n="contributor_role_developer"></span></span>
+                </div>
               </div>
             </div>
             <div class="cardd glow-helper">
               <div class="boxx">
                 <img src="assets/virgil8410.jpg" alt="daastolfo09" />
                 <div class="text">@daastolfo09</div>
-                <p>
-                  <button class="badges helper">
-                    <i class="fas fa-headset"></i>
-                    <span data-i18n="contributor_role_helper"></span>
-                  </button>
-                  <button class="badges friend">
-                    <i class="fas fa-user-friends"></i>
-                    <span data-i18n="contributor_role_friend"></span>
-                  </button>
-                </p>
+                <div class="badge-row">
+                  <span class="badge badge-blue"><span data-i18n="contributor_role_helper"></span></span>
+                  <span class="badge badge-green"><span data-i18n="contributor_role_friend"></span></span>
+                </div>
               </div>
             </div>
             <div class="cardd glow-tester">
               <div class="boxx">
                 <img src="assets/sigmamale.jpg" alt="Dvärg" />
                 <div class="text">@Dvärg</div>
-                <p>
-                  <button class="badges tester">
-                    <i class="fas fa-tools"></i>
-                    <span data-i18n="contributor_role_tester"></span>
-                  </button>
-                  <button class="badges friend">
-                    <i class="fas fa-user-friends"></i>
-                    <span data-i18n="contributor_role_friend"></span>
-                  </button>
-                </p>
+                <div class="badge-row">
+                  <span class="badge badge-sky"><span data-i18n="contributor_role_tester"></span></span>
+                  <span class="badge badge-green"><span data-i18n="contributor_role_friend"></span></span>
+                </div>
               </div>
             </div>
             <div class="cardd glow-supporter">
               <div class="boxx">
                 <img src="https://github.com/Scuiss.png" alt="scuiss" />
                 <div class="text">@scuiss</div>
-                <p>
-                  <button class="badges supporter">
-                    <i class="fas fa-user"></i>
-                    <span data-i18n="contributor_role_supporter"></span>
-                  </button>
-                  <button class="badges tester">
-                    <i class="fas fa-tools"></i>
-                    <span data-i18n="contributor_role_tester"></span>
-                  </button>
-                </p>
+                <div class="badge-row">
+                  <span class="badge badge-secondary"><span data-i18n="contributor_role_supporter"></span></span>
+                  <span class="badge badge-sky"><span data-i18n="contributor_role_tester"></span></span>
+                </div>
               </div>
             </div>
           </div>
@@ -383,17 +376,19 @@
               </li>
               <li class="footer-item">
                 <a
-                  href="https://docs.fistashkinbot.xyz/first-steps/stored-data"
+                  href="docs.html#pervye-shagi--dannye"
                   class="footer-link"
-                  data-i18n="footer_stored_data"
-                ></a>
+                  ><i class="fa-solid fa-database"></i>
+                  <span data-i18n="footer_stored_data"></span>
+                </a>
               </li>
               <li class="footer-item">
                 <a
-                  href="https://docs.fistashkinbot.xyz/first-steps/permissions-to-use-commands"
+                  href="docs.html#pervye-shagi--prava"
                   class="footer-link"
-                  data-i18n="footer_permissions"
-                ></a>
+                  ><i class="fa-solid fa-user-shield"></i>
+                  <span data-i18n="footer_permissions"></span>
+                </a>
               </li>
             </ul>
             <ul class="footer-list">
@@ -448,6 +443,9 @@
     <script src="./js/script.js" defer></script>
     <script src="./js/particles.js" defer></script>
     <script src="./js/app.js" defer></script>
+    <script src="./js/dropdown.js" defer></script>
+    <script src="./js/theme.js" defer></script>
+    <script src="./js/glow.js" defer></script>
 
     <!-- FIX: лоадер — исправлен для iOS BFCache -->
     <script>
@@ -484,22 +482,6 @@
         if (typeof AOS !== "undefined") {
           AOS.init({ duration: 1000, once: true });
         }
-      });
-    </script>
-
-    <!-- FIX: ionicons убраны (unpkg медленный) — иконки уже покрыты Font Awesome -->
-
-    <!-- Glow Cards -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const glowEls = document.querySelectorAll(".dm-glow-card, .cardd");
-        glowEls.forEach((card) => {
-          card.addEventListener("mousemove", (e) => {
-            const rect = card.getBoundingClientRect();
-            card.style.setProperty("--xPos", `${e.clientX - rect.left}px`);
-            card.style.setProperty("--yPos", `${e.clientY - rect.top}px`);
-          });
-        });
       });
     </script>
   </body>

@@ -37,12 +37,12 @@ const translations = {
 
         // Секция команды
         contributors_title: "Команда",
-        contributor_role_owner: "Владелец",
-        contributor_role_developer: "Разработчик",
-        contributor_role_helper: "Помощник",
-        contributor_role_friend: "Друг",
-        contributor_role_tester: "Бета тестер",
-        contributor_role_supporter: "Сторонник",
+        contributor_role_owner: " Владелец",
+        contributor_role_developer: " Разработчик",
+        contributor_role_helper: " Помощник",
+        contributor_role_friend: " Друг",
+        contributor_role_tester: " Бета тестер",
+        contributor_role_supporter: " Сторонник",
 
         // Футер
         footer_not_affiliated: "Мы не являемся аффилированным лицом компании Discord Inc.",
@@ -73,6 +73,9 @@ const translations = {
             "крутой",
             "классный"
         ],
+        dropdown_language: "Язык:",
+        dropdown_theme_light: "Включить светлую тему",
+        dropdown_theme_dark: "Включить тёмную тему",
 
         not_found_error_heading: "Ой... Страница потерялась",
         not_found_error_message: "Фисташкин немного заблудился... Мы уже ищем его. Попробуйте зайти позже.",
@@ -140,12 +143,12 @@ const translations = {
 
         // Секция команды
         contributors_title: "Команда",
-        contributor_role_owner: "Власник",
-        contributor_role_developer: "Розробник",
-        contributor_role_helper: "Помічник",
-        contributor_role_friend: "Друг",
-        contributor_role_tester: "Бета-тестер",
-        contributor_role_supporter: "Підтримувач",
+        contributor_role_owner: " Власник",
+        contributor_role_developer: " Розробник",
+        contributor_role_helper: " Помічник",
+        contributor_role_friend: " Друг",
+        contributor_role_tester: " Бета-тестер",
+        contributor_role_supporter: " Підтримувач",
 
         // Футер
         footer_not_affiliated: "Ми не є афілійованою особою компанії Discord Inc.",
@@ -176,6 +179,9 @@ const translations = {
             "крутий",
             "класний"
         ],
+        dropdown_language: "Мова:",
+        dropdown_theme_light: "Увімкнути світлу тему",
+        dropdown_theme_dark: "Увімкнути темну тему",
 
         not_found_error_heading: "Ой... Сторінка загубилася",
         not_found_error_message: "Фісташкін трохи заблукав... Ми вже шукаємо його. Спробуйте зайти пізніше.",
@@ -241,12 +247,12 @@ const translations = {
 
         // Contributors section
         contributors_title: "Team",
-        contributor_role_owner: "Owner",
-        contributor_role_developer: "Developer",
-        contributor_role_helper: "Helper",
-        contributor_role_friend: "Friend",
-        contributor_role_tester: "Beta Tester",
-        contributor_role_supporter: "Supporter",
+        contributor_role_owner: " Owner",
+        contributor_role_developer: " Developer",
+        contributor_role_helper: " Helper",
+        contributor_role_friend: " Friend",
+        contributor_role_tester: " Beta Tester",
+        contributor_role_supporter: " Supporter",
 
         // Footer
         footer_not_affiliated: "We are not affiliated with Discord Inc.",
@@ -277,6 +283,9 @@ const translations = {
             "cool",
             "awesome"
         ],
+        dropdown_language: "Language:",
+        dropdown_theme_light: "Switch to light theme",
+        dropdown_theme_dark: "Switch to dark theme",
 
         not_found_error_heading: "Oops... Page got lost",
         not_found_error_message: "Fistashkin got a bit lost... We're already looking for him. Try visiting later.",
@@ -355,6 +364,12 @@ function translatePage(lang) {
     updateMetaTags(lang);
 }
 
+// Доступ к переводам/текущему языку для других скриптов (например theme.js)
+window.translations = translations;
+window.getCurrentLanguage = function () {
+    return document.documentElement.dataset.lang || localStorage.getItem('siteLanguage') || 'ru';
+};
+
 // === Смена языка ===
 function setLanguage(lang) {
     if (!translations[lang]) return;
@@ -368,6 +383,11 @@ function setLanguage(lang) {
     // Хук для перезагрузки документации при смене языка
     if (typeof window.__onDocLangChange === 'function') {
         window.__onDocLangChange(lang);
+    }
+
+    // Обновляем подпись кнопки переключения темы под новый язык
+    if (typeof window.updateThemeToggleUI === 'function') {
+        window.updateThemeToggleUI();
     }
 }
 
@@ -386,6 +406,7 @@ function showLanguageToast(lang) {
     if (currentToast) currentToast.remove();
 
     const toast = document.createElement('div');
+    toast.className = 'toast';
     toast.style.cssText = `
         position: fixed; 
         bottom: 20px; 
@@ -393,13 +414,11 @@ function showLanguageToast(lang) {
         background: rgba(0, 0, 0, 0);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
-        color: white; 
         padding: 14px 22px; 
         border-radius: 10px; 
         font-size: 15px; 
         z-index: 10000;
         box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-        border: 1px solid rgba(255, 255, 255, 0.1);
         opacity: 0;
         transition: all 0.3s ease;
         display: flex;
@@ -466,6 +485,8 @@ function createLanguageDropdown() {
 
     const dropdown = document.createElement('div');
     dropdown.className = 'language-dropdown-js';
+    // Позиционирование и backdrop оставляем через inline (нужно для fixed + JS positioning),
+    // но цвета и фон теперь полностью контролируются CSS-переменными в .language-dropdown-js и .language-option
     dropdown.style.cssText = `
         position: fixed;
         backdrop-filter: blur(16px);
@@ -477,10 +498,12 @@ function createLanguageDropdown() {
         option.className = 'language-option';
         option.dataset.lang = key;
 
+        // Убрали все hardcoded цвета и background.
+        // Теперь опции стилизуются через CSS-класс .language-option + CSS-переменные (светлая/тёмная тема)
         option.style.cssText = `
             display: flex; align-items: center; gap: 12px;
             padding: 12px 18px; cursor: pointer;
-            color: #ddd; transition: 0.2s;
+            transition: 0.2s;
         `;
 
         option.innerHTML = `
@@ -497,20 +520,18 @@ function createLanguageDropdown() {
 
         option.onclick = e => {
             e.stopPropagation();
+            const currentLang = document.documentElement.dataset.lang || localStorage.getItem('siteLanguage') || 'ru';
+            if (key === currentLang) {
+                return; // ничего не делаем, меню остаётся открытым
+            }
             setLanguage(key);
             showLanguageToast(key);
             updateLanguageSwitcher(key);
             closeDropdown();
         };
 
-        option.onmouseenter = () => {
-            option.style.background = 'rgba(192, 105, 78, 0.25)';
-            option.style.color = '#fff';
-        };
-        option.onmouseleave = () => {
-            option.style.background = '';
-            option.style.color = '#ddd';
-        };
+        // Убрали onmouseenter/onmouseleave с hardcoded цветами.
+        // Теперь hover-стили берутся из CSS (уже поддерживают тему через переменные)
 
         dropdown.appendChild(option);
     });
@@ -581,6 +602,58 @@ function updateLanguageSwitcher(lang) {
     if (el && languages[lang]) {
         el.innerHTML = `<img src="${languages[lang].flag}" style="width:100%; height:100%; display:block; object-fit:cover;">`;
     }
+
+    const label = document.getElementById('lang-switcher-label');
+    if (label && languages[lang]) {
+        const t = translations[lang] || translations.ru;
+        label.textContent = `${t.dropdown_language} ${languages[lang].name}`;
+    }
+
+    renderInlineLangOptions(lang);
+}
+
+// === Inline language accordion (unified with the settings panel, no floating box) ===
+function renderInlineLangOptions(current) {
+    const container = document.getElementById('lang-inline-list-inner');
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    Object.entries(languages).forEach(([key, data]) => {
+        const option = document.createElement('div');
+        option.className = 'lang-inline-option' + (key === current ? ' active' : '');
+        option.dataset.lang = key;
+
+        option.innerHTML = `
+            <div class="flag"><img src="${data.flag}" style="width:100%;height:100%;display:block;object-fit:cover;"></div>
+            <span>${data.name}</span>
+            <svg class="lang-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        `;
+
+        option.addEventListener('click', e => {
+            e.stopPropagation();
+            const currentLang = document.documentElement.dataset.lang || localStorage.getItem('siteLanguage') || 'ru';
+            if (key === currentLang) {
+                return; // ничего не делаем, меню остаётся открытым
+            }
+            setLanguage(key);
+            showLanguageToast(key);
+            updateLanguageSwitcher(key);
+            toggleInlineLangAccordion(false);
+        });
+
+        container.appendChild(option);
+    });
+}
+
+function toggleInlineLangAccordion(forceOpen) {
+    const list = document.getElementById('lang-inline-list');
+    const trigger = document.getElementById('lang-switcher-menu');
+    if (!list || !trigger) return;
+
+    const shouldOpen = typeof forceOpen === 'boolean' ? forceOpen : !list.classList.contains('open');
+    list.classList.toggle('open', shouldOpen);
+    trigger.classList.toggle('open', shouldOpen);
 }
 
 function initLanguageSwitcher() {
@@ -612,6 +685,10 @@ function initLanguageSwitcher() {
     document.querySelectorAll('.lang-switcher button').forEach(btn => {
         btn.addEventListener('click', () => {
             const lang = btn.dataset.lang;
+            const currentLang = document.documentElement.dataset.lang || localStorage.getItem('siteLanguage') || 'ru';
+            if (lang === currentLang) {
+                return; // ничего не делаем
+            }
             setLanguage(lang);
             showLanguageToast(lang);
             updateLanguageSwitcher(lang);
@@ -622,12 +699,8 @@ function initLanguageSwitcher() {
     if (langMenuItem) {
         langMenuItem.addEventListener('click', e => {
             e.preventDefault();
-            const current = localStorage.getItem('siteLanguage') || 'ru';
-            const cycle = { ru: 'uk', uk: 'en', en: 'ru' };
-            const next = cycle[current] || 'ru';
-            setLanguage(next);
-            showLanguageToast(next);
-            updateLanguageSwitcher(next);
+            e.stopPropagation();
+            toggleInlineLangAccordion();
         });
     }
 })();

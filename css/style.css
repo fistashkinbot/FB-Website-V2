@@ -3,11 +3,160 @@
 /* vote FistashkinBot and stop looking at the code */
 
 :root {
+
+  /* Light theme */
   --accent: #c0694e;
   --accent-dim: rgba(192, 105, 78, 0.25);
   --bg: #0e0e0e;
   --bg-card: rgba(26, 26, 26, 0.2);
   --text-dim: #aaa;
+
+  --bg-page: #f8f9fa;
+  --text-primary: #18181b;
+  --text-muted: #71717a;
+  --border: #e4e4e7;
+  --surface: #ffffff;
+  --hover: #f4f4f5;
+  --badge-default-bg: #18181b;
+  --badge-default-text: #fafafa;
+  --badge-secondary-bg: #f4f4f5;
+  --badge-secondary-text: #18181b;
+
+  /* ===== Светлая тема: адаптированные токены секций сайта ===== */
+  --nav-bg-sticky: rgba(255, 255, 255, 0.75);
+  --nav-text: #18181b;
+  --nav-hover-glow: rgba(0, 0, 0, 0.2);
+  --nav-mobile-bg: rgba(255, 255, 255, 0.85);
+
+  --hero-grad-start: #f3d7c8;
+  --hero-grad-end: #f8f9fa;
+  --hero-overlay-1: rgba(255, 255, 255, 0.6);
+  --hero-overlay-2: rgba(255, 255, 255, 0.35);
+  --hero-overlay-3: rgba(255, 255, 255, 0.55);
+  --hero-fade-mid: rgba(248, 249, 250, 0.6);
+  --hero-fade-end: #ffffff;
+  --hero-text: #18181b;
+  --hero-text-shadow: rgba(0, 0, 0, 0.15);
+
+  --section-bg: #ffffff;
+  --section-text: #18181b;
+  --title-underline-bg: #ffffff;
+
+  --card-bg: #ffffff;
+  --card-border: #e4e4e7;
+  --card-border-hover: #d4d4d8;
+  --card-text: #18181b;
+  --card-text-muted: #52525b;
+
+  --footer-bg: #f4f4f5;
+  --footer-bottom-bg: #e4e4e7;
+  --footer-text: #52525b;
+  --footer-heading: #18181b;
+  --footer-brand-text: #71717a;
+
+  --loader-bg: #f8f9fa;
+  --scrollbar-track: #e4e4e7;
+
+  --switcher-bg: rgba(255, 255, 255, 0.6);
+  --switcher-text: #18181b;
+  --dropdown-lang-bg: rgba(255, 255, 255, 0.3);
+  --language-dropdown-border: rgba(0, 0, 0, 0.1);
+  --language-dropdown-shadow: rgba(0, 0, 0, 0.15);
+  --language-option-text: #52525b;
+  --language-option-hover-text: #18181b;
+
+  --error-heading: #18181b;
+  --error-message: #52525b;
+
+  --body-fallback-bg: #f8f9fa;
+}
+
+.dark {
+  --accent: #c0694e;
+  --accent-dim: rgba(192, 105, 78, 0.25);
+  --bg: #0e0e0e;
+  --bg-card: rgba(26, 26, 26, 0.2);
+  --text-dim: #aaa;
+
+  --bg-page: #09090b;
+  --text-primary: #fafafa;
+  --text-muted: #a1a1aa;
+  --border: #3f3f46;
+  --surface: #18181b;
+  --hover: rgba(39, 39, 42, 0.3);
+  --badge-default-bg: #27272a;
+  --badge-default-text: #fafafa;
+  --badge-secondary-bg: #27272a;
+  --badge-secondary-text: #e4e4e7;
+
+  /* ===== Тёмная тема: оригинальные значения, без изменений ===== */
+  --nav-bg-sticky: rgba(0, 0, 0, 0.3);
+  --nav-text: #fff;
+  --nav-hover-glow: rgba(255, 255, 255, 0.7);
+  --nav-mobile-bg: rgba(0, 0, 0, 0.75);
+
+  --hero-grad-start: #592222;
+  --hero-grad-end: #000000;
+  --hero-overlay-1: rgba(0, 0, 0, 0.75);
+  --hero-overlay-2: rgba(0, 0, 0, 0.5);
+  --hero-overlay-3: rgba(0, 0, 0, 0.7);
+  --hero-fade-mid: rgba(18, 18, 18, 0.5);
+  --hero-fade-end: #121212;
+  --hero-text: #fff;
+  --hero-text-shadow: rgba(255, 255, 255, 0.5);
+
+  --section-bg: #121212;
+  --section-text: #fff;
+  --title-underline-bg: #121212;
+
+  --card-bg: #121212;
+  --card-border: rgba(255, 255, 255, 0.05);
+  --card-border-hover: rgba(255, 255, 255, 0.1);
+  --card-text: #fff;
+  --card-text-muted: rgba(255, 255, 255, 0.55);
+
+  --footer-bg: #121212;
+  --footer-bottom-bg: #0d0d0d;
+  --footer-text: #aaa;
+  --footer-heading: #fff;
+  --footer-brand-text: #888;
+
+  --loader-bg: #0e0e0e;
+  --scrollbar-track: #121212;
+
+  --switcher-bg: rgba(18, 18, 18, 0.3);
+  --switcher-text: #fff;
+  --dropdown-lang-bg: rgba(0, 0, 0, 0.3);
+  --language-dropdown-border: rgba(255, 255, 255, 0.1);
+  --language-dropdown-shadow: rgba(0, 0, 0, 0.7);
+  --language-option-text: #cfcfd6;
+  --language-option-hover-text: #fff;
+
+  --error-heading: #fff;
+  --error-message: #ddd;
+
+  --body-fallback-bg: #0d0d0d;
+}
+
+/* ================= ПЛАВНОЕ ПЕРЕКЛЮЧЕНИЕ ТЕМЫ ================= */
+/* Плавная смена фона и цветов при переключении темы.
+   Только цветовые свойства — чтобы не сломать вёрстку и hover-анимации.
+*/
+html {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body {
+  overflow-x: hidden;
+  width: 100%;
+  background: var(--bg-page);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Hero теперь тоже плавно меняет фон и текст при смене темы */
+.home {
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 * {
@@ -43,7 +192,7 @@ body {
 
 ::-webkit-scrollbar {
   width: 7px;
-  background: #121212;
+  background: var(--scrollbar-track);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -67,19 +216,30 @@ body {
 
 .navbar.sticky {
   padding: 15px 0;
-  background: rgba(0, 0, 0, 0.3) !important;
+  background: var(--nav-bg-sticky) !important;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px); /* FIX: iOS */
 }
 
 .navbar .max-width {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
+  column-gap: 20px;
+}
+
+.navbar .logo {
+  grid-column: 1;
+  justify-self: start;
+}
+
+.navbar .dropdown-wrapper {
+  grid-column: 3;
+  justify-self: end;
 }
 
 .navbar .logo a {
-  color: #fff;
+  color: var(--nav-text);
   font-size: 35px;
   font-weight: 600;
 }
@@ -90,20 +250,26 @@ body {
 }
 
 .navbar.sticky .logo a span {
-  color: #fff;
+  color: var(--nav-text);
+}
+
+.navbar .menu {
+  grid-column: 2;
+  justify-self: center;
+  display: flex;
+  align-items: center;
+  gap: 25px;
 }
 
 .navbar .menu li {
   list-style: none;
-  display: inline-block;
 }
 
 .navbar .menu li a {
   display: block;
-  color: #fff;
+  color: var(--nav-text);
   font-size: 18px;
   font-weight: 500;
-  margin-left: 25px;
   transition: all 0.3s ease;
 }
 
@@ -113,12 +279,12 @@ body {
 }
 
 .navbar.sticky .menu li a:hover {
-  color: #fff;
-  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7));
+  color: var(--nav-text);
+  filter: drop-shadow(0 0 5px var(--nav-hover-glow));
 }
 
 .menu-btn {
-  color: #fff;
+  color: var(--nav-text);
   font-size: 23px;
   cursor: pointer;
   display: none;
@@ -186,11 +352,11 @@ body {
 
 .home {
   display: flex;
-  background: radial-gradient(circle at center, #592222 0%, #000000 100%);
+  background: radial-gradient(circle at center, var(--hero-grad-start) 0%, var(--hero-grad-end) 100%);
   background-size: cover;
   background-attachment: fixed;
   height: 100vh;
-  color: #fff;
+  color: var(--hero-text);
   min-height: 500px;
   font-family: "Ubuntu", sans-serif;
   position: relative;
@@ -200,7 +366,7 @@ body {
 @supports (-webkit-touch-callout: none) {
   .home {
     background-attachment: scroll;
-    background: radial-gradient(circle at center, #592222 0%, #000000 100%);
+    background: radial-gradient(circle at center, var(--hero-grad-start) 0%, var(--hero-grad-end) 100%);
   }
 }
 
@@ -211,9 +377,9 @@ body {
   inset: 0;
   background: linear-gradient(
     135deg,
-    rgba(0, 0, 0, 0.75) 0%,
-    rgba(0, 0, 0, 0.5) 50%,
-    rgba(0, 0, 0, 0.7) 100%
+    var(--hero-overlay-1) 0%,
+    var(--hero-overlay-2) 50%,
+    var(--hero-overlay-3) 100%
   );
   z-index: 1;
   pointer-events: none;
@@ -230,8 +396,8 @@ body {
   background: linear-gradient(
     to bottom,
     rgba(0, 0, 0, 0) 0%,
-    rgba(18, 18, 18, 0.5) 60%,
-    #121212 100%
+    var(--hero-fade-mid) 60%,
+    var(--hero-fade-end) 100%
   );
   z-index: 3;
   pointer-events: none;
@@ -251,7 +417,7 @@ body {
   font-size: 75px;
   font-weight: 600;
   margin-left: -3px;
-  filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.5));
+  filter: drop-shadow(0 0 25px var(--hero-text-shadow));
 }
 
 .home .home-content .text-3 {
@@ -270,7 +436,7 @@ body {
   background: rgba(192, 105, 78, 0.35); /* FIX: iOS fallback */
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px); /* FIX: iOS */
-  color: #fff;
+  color: var(--hero-text);
   font-size: 25px;
   padding: 12px 36px;
   margin-top: 20px;
@@ -308,7 +474,7 @@ section .title::before {
   left: 50%;
   width: 220px;
   height: 3px;
-  background: #121212;
+  background: var(--title-underline-bg);
   transform: translateX(-50%);
 }
 
@@ -319,7 +485,7 @@ section .title::after {
   font-size: 20px;
   color: #c0694e;
   padding: 5px;
-  background: #121212;
+  background: var(--title-underline-bg);
   transform: translateX(-50%);
 }
 
@@ -327,8 +493,8 @@ section .title::after {
 
 .features,
 .contributors {
-  color: #fff;
-  background: #121212;
+  color: var(--section-text);
+  background: var(--section-bg);
   font-family: "Poppins", sans-serif;
 }
 
@@ -376,7 +542,7 @@ section .title::after {
 }
 
 .card {
-  background: #121212;
+  background: var(--card-bg);
   border-radius: 12px;
   padding: 28px 24px;
   cursor: pointer;
@@ -384,12 +550,12 @@ section .title::after {
   display: flex;
   flex-direction: column;
   height: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--card-border);
 }
 
 .card:hover {
   transform: translateY(-6px);
-  border-color: rgba(255, 255, 255, 0.1);
+  border-color: var(--card-border-hover);
 }
 
 .card .box {
@@ -404,13 +570,13 @@ section .title::after {
   font-size: 20px;
   font-weight: 700;
   margin: 0 0 12px;
-  color: #fff;
+  color: var(--card-text);
   line-height: 1.3;
 }
 
 .card p {
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--card-text-muted);
   line-height: 1.65;
   margin: 0;
 }
@@ -472,10 +638,10 @@ section .title::after {
 /* ================= CONTRIBUTORS ================= */
 
 .contributors .carousel .cardd {
-  background: #121212;
+  background: var(--card-bg);
   border-radius: 12px;
   padding: 25px 35px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--card-border);
   transition: border-color 0.4s ease;
   position: relative;
   /* overflow: hidden убран — режет края при анимации owl-carousel */
@@ -506,7 +672,7 @@ section .title::after {
 }
 
 .contributors .carousel .cardd:hover {
-  border-color: rgba(255, 255, 255, 0.1);
+  border-color: var(--card-border-hover);
 }
 
 /* Цвета свечения по первому бейджику */
@@ -548,18 +714,14 @@ section .title::after {
   width: 150px;
   object-fit: cover;
   border-radius: 50%;
-  border: 5px solid rgba(192, 105, 78, 0.2);
+  border: 5px solid var(--border);
   transition: all 0.3s ease;
 }
 
-.contributors .carousel .cardd:hover img {
-  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.2));
-  transition: filter 0.4s ease;
-}
 
 /* ================= BADGES ================= */
 
-.badges {
+/*.badges {
   padding: 5px 10px;
   color: black;
   border: 1px solid black;
@@ -587,6 +749,296 @@ section .title::after {
 }
 .badges.friend {
   background: #c1ff98;
+}
+
+/* ==================== THEME TOGGLE ==================== */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  padding: 4px;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+}
+
+.theme-toggle button {
+  background: none;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 9999px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  color: var(--text-muted);
+}
+
+.theme-toggle button.active {
+  background-color: var(--hover);
+  color: var(--text-primary);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.1);
+}
+
+.theme-toggle svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ==================== BADGE ==================== */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  line-height: 1;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.badge-default {
+  background-color: var(--badge-default-bg);
+  color: var(--badge-default-text);
+}
+
+.badge-secondary {
+  background-color: var(--badge-secondary-bg);
+  color: var(--badge-secondary-text);
+  border-color: var(--border);
+}
+
+.badge-destructive {
+  background-color: #dc2626;
+  color: white;
+}
+
+.badge-outline {
+  background-color: transparent;
+  color: var(--text-primary);
+  border-color: var(--border);
+}
+
+/* Кастомные цвета */
+.badge-blue { background-color: #dbeafe; color: #1e40af; border-color: #bfdbfe; }
+.dark .badge-blue { background-color: #1e3a8a; color: #93c5fd; border-color: #1e40af; }
+
+.badge-green { background-color: #dcfce7; color: #166534; border-color: #bbf7d0; }
+.dark .badge-green { background-color: #14532d; color: #86efac; border-color: #166534; }
+
+.badge-sky { background-color: #e0f2fe; color: #0369a1; border-color: #bae6fd; }
+.dark .badge-sky { background-color: #0c4a6e; color: #7dd3fc; border-color: #0369a1; }
+
+.badge-purple { background-color: #ede9fe; color: #5b21b6; border-color: #c4b5fd; }
+.dark .badge-purple { background-color: #4c1d95; color: #c4b5fd; border-color: #5b21b6; }
+
+.badge-red { background-color: #fee2e2; color: #991b1b; border-color: #fecaca; }
+.dark .badge-red { background-color: #7f1d1d; color: #fca5a5; border-color: #991b1b; }
+
+.badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.demo-label {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* ==================== DROPDOWN MENU ==================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 9px 16px;
+  border: 1px solid var(--border);
+  background: var(--switcher-bg);
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%); /* FIX: iOS */
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  margin-left: 25px;
+}
+.btn:hover { background-color: var(--hover); }
+
+.dropdown-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown {
+  min-width: 220px;
+  z-index: 10000;
+  padding: 4px;
+  opacity: 0;
+  transform: scale(0.95) translateY(-5px);
+  transition: opacity 0.15s ease-out, transform 0.15s ease-out;
+  pointer-events: none;
+  font-family: "Ubuntu", sans-serif;
+  /* position: fixed + top/left/фон/блюр/бордер/тень задаются через JS (dropdown.js).
+     Меню вынесено из .navbar (position: fixed + свой backdrop-filter при .sticky),
+     иначе вложенные backdrop-filter конфликтуют и блюр пропадает при скролле.
+     font-family прописан явно — раньше наследовался от .navbar, а после переноса
+     в <body> это наследование терялось. */
+}
+
+.dropdown.show {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  pointer-events: auto;
+}
+
+.dropdown-label {
+  padding: 8px 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  font-size: 0.875rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.1s;
+  color: var(--text-primary);
+  text-decoration: none; /* пункты мобильной навигации — это <a>, убираем подчёркивание */
+}
+
+.dropdown-item:hover {
+  background-color: var(--hover);
+}
+
+.dropdown-item svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+
+.dropdown-item-destructive {
+  color: #f87171;
+}
+.dropdown-item-destructive:hover {
+  background-color: rgba(69, 10, 10, 0.5);
+}
+
+.dropdown-separator {
+  height: 1px;
+  background-color: var(--border);
+  margin: 4px 0;
+}
+
+/* Пункты навигации (Главная/Возможности/Команда/Документация) внутри дропдауна
+   настроек: на десктопе не нужны — там уже видна .navbar .menu, показываем
+   только на мобильном, где раньше было отдельное полноэкранное меню. */
+.dropdown-mobile-nav {
+  display: none;
+}
+
+.dropdown-mobile-nav-sep {
+  display: none;
+}
+
+.dropdown-shortcut {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+/* ---- Inline language accordion (unified with the settings panel) ---- */
+.lang-caret {
+  margin-left: auto;
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: transform 0.2s ease;
+}
+
+#lang-switcher-menu.open .lang-caret {
+  transform: rotate(90deg);
+}
+
+.lang-inline-list {
+  display: grid;
+  grid-template-rows: 0fr;
+  padding-left: 4px;
+  transition: grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lang-inline-list.open {
+  grid-template-rows: 1fr;
+  margin: 2px 0 4px 0;
+}
+
+.lang-inline-list-inner {
+  overflow: hidden;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.lang-inline-list.open .lang-inline-list-inner {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.25s ease 0.08s, transform 0.25s ease 0.08s;
+}
+
+.lang-inline-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  color: var(--text-primary);
+  transition: background-color 0.1s;
+}
+
+.lang-inline-option:hover {
+  background-color: var(--hover);
+}
+
+.lang-inline-option .flag {
+  width: 20px;
+  height: 14px;
+  margin: 0;
+}
+
+.lang-inline-option .lang-check {
+  margin-left: auto;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: var(--text-primary);
+  opacity: 0;
+}
+
+.lang-inline-option.active .lang-check {
+  opacity: 1;
 }
 
 /* ================= CAROUSEL ================= */
@@ -625,7 +1077,7 @@ section .title::after {
 .loader-wrapper {
   position: fixed;
   inset: 0;
-  background: #0e0e0e;
+  background: var(--loader-bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -710,8 +1162,8 @@ section .title::after {
 /* ================= FOOTER ================= */
 
 footer {
-  background: #121212;
-  color: #aaa;
+  background: var(--footer-bg);
+  color: var(--footer-text);
   font-family: "Poppins", sans-serif;
 }
 
@@ -737,12 +1189,12 @@ footer {
 
 .footer-brand-text {
   font-size: 14px;
-  color: #888;
+  color: var(--footer-brand-text);
   margin-bottom: 20px;
 }
 
 .social-title {
-  color: #fff;
+  color: var(--footer-heading);
   font-size: 18px;
   margin-bottom: 20px;
 }
@@ -756,7 +1208,7 @@ footer {
 }
 
 .social-link {
-  color: #aaa;
+  color: var(--footer-text);
   font-size: 20px;
   padding: 10px;
   border-radius: 50%;
@@ -784,7 +1236,7 @@ footer {
 }
 
 .footer-item-title {
-  color: #fff;
+  color: var(--footer-heading);
   font-size: 18px;
   margin-bottom: 15px;
 }
@@ -795,7 +1247,7 @@ footer {
 
 .footer-link {
   display: inline-block;
-  color: #aaa;
+  color: var(--footer-text);
   font-size: 14px;
   transition: 0.3s;
 }
@@ -806,7 +1258,7 @@ footer {
 }
 
 .footer-bottom {
-  background: #0d0d0d;
+  background: var(--footer-bottom-bg);
   padding: 20px 0;
 }
 
@@ -823,11 +1275,11 @@ footer {
 
 .copyright {
   font-size: 14px;
-  color: #888;
+  color: var(--footer-brand-text);
 }
 
 .copyright a {
-  color: #fff;
+  color: var(--footer-heading);
   transition: 0.3s ease;
 }
 
@@ -841,7 +1293,7 @@ footer {
 }
 
 .footer-bottom-links a {
-  color: #888;
+  color: var(--footer-brand-text);
   font-size: 14px;
   transition: 0.3s;
 }
@@ -864,14 +1316,14 @@ footer {
   align-items: center;
   gap: 8px;
   padding: 7px 10px;
-  background: rgba(18, 18, 18, 0.3);
+  background: var(--switcher-bg);
   backdrop-filter: blur(16px) saturate(150%);
   -webkit-backdrop-filter: blur(16px) saturate(150%); /* FIX: iOS */
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border);
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.25s ease;
-  color: #fff;
+  color: var(--switcher-text);
   font-size: 18px;
   font-family: "Ubuntu", sans-serif;
 }
@@ -886,7 +1338,7 @@ footer {
 }
 
 .arrow {
-  color: #fff;
+  color: var(--switcher-text);
   font-size: 18px;
   transition: transform 0.3s ease;
 }
@@ -900,10 +1352,10 @@ footer {
   top: calc(100% + 16px);
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--dropdown-lang-bg);
+  border: 1px solid var(--language-dropdown-border);
   border-radius: 12px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 12px 40px var(--language-dropdown-shadow);
   overflow: hidden;
   min-width: 210px;
   z-index: 100001;
@@ -924,7 +1376,7 @@ footer {
   box-sizing: border-box;
   padding: 10px 14px;
   border-radius: 10px;
-  color: #cfcfd6;
+  color: var(--language-option-text);
   font-size: 15.5px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -933,7 +1385,7 @@ footer {
 
 .language-option:hover {
   background: rgba(192, 105, 78, 0.28);
-  color: #fff;
+  color: var(--language-option-hover-text);
 }
 
 .flag {
@@ -951,6 +1403,27 @@ footer {
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+.toast {
+  position: fixed; 
+  bottom: 20px; 
+  right: 20px; 
+  background: rgba(0, 0, 0, 0);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 14px 22px; 
+  border-radius: 10px; 
+  font-size: 15px; 
+  z-index: 10000;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border);
+  opacity: 0;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Poppins', sans-serif;
 }
 
 /* ================= RESPONSIVE — ДЕСКТОП (без изменений) ================= */
@@ -980,32 +1453,16 @@ footer {
     content: "\f00d";
   }
 
-  /* Полноэкранное меню */
+  /* Полноэкранное меню удалено — на мобильном пункты навигации теперь
+     живут внутри дропдауна настроек (см. .dropdown-mobile-nav выше),
+     поэтому инлайновый список .navbar .menu на мобильном просто скрыт. */
   .navbar .menu {
-    position: fixed;
-    height: 100vh;
-    width: 100vw; /* FIX: точно 100vw, не выезжает */
-    left: -100vw;
-    top: 0;
-    background: #121212;
-    text-align: center;
-    padding-top: 80px;
-    transition: all 0.3s ease;
-    overflow-x: hidden; /* FIX: скролл */
+    display: none;
   }
 
-  .navbar .menu.active {
-    left: 0;
-  }
-
-  .navbar .menu li {
+  .dropdown-mobile-nav,
+  .dropdown-mobile-nav-sep {
     display: block;
-  }
-
-  .navbar .menu li a {
-    display: inline-block;
-    margin: 20px 0;
-    font-size: 25px;
   }
 
   /* FIX: language switcher в мобильном меню — не растягивается */
@@ -1202,12 +1659,12 @@ footer {
 .error-heading {
   font-size: 38px;
   margin: 25px 0 15px;
-  color: #fff;
+  color: var(--error-heading);
 }
 
 .error-message {
   font-size: 21px;
-  color: #ddd;
+  color: var(--error-message);
   max-width: 650px;
   margin: 0 auto 40px;
 }
@@ -1273,7 +1730,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #0d0d0d; /* чтобы не было белого */
+  background: var(--body-fallback-bg); /* адаптивный фон под тему */
 }
 
 footer {
@@ -1295,4 +1752,22 @@ body > :last-child:not(footer) {
   html {
     height: -webkit-fill-available;
   }
+}
+
+/* ================= ДОПОЛНИТЕЛЬНЫЕ ПЛАВНЫЕ ПЕРЕХОДЫ ДЛЯ ТЕМЫ (в конце файла) ================= */
+/* Только цветовые свойства — безопасно для вёрстки */
+.features,
+.contributors,
+footer,
+.footer-bottom,
+.card,
+.contributors .carousel .cardd,
+.dropdown,
+.language-dropdown-js,
+.navbar,
+section .title,
+section .title::before,
+section .title::after,
+.this-is-pain {
+  transition: all 0.3s ease;
 }
