@@ -19,6 +19,3 @@
 * [1.05.2026 Патч #2](obnovleniya/2025-2026/patch-2.md)
 * [12.01.2025](obnovleniya/12.01.2025.md)
 * [Лог версий с 0.4 по 1.8](obnovleniya/04-1_8.md)
-
-## ДЕБАГ
-* [ТЕСТ ХИНТОВ](docs-hints-test.md)
