@@ -450,7 +450,13 @@ function closeDocSearch() {
   const res = document.getElementById("doc-s-res");
   overlay.classList.remove("open");
   input.value = "";
-  res.innerHTML = `<div class="doc-s-empty">Начните вводить для поиска</div>`;
+  res.innerHTML = `<div class="doc-s-empty">${getSearchEmptyText()}</div>`;
+}
+
+function getSearchEmptyText() {
+  const lang = getDocLang();
+  const t = (translations && translations[lang]) || translations.ru;
+  return t.docs_input_search_empty || "Начните вводить для поиска";
 }
 
 document.getElementById("doc-search-overlay").addEventListener("click", (e) => {
@@ -460,20 +466,25 @@ document.getElementById("doc-search-overlay").addEventListener("click", (e) => {
 document.getElementById("doc-s-inp").addEventListener("input", (e) => {
   const q = e.target.value.trim().toLowerCase();
   const res = document.getElementById("doc-s-res");
+  const lang = getDocLang();
+  const t = (translations && translations[lang]) || translations.ru;
+
   if (!q) {
-    res.innerHTML = `<div class="doc-s-empty">Начните вводить для поиска</div>`;
+    res.innerHTML = `<div class="doc-s-empty">${t.docs_input_search_empty || "Начните вводить для поиска"}</div>`;
     return;
   }
+
   const matches = ALL.filter(p => 
     p.title.toLowerCase().includes(q) || p.section.toLowerCase().includes(q)
   ).slice(0, 12);
+
   res.innerHTML = matches.length 
     ? matches.map(p => `
         <div class="doc-s-item" onclick="loadDocPage('${p.file}'); closeDocSearch();">
           <div class="doc-s-item-title">${p.title}</div>
           <div class="doc-s-item-sec">${p.section}</div>
         </div>`).join("")
-    : `<div class="doc-s-empty">Ничего не найдено</div>`;
+    : `<div class="doc-s-empty">${t.docs_search_no_results || "Ничего не найдено"}</div>`;
 });
 
 document.addEventListener("keydown", (e) => {
