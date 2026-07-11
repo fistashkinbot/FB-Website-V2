@@ -78,6 +78,48 @@ function fileFromSlug(s) {
   return found ? found.file : ALL[0]?.file;
 }
 
+// ─── ФОРМАТИРОВАНИЕ ДАТЫ ОБНОВЛЕНИЯ ───
+function formatLastUpdated(dateStr, lang = getDocLang()) {
+  const t = (translations && translations[lang]) || translations.ru;
+
+  if (!dateStr) return t.docs_reltime_unknown || "неизвестно";
+
+  const date = new Date(dateStr);
+  if (isNaN(date.getTime())) return t.docs_reltime_unknown || "неизвестно";
+
+  const now = new Date();
+  const diffMs = now - date;
+  const diffMin = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMin / 60);
+
+  if (diffMin < 60) {
+    if (diffMin < 1) {
+      return t.docs_last_updated_just_now || "только что";
+    }
+    return `${diffMin} ${t.docs_reltime_minutes_ago || "мин. назад"}`;
+  }
+
+  if (diffHours < 24) {
+    return `${diffHours} ${t.docs_reltime_hours_ago || "ч. назад"}`;
+  }
+
+  if (date.toDateString() === now.toDateString()) {
+    return `${t.docs_reltime_today || "сегодня"} в ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+  }
+
+  const yesterday = new Date(now);
+  yesterday.setDate(yesterday.getDate() - 1);
+  if (date.toDateString() === yesterday.toDateString()) {
+    return `вчера в ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+  }
+
+  return date.toLocaleDateString(lang === 'uk' ? 'uk-UA' : lang === 'en' ? 'en-GB' : 'ru-RU', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+}
+
 // ─── ИНИЦИАЛИЗАЦИЯ ───
 async function initDocs(lang) {
   lang = lang || getDocLang();
@@ -96,7 +138,7 @@ async function initDocs(lang) {
     if (startFile) await loadDocPage(startFile, lang);
   } catch (e) {
     console.error("Failed to load SUMMARY.md", e);
-    const t = (typeof translations !== "undefined" && translations[lang]) || {};
+    const t = (translations && translations[lang]) || {};
     document.getElementById("doc-content").innerHTML = `
       <h1>${t.docs_load_error_heading || "Ошибка загрузки"}</h1>
       <div class="gitbook-hint hint-danger">
@@ -165,7 +207,7 @@ function toggleDocSidebar() {
   document.getElementById("doc-sb-overlay").classList.toggle("open");
 }
 
-// ─── РЕНДЕРИНГ ХИНТОВ (ТОЧНО ПО ТРЕБОВАНИЮ) ───
+// ─── РЕНДЕРИНГ ХИНТОВ ───
 const HINT_ICONS = {
   info: 'fa-info-circle',
   tip: 'fa-lightbulb',
@@ -243,12 +285,10 @@ function renderDocMd(raw) {
   raw = raw.replace(/\{%\s*hint\s+style="(\w+)"\s*%\}([\s\S]*?)\{%\s*endhint\s*%\}/g, (_, style, body) => {
     const allowed = ["info", "success", "warning", "danger", "tip", "working"];
     const s = allowed.includes(style) ? style : "info";
-    
     const iconClass = HINT_ICONS[s] || 'fa-info-circle';
     const icon = `<div class="hint-icon"><i class="fa-solid ${iconClass}"></i></div>`;
     
     const ph = `\x00H${placeholders.length}\x00`;
-    // Точная структура как в примере пользователя
     placeholders.push(`<div class="gitbook-hint hint-${s}">${icon}<div class="hint-content">${renderHintBody(body)}</div></div>`);
     return ph;
   });
@@ -295,8 +335,14 @@ async function loadDocPage(file, lang) {
     try {
       const resp = await fetch(BASE_PATH + file);
       if (!resp.ok) throw new Error();
+
       raw = await resp.text();
       cache[file] = { content: raw };
+
+      const lastModified = resp.headers.get('Last-Modified');
+      if (lastModified) {
+        cache[file].lastModified = lastModified;
+      }
     } catch (e) {
       doc.innerHTML = `<h1>Страница не найдена</h1>`;
       return;
@@ -330,9 +376,12 @@ async function loadDocPage(file, lang) {
 
   doc.querySelectorAll("pre code").forEach(b => hljs.highlightElement(b));
 
-  document.getElementById("doc-toolbar").style.display = "flex";
+  // Дата последнего обновления
+  const lm = cache[file]?.lastModified;
   document.getElementById("doc-last-updated").style.display = "block";
-  document.getElementById("doc-lu-text").textContent = "только что";
+  document.getElementById("doc-lu-text").textContent = formatLastUpdated(lm, lang);
+
+  document.getElementById("doc-toolbar").style.display = "flex";
 
   buildDocTOC();
   buildDocPageNav(file);
@@ -375,17 +424,15 @@ function buildDocPageNav(file) {
     return;
   }
   const lang = getDocLang();
-  const t = (typeof translations !== "undefined" && translations[lang]) || {};
-  const lblPrev = t.docs_btn_page_nav_prev || "Previous";
-  const lblNext = t.docs_btn_page_nav_next || "Next";
+  const t = (translations && translations[lang]) || translations.ru;
   nav.style.display = "flex";
   nav.innerHTML = `
     ${prev ? `<div class="page-nav-btn" onclick="loadDocPage('${prev.file}')">
-        <div class="pnav-label"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> ${lblPrev}</div>
+        <div class="pnav-label"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> ${t.docs_btn_page_nav_prev || "Предыдущая"}</div>
         <div class="pnav-title">${prev.title}</div>
       </div>` : "<div></div>"}
     ${next ? `<div class="page-nav-btn right" onclick="loadDocPage('${next.file}')">
-        <div class="pnav-label">${lblNext} <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+        <div class="pnav-label">${t.docs_btn_page_nav_next || "Следующая"} <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
         <div class="pnav-title">${next.title}</div>
       </div>` : "<div></div>"}
   `;
