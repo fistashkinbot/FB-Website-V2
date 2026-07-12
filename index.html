@@ -127,6 +127,7 @@
             <!-- Пункты навигации: видны только на мобильном (см. .dropdown-mobile-nav
                  в style.css), на десктопе скрыты — там навигация уже видна в .navbar .menu -->
             <div class="dropdown-mobile-nav">
+              <div class="dropdown-label" data-i18n="dropdown_navigation"></div>
               <a href="#home" class="dropdown-item">
                 <i class="fas fa-home"></i>
                 <span data-i18n="menu_btn_home"></span>
@@ -145,6 +146,8 @@
               </a>
             </div>
             <div class="dropdown-separator dropdown-mobile-nav-sep"></div>
+
+            <div class="dropdown-label" data-i18n="dropdown_settings"></div>
 
             <div class="dropdown-item" id="lang-switcher-menu" data-keep-open="true">
               <i class="fa-solid fa-globe"></i>
@@ -401,13 +404,13 @@
               <li class="footer-item">
                 <a
                   href="https://www.patreon.com/FistashkinBot"
-                  class="footer-link"
+                  class="footer-link footer-link-patreon"
                   ><i class="fab fa-patreon active"></i>
                   <span data-i18n="footer_patreon"></span
                 ></a>
               </li>
               <li class="footer-item">
-                <a href="https://www.discord.gg/H9XCZSReMj" class="footer-link"
+                <a href="https://www.discord.gg/H9XCZSReMj" class="footer-link footer-link-discord"
                   ><i class="fab fa-discord active"></i>
                   <span data-i18n="footer_support_server"></span
                 ></a>

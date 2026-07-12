@@ -1215,10 +1215,44 @@ footer {
   transition: all 0.3s ease;
 }
 
-.social-link:hover {
-  color: #c0694e;
-  filter: drop-shadow(0 0 6px rgba(192, 105, 78, 0.6))
-    drop-shadow(0 0 12px rgba(192, 105, 78, 0.4));
+/* Уникальное фирменное свечение под каждую соцсеть — переопределяет
+   общий цвет/тень выше именно на самой иконке (правило нацелено на
+   конкретный вложенный элемент, поэтому оно приоритетнее).
+   transition — на базовом состоянии, а не в :hover, иначе анимируется
+   только "включение" свечения, а при уходе курсора оно пропадает рывком. */
+.social-link .fa-github,
+.social-link .fa-x-twitter,
+.social-link .fa-instagram,
+.social-link .fa-discord {
+  transition: color 0.3s ease, filter 0.3s ease, transform 0.5s ease;
+}
+
+.social-link:hover .fa-github {
+  color: #f0f6fc;
+  filter: drop-shadow(0 0 6px rgba(240, 246, 252, 0.55))
+    drop-shadow(0 0 14px rgba(240, 246, 252, 0.3));
+  transform: translateY(-2px);
+}
+
+.social-link:hover .fa-x-twitter {
+  color: #1d9bf0;
+  filter: drop-shadow(0 0 6px rgba(29, 155, 240, 0.6))
+    drop-shadow(0 0 14px rgba(29, 155, 240, 0.35));
+  transform: translateY(-2px);
+}
+
+.social-link:hover .fa-instagram {
+  color: #e1306c;
+  filter: drop-shadow(0 0 6px rgba(225, 48, 108, 0.55))
+    drop-shadow(0 0 10px rgba(247, 119, 55, 0.35))
+    drop-shadow(0 0 14px rgba(129, 52, 175, 0.3));
+  transform: translateY(-2px);
+}
+
+.social-link:hover .fa-discord {
+  color: #5865f2;
+  filter: drop-shadow(0 0 6px rgba(88, 101, 242, 0.6))
+    drop-shadow(0 0 14px rgba(88, 101, 242, 0.35));
   transform: translateY(-2px);
 }
 
@@ -1255,6 +1289,32 @@ footer {
 .footer-link:hover {
   color: #c0694e;
   transform: translateX(3px);
+}
+
+/* Уникальное фирменное свечение для блока "Поддержка" — красим весь линк
+   (иконку + текст) в цвет бренда, а не только иконку, как раньше.
+   transition на базовом состоянии, чтобы анимация была плавной в обе стороны. */
+.footer-link .fa-patreon,
+.footer-link .fa-discord {
+  transition: color 0.3s ease, filter 0.3s ease;
+}
+
+.footer-link-patreon:hover {
+  color: #ff424d;
+}
+
+.footer-link-patreon:hover .fa-patreon {
+  filter: drop-shadow(0 0 6px rgba(255, 66, 77, 0.55))
+    drop-shadow(0 0 14px rgba(255, 66, 77, 0.3));
+}
+
+.footer-link-discord:hover {
+  color: #5865f2;
+}
+
+.footer-link-discord:hover .fa-discord {
+  filter: drop-shadow(0 0 6px rgba(88, 101, 242, 0.6))
+    drop-shadow(0 0 14px rgba(88, 101, 242, 0.35));
 }
 
 .footer-bottom {

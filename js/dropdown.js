@@ -30,6 +30,7 @@ function initDropdown(trigger, menu) {
         box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
         backdrop-filter: blur(16px) saturate(150%);
         -webkit-backdrop-filter: blur(16px) saturate(150%);
+        line-height: 1;
     `;
 
     let rafId = null;
@@ -157,46 +158,45 @@ initDropdown(
 
 // ==================== ОЧЕНЬ ПЛАВНЫЙ ПЕРЕХОД ИКОНКИ БАРОВ ====================
 
+// ==================== ПЛАВНАЯ СМЕНА БЕЗ МЕРЦАНИЯ ====================
+
 document.addEventListener("DOMContentLoaded", function () {
     const trigger = document.getElementById("dropdown-trigger");
     const icon = document.getElementById("dropdown-icon") || trigger?.querySelector("i");
 
     if (!trigger || !icon) return;
 
-    // Стили для супер-плавного перехода
+    let timeoutId = null;
+
     const style = document.createElement('style');
     style.textContent = `
         #dropdown-icon {
-            transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
+            transition: opacity 0.28s ease-in-out;
         }
     `;
     document.head.appendChild(style);
 
     function updateBarsIcon() {
+        clearTimeout(timeoutId);
+
         const isOpen = trigger.getAttribute("aria-expanded") === "true";
-        
+
         icon.style.opacity = "0";
 
-        setTimeout(() => {
-            if (isOpen) {
-                icon.className = "fa-solid fa-bars-staggered";
-            } else {
-                icon.className = "fa-solid fa-bars";
-            }
+        timeoutId = setTimeout(() => {
+            icon.className = isOpen ? "fa-solid fa-bars-staggered" : "fa-solid fa-bars";
             icon.style.opacity = "1";
-        }, 160);
+        }, 130);
     }
 
-    // Следим за aria-expanded
-    const observer = new MutationObserver(updateBarsIcon);
-    observer.observe(trigger, { 
-        attributes: true, 
-        attributeFilter: ["aria-expanded"] 
+    // Обновляем только при клике по кнопке
+    trigger.addEventListener("click", () => {
+        setTimeout(updateBarsIcon, 40);
     });
 
-    trigger.addEventListener("click", () => setTimeout(updateBarsIcon, 20));
-
     // Начальное состояние
-    updateBarsIcon();
+    setTimeout(() => {
+        const isOpen = trigger.getAttribute("aria-expanded") === "true";
+        icon.className = isOpen ? "fa-solid fa-bars-staggered" : "fa-solid fa-bars";
+    }, 100);
 });

@@ -1,7 +1,4 @@
 // ==================== GLOW CARDS ====================
-// Много вариантов цвета свечения для карточек фич (.dm-glow-card).
-// При каждой перезагрузке страницы карточкам случайно (и без повторов,
-// пока цветов хватает) назначаются новые цвета из палитры ниже.
 
 const GLOW_COLOR_PALETTE = [
     "rgba(168, 85, 247, 0.22)",  // фиолетовый
@@ -30,8 +27,7 @@ function shuffleArray(array) {
     return arr;
 }
 
-// Раздаём каждой .dm-glow-card случайный цвет из палитры (инлайн-стиль
-// переопределяет фиксированный --glow-color, заданный классом glow-* в CSS)
+// Назначаем случайные цвета из палитры
 function applyRandomGlowColors() {
     const cards = document.querySelectorAll(".dm-glow-card");
     if (!cards.length) return;
@@ -42,14 +38,41 @@ function applyRandomGlowColors() {
     });
 }
 
-// Свечение следует за курсором внутри карточки
+// Плавное следование свечения за курсором (lerp)
 function initGlowTracking() {
-    const glowEls = document.querySelectorAll(".dm-glow-card, .cardd");
-    glowEls.forEach((card) => {
+    const cards = document.querySelectorAll(".dm-glow-card");
+
+    cards.forEach(card => {
+        let targetX = 0, targetY = 0;
+        let currentX = 0, currentY = 0;
+        let isAnimating = false;
+        const lerpFactor = 0.05; // чем меньше — тем плавнее
+
+        function animate() {
+            if (!isAnimating) return;
+
+            currentX += (targetX - currentX) * lerpFactor;
+            currentY += (targetY - currentY) * lerpFactor;
+
+            card.style.setProperty("--xPos", `${currentX}px`);
+            card.style.setProperty("--yPos", `${currentY}px`);
+
+            requestAnimationFrame(animate);
+        }
+
+        card.addEventListener("mouseenter", () => {
+            isAnimating = true;
+            animate();
+        });
+
+        card.addEventListener("mouseleave", () => {
+            isAnimating = false;
+        });
+
         card.addEventListener("mousemove", (e) => {
             const rect = card.getBoundingClientRect();
-            card.style.setProperty("--xPos", `${e.clientX - rect.left}px`);
-            card.style.setProperty("--yPos", `${e.clientY - rect.top}px`);
+            targetX = e.clientX - rect.left;
+            targetY = e.clientY - rect.top;
         });
     });
 }

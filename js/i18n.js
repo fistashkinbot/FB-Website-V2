@@ -73,6 +73,8 @@ const translations = {
             "крутой",
             "классный"
         ],
+        dropdown_navigation: "Навигация",
+        dropdown_settings: "Настройки",
         dropdown_language: "Язык:",
         dropdown_theme_light: "Включить светлую тему",
         dropdown_theme_dark: "Включить тёмную тему",
@@ -183,6 +185,8 @@ const translations = {
             "крутий",
             "класний"
         ],
+        dropdown_navigation: "Навігація",
+        dropdown_settings: "Налаштування",
         dropdown_language: "Мова:",
         dropdown_theme_light: "Увімкнути світлу тему",
         dropdown_theme_dark: "Увімкнути темну тему",
@@ -293,6 +297,8 @@ const translations = {
             "cool",
             "awesome"
         ],
+        dropdown_navigation: "Navigation",
+        dropdown_settings: "Settings",
         dropdown_language: "Language:",
         dropdown_theme_light: "Switch to light theme",
         dropdown_theme_dark: "Switch to dark theme",
