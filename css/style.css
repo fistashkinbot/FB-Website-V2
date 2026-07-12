@@ -1234,6 +1234,14 @@ footer {
   transform: translateY(-2px);
 }
 
+/* На светлой теме почти белый цвет потерялся бы на светлом фоне подвала —
+   берём тёмный фирменный цвет GitHub вместо него. */
+body:not(.dark) .social-link:hover .fa-github {
+  color: #24292f;
+  filter: drop-shadow(0 0 6px rgba(36, 41, 47, 0.35))
+    drop-shadow(0 0 14px rgba(36, 41, 47, 0.2));
+}
+
 .social-link:hover .fa-x-twitter {
   color: #1d9bf0;
   filter: drop-shadow(0 0 6px rgba(29, 155, 240, 0.6))
