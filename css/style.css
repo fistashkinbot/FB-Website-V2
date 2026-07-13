@@ -144,14 +144,6 @@
     box-shadow 0.3s ease;
 }
 
-/* Градиентные фоны (hero, оверлей, нижний фейд) используют CSS-переменные
-   в background, а не background-color — их анимирует отдельное правило. */
-.home,
-.home::before,
-.home::after {
-  transition: background 0.3s ease, color 0.3s ease;
-}
-
 html {
   scroll-behavior: smooth;
   overflow-x: hidden; /* FIX: горизонтальный скролл */
