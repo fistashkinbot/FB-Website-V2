@@ -168,7 +168,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: var(--bg-page);
+  background: var(--body-fallback-bg);
   color: var(--text-primary);
 }
 
