@@ -61,6 +61,8 @@
 
   --error-heading: #18181b;
   --error-message: #52525b;
+
+  --body-fallback-bg: #e4e4e7;
 }
 
 .dark {
@@ -120,6 +122,8 @@
 
   --error-heading: #fff;
   --error-message: #ddd;
+
+  --body-fallback-bg: #0d0d0d;
 }
 
 /* ================= ПЛАВНОЕ ПЕРЕКЛЮЧЕНИЕ ТЕМЫ ================= */
@@ -142,6 +146,14 @@
     fill 0.3s ease,
     stroke 0.3s ease,
     box-shadow 0.3s ease;
+}
+
+/* Градиентные фоны (hero, оверлей, нижний фейд) используют CSS-переменные
+   в background, а не background-color — их анимирует отдельное правило. */
+.home,
+.home::before,
+.home::after {
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 html {
@@ -355,9 +367,20 @@ body {
 
 /* FIX: background-attachment: fixed ломается на iOS */
 @supports (-webkit-touch-callout: none) {
+  /* FIX: iOS Safari — анимация background (пересчёт radial/linear-gradient
+     на каждый кадр) на hero заметно тяжелее, чем background-color в
+     остальных секциях, поэтому именно с .home смена темы визуально
+     "отстаёт" от остального сайта. Текст (color) внутри hero всё ещё
+     анимируется, а фон/оверлей/нижний фейд на iOS переключаются мгновенно. */
   .home {
     background-attachment: scroll;
     background: radial-gradient(circle at center, var(--hero-grad-start) 0%, var(--hero-grad-end) 100%);
+    transition: color 0.3s ease;
+  }
+
+  .home::before,
+  .home::after {
+    transition: none;
   }
 }
 
@@ -1685,7 +1708,10 @@ body:not(.dark) .social-link:hover .fa-github {
 
 /* min-height/flex/фон body перенесены в единое правило body в начале файла —
    раньше это объявление конфликтовало с ним (два разных фона для тёмной
-   темы, --bg-page и --body-fallback-bg, отличались оттенком чёрного). */
+   темы, --bg-page и --body-fallback-bg, отличались оттенком чёрного).
+   --body-fallback-bg по просьбе восстановлена как переменная (#0d0d0d
+   для тёмной темы), но сам body по-прежнему красится через --bg-page —
+   единый источник правды, чтобы конфликт не вернулся. */
 
 footer {
   margin-top: auto;
