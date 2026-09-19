@@ -366,8 +366,7 @@ body {
 /* ================= HOME ================= */
 
 #particles-js {
-  height: 100vh; /* фолбэк, если JS не отработал */
-  height: calc(var(--vh, 1vh) * 100);
+  height: 100vh;
   width: 100%;
   position: absolute;
   top: 0;
@@ -391,8 +390,7 @@ body {
   background: radial-gradient(circle at center, var(--hero-grad-start) 0%, var(--hero-grad-end) 100%);
   background-size: cover;
   background-attachment: fixed;
-  height: 100vh; /* фолбэк, если JS не отработал */
-  height: calc(var(--vh, 1vh) * 100);
+  height: 100vh;
   color: var(--hero-text);
   min-height: 500px;
   font-family: "Ubuntu", sans-serif;
@@ -1705,25 +1703,6 @@ body:not(.dark) .social-link:hover .fa-github {
     gap: 8px;
   }
 
-  /* FIX: центрирование через margin:auto считается от высоты САМОЙ
-     .home, а её высоту мы намеренно зафиксировали чуть больше
-     реального экрана (см. blobs.js, max(innerHeight, screen.height)),
-     чтобы не дёргались блобы при скролле на iOS. На десктопе innerHeight
-     и screen.height обычно близки, поэтому там разницы не видно — а вот
-     на мобильных/планшетных ширинах разница заметна, и центр по .home
-     оказывается ниже центра реально видимой области. Начиная с этого
-     брейкпоинта (мобильные/планшеты) центрируем по 50dvh — реальной
-     ТЕКУЩЕЙ высоте вьюпорта — вместо margin:auto. Горизонтальный отступ
-     (left:0) оставляем как был.*/
-  .home .max-width {
-    position: absolute;
-    top: 50vh; /* фолбэк для браузеров без dvh */
-    top: 50dvh;
-    left: 0;
-    transform: translateY(-50%);
-    margin: 0;
-  }
-
   .home .home-content .text-2 {
     font-size: 70px;
   }
@@ -1752,24 +1731,8 @@ body:not(.dark) .social-link:hover .fa-github {
     padding: 0 25px;
   }
 
-  /* FIX: раньше центрирование было через margin:auto внутри flex .home,
-     то есть считалось от высоты САМОЙ .home — а её высоту мы намеренно
-     зафиксировали чуть больше реального экрана (max(innerHeight,
-     screen.height)), чтобы не дёргались блобы при скролле на iOS.
-     Из-за этого центр по .home оказывался ниже центра реально видимой
-     области — текст выглядел смещённым вниз.
-     Центрируем через 50dvh — это реальная ТЕКУЩАЯ высота вьюпорта
-     (в отличие от --vh она сама живо обновляется вместе с адрес-баром),
-     то есть контент честно по центру видимого экрана в любой момент,
-     независимо от того, насколько "раздута" сама .home. */
   .home .max-width {
-    position: absolute;
-    top: 50vh; /* фолбэк для браузеров без dvh */
-    top: 50dvh;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    margin: 0;
+    margin: auto;
     padding: 0 25px;
   }
 
