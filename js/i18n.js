@@ -23,23 +23,23 @@ const translations = {
         // Секция возможностей
         features_title: "Мои возможности",
         features_card1_title: "🛠️ Утилиты",
-        features_card1_text: "Со стандартным набором команд Вы можете посмотреть информацию про участников сервера и про сам сервер, посмотреть аватар пользователя и саму информацию о боте, установить уникальный текст в свой профиль! Также доступны автоматические и временные роли и другие инструменты для управления сервером.",
+        features_card1_text: "Со стандартным набором команд Вы можете посмотреть информацию про участников сервера и про сам сервер, посмотреть аватар пользователя и саму информацию о боте, установить уникальный текст в свой профиль!",
         features_card2_title: "✨ Экономика",
         features_card2_text: "Вы можете стать аристократом по балансу или лидером в топе по уровню среди участников просто общаясь! Если хотите потратить свои сбережения - для вас есть настраиваемый магазин с ролями, но для азартных игроков тоже найдётся местечко!",
         features_card3_title: "🛡️ Модерация",
         features_card3_text: "Инструменты для поддержания порядка, безопасности и комфортной атмосферы на сервере: команды бана, кика и таймаута, а также другие инструменты модерации.",
-        features_card4_title: "🧹 Automod",
+        features_card4_title: "🧹 Автомодерация",
         features_card4_text: "Автоматическая модерация фильтрует спам, ссылки, упоминания и запрещённые слова по гибким правилам — сервер остаётся чистым без постоянного участия модераторов.",
         features_card5_title: "🔒 Приватные комнаты",
         features_card5_text: "Создавайте временные приватные текстовые и голосовые комнаты для себя и своих друзей — с гибкими правами доступа и автоматическим удалением, когда комната больше не нужна.",
         features_card6_title: "📋 Система аудита",
-        features_card6_text: "Если встроенного в Discord аудита недостаточно, настройте дополнительное логирование событий удаления или изменения сообщений, присоединения и выхода из голосовых каналов, изменения ролей участников и многое другое. Система аудита использует вебхуки для отправки логов.",
+        features_card6_text: "Видит всё, что упускает стандартный аудит Discord: удаления и правки сообщений, вход и выход из голосовых каналов, смену ролей. Логи прилетают прямо к вам через вебхуки.",
         features_card7_title: "🎭 Развлечение",
         features_card7_text: "Обнимашки, подмигивания и другие реакции для общения с участниками сервера, свадьбы (бракосочетания), а также дуэли, крестики-нолики и другие мини-игры прямо в Discord!",
         features_card8_title: "🧠 ИИ-чат",
         features_card8_text: "Общайтесь с AI прямо в Discord и получайте ответы на вопросы без сторонних сервисов.",
         features_card9_title: "🏆 Рейтинг участников",
-        features_card9_text: "Ваше сообщество бесценно! Награждайте самых активных участников с помощью нашей системы рейтинга. Позвольте им поощрять друг друга фисташками, подниматься по списку лидеров и покупать роли. Любите своё сообщество <3",
+        features_card9_text: "Активность — это игра! Зарабатывайте фисташки за общение, поднимайтесь в топе лидеров и обменивайте статус на эксклюзивные роли.",
 
         // Секция команды
         contributors_title: "Команда",
@@ -141,23 +141,23 @@ const translations = {
         // Секция возможностей
         features_title: "Мої можливості",
         features_card1_title: "🛠️ Утиліти",
-        features_card1_text: "За допомогою стандартного набору команд ви можете переглянути інформацію про учасників сервера та про сам сервер, подивитися аватар користувача та інформацію про бота, встановити унікальний текст у свій профіль! Також доступні автоматичні та тимчасові ролі та інші інструменти для керування сервером.",
+        features_card1_text: "За допомогою стандартного набору команд ви можете переглянути інформацію про учасників сервера та про сам сервер, подивитися аватар користувача та інформацію про бота, встановити унікальний текст у свій профіль!",
         features_card2_title: "✨ Економіка",
         features_card2_text: "Ви можете стати аристократом за балансом або лідером у топі за рівнем просто спілкуючись! Якщо захочете витратити свої заощадження — для вас є налаштовуваний магазин з ролями, а для азартних гравців також знайдеться чим зайнятися!",
         features_card3_title: "🛡️ Модерація",
         features_card3_text: "Інструменти для підтримання порядку, безпеки та комфортної атмосфери на сервері: команди бану, кіку та таймауту, а також інші інструменти модерації.",
-        features_card4_title: "🧹 Automod",
+        features_card4_title: "🧹 Автомодерація",
         features_card4_text: "Автоматична модерація фільтрує спам, посилання, згадки та заборонені слова за гнучкими правилами — сервер залишається чистим без постійної участі модераторів.",
         features_card5_title: "🔒 Приватні кімнати",
         features_card5_text: "Створюйте тимчасові приватні текстові та голосові кімнати для себе та своїх друзів — із гнучкими правами доступу та автоматичним видаленням, коли кімната більше не потрібна.",
         features_card6_title: "📋 Система аудиту",
-        features_card6_text: "Якщо вбудованого в Discord аудиту недостатньо, налаштуйте додаткове логування подій видалення чи зміни повідомлень, приєднання та виходу з голосових каналів, зміни ролей учасників і багато іншого. Система аудиту використовує вебхуки для надсилання логів.",
+        features_card6_text: "Бачить усе, що пропускає стандартний аудит Discord: видалення й редагування повідомлень, вхід і вихід із голосових каналів, зміну ролей. Логи летять просто до вас через вебхуки.",
         features_card7_title: "🎭 Розваги",
         features_card7_text: "Обійняшки, підморгування та інші реакції для спілкування з учасниками сервера, весілля (одруження), а також дуелі, хрестики-нолики та інші міні-ігри прямо в Discord!",
         features_card8_title: "🧠 ШІ-чат",
         features_card8_text: "Спілкуйтеся з AI прямо в Discord та отримуйте відповіді на запитання без сторонніх сервісів.",
         features_card9_title: "🏆 Рейтинг учасників",
-        features_card9_text: "Ваша спільнота безцінна! Нагороджуйте найактивніших учасників за допомогою нашої системи рейтингу. Дозвольте їм заохочувати одне одного фісташками, підійматися у списку лідерів та купувати ролі. Любіть свою спільноту <3",
+        features_card9_text: "Активність — це гра! Заробляйте фісташки за спілкування, підіймайтеся в топі лідерів та обмінюйте статус на ексклюзивні ролі.",
 
         // Секция команды
         contributors_title: "Команда",
@@ -259,7 +259,7 @@ const translations = {
         // Features section
         features_title: "My Features",
         features_card1_title: "🛠️ Utilities",
-        features_card1_text: "With a standard set of commands, you can view information about server members and the server itself, view a user's avatar and information about the bot, set a unique text in your profile! Also available: automatic and temporary roles and other tools for managing your server.",
+        features_card1_text: "With a standard set of commands, you can view information about server members and the server itself, view a user's avatar and information about the bot, set a unique text in your profile!",
         features_card2_title: "✨ Economy",
         features_card2_text: "You can become an aristocrat by balance or a leader in the level top among participants just by chatting! If you want to spend your savings - there is a customizable store with roles, but there is also a place for gambling players!",
         features_card3_title: "🛡️ Moderation",
@@ -269,13 +269,13 @@ const translations = {
         features_card5_title: "🔒 Private Rooms",
         features_card5_text: "Create temporary private text and voice rooms for you and your friends — with flexible access permissions and automatic deletion once the room is no longer needed.",
         features_card6_title: "📋 Audit System",
-        features_card6_text: "If Discord's built-in audit log isn't enough, set up extra logging for message deletions and edits, voice channel joins and leaves, role changes, and more. The audit system uses webhooks to deliver the logs.",
+        features_card6_text: "Sees everything Discord's own audit log misses: message edits and deletions, voice channel joins and leaves, role changes — delivered straight to you via webhooks.",
         features_card7_title: "🎭 Entertainment",
         features_card7_text: "Hugs, winks and other reactions to interact with server members, marriages, plus duels, tic-tac-toe and other mini-games right in Discord!",
         features_card8_title: "🧠 AI Chat",
         features_card8_text: "Chat with AI right in Discord and get answers to your questions without third-party services.",
         features_card9_title: "🏆 Member Leaderboard",
-        features_card9_text: "Your community is priceless! Reward your most active members with our rating system. Let them cheer each other on with pistachios, climb the leaderboard, and unlock roles. Love your community <3",
+        features_card9_text: "Activity is a game! Earn pistachios for chatting, climb the leaderboard, and cash in your status for exclusive roles.",
 
         // Contributors section
         contributors_title: "Team",
@@ -408,6 +408,45 @@ window.getCurrentLanguage = function () {
     return document.documentElement.dataset.lang || localStorage.getItem('siteLanguage') || 'ru';
 };
 
+// === Плавная подмена текста при смене языка ===
+// Затемняем все переводимые элементы, ждём конца transition (см. style.css,
+// .i18n-fading), подменяем текст и отпускаем класс — получается кроссфейд
+// вместо мгновенного «моргания» текста.
+const I18N_FADE_MS = 200;
+
+// afterUpdate вызывается СРАЗУ ПОСЛЕ translatePage(lang), а не до него —
+// это важно для updateLanguageSwitcher(): она вручную дописывает название
+// языка к лейблу ("Язык: Русский"), и если вызвать её раньше отложенного
+// translatePage(), он позже перетрёт лейбл обратно на голое "Язык:" через
+// его собственный data-i18n.
+function translatePageAnimated(lang, afterUpdate) {
+    // .typing (Typed.js) и #current-flag тоже участвуют в кроссфейде —
+    // см. комментарий в style.css у их правил .i18n-fading.
+    const elements = document.querySelectorAll(
+        '[data-i18n], [data-i18n-placeholder], .typing, #current-flag'
+    );
+
+    const applyUpdate = () => {
+        translatePage(lang);
+        afterUpdate?.();
+    };
+
+    const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (!elements.length || reduceMotion) {
+        applyUpdate();
+        return;
+    }
+
+    elements.forEach(el => el.classList.add('i18n-fading'));
+
+    setTimeout(() => {
+        applyUpdate();
+        // Форсируем reflow, чтобы браузер не «схлопнул» fade-out и fade-in в один кадр
+        void document.body.offsetHeight;
+        elements.forEach(el => el.classList.remove('i18n-fading'));
+    }, I18N_FADE_MS);
+}
+
 // === Смена языка ===
 function setLanguage(lang) {
     if (!translations[lang]) return;
@@ -415,7 +454,9 @@ function setLanguage(lang) {
     document.documentElement.lang = lang;
     document.documentElement.dataset.lang = lang;
 
-    translatePage(lang);
+    // updateLanguageSwitcher обновляет лейбл/флаг/чекмарки в переключателе —
+    // выполняем её после подмены текста, см. комментарий в translatePageAnimated.
+    translatePageAnimated(lang, () => updateLanguageSwitcher(lang));
     localStorage.setItem('siteLanguage', lang);
 
     // Хук для перезагрузки документации при смене языка
@@ -525,7 +566,6 @@ function createLanguageDropdown() {
             }
             setLanguage(key);
             showLanguageToast(key);
-            updateLanguageSwitcher(key);
             closeDropdown();
         };
 
@@ -637,7 +677,6 @@ function renderInlineLangOptions(current) {
             }
             setLanguage(key);
             showLanguageToast(key);
-            updateLanguageSwitcher(key);
             toggleInlineLangAccordion(false);
         });
 
@@ -690,7 +729,6 @@ function initLanguageSwitcher() {
             }
             setLanguage(lang);
             showLanguageToast(lang);
-            updateLanguageSwitcher(lang);
         });
     });
 

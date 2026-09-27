@@ -22,6 +22,17 @@
   --badge-secondary-bg: #f4f4f5;
   --badge-secondary-text: #18181b;
 
+  /* ================= GLOBAL BLUR CONSTANTS ================= */
+  /* Все размытия в проекте — через эти переменные.
+     Меняешь значение здесь → обновляется везде. */
+  --blur-xs: 4px;    /* overlay backgrounds */
+  --blur-sm: 8px;    /* iOS fallback */
+  --blur-md: 16px;   /* панели, кнопки, dropdown */
+  --blur-lg: 80px;   /* mobile blob-outer */
+  --blur-xl: 120px;  /* features::after */
+  --blur-2xl: 300px; /* blob-outer (desktop) */
+  --blur-sat: 150%;  /* saturate() рядом с blur() */
+
   /* ===== Светлая тема: адаптированные токены секций сайта ===== */
   --nav-bg-sticky: rgba(255, 255, 255, 0.75);
   --nav-text: #18181b;
@@ -150,21 +161,67 @@
   --pain-star: #fffdef;
 }
 
-/* ================= ПЛАВНОЕ ПЕРЕКЛЮЧЕНИЕ ТЕМЫ ================= */
-html {
-  transition: background-color 0.3s ease, color 0.3s ease;
+/* ================= ПЛАВНОЕ ПЕРЕКЛЮЧЕНИЕ ТЕМЫ (View Transitions) ================= */
+/*
+  Отключаем стандартный кроссфейд — theme.js запускает анимацию
+  clip-path: circle() из точки клика.
+
+  pointer-events на псевдо-элементах здесь не работает: браузер
+  замораживает ввод на своём уровне (не CSS). За кликабельность
+  кнопки отвечает pointerdown-хак в theme.js — он вызывает
+  skipTransition() до того, как браузер съест клик.
+*/
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
 }
 
-body {
-  overflow-x: hidden;
-  width: 100%;
-  background: var(--bg-page);
-  color: var(--text-primary);
-  transition: background-color 0.3s ease, color 0.3s ease;
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+  }
 }
 
-.home {
-  transition: background 0.3s ease, color 0.3s ease;
+/* ================= ПЛАВНАЯ СМЕНА ЯЗЫКА ================= */
+/*
+  i18n.js на время подмены текста добавляет класс .i18n-fading
+  на все [data-i18n]/[data-i18n-placeholder] элементы — они
+  затухают, дожидаются подмены textContent и плавно проявляются
+  обратно с лёгким сдвигом, вместо мгновенной подмены текста.
+*/
+[data-i18n],
+[data-i18n-placeholder] {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+[data-i18n].i18n-fading,
+[data-i18n-placeholder].i18n-fading {
+  opacity: 0;
+  transform: translateY(3px);
+}
+
+/* .typing (бегущая строка Typed.js) и #current-flag (иконка текущего языка
+   в переключателе) — не текстовые data-i18n узлы, но тоже меняются при
+   смене языка, поэтому включены в тот же кроссфейд. Это инлайновые/мелкие
+   элементы, для них только прозрачность, без сдвига. */
+.typing,
+#current-flag {
+  transition: opacity 0.2s ease;
+}
+
+.typing.i18n-fading,
+#current-flag.i18n-fading {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-i18n],
+  [data-i18n-placeholder] {
+    transition: none;
+  }
 }
 
 * {
@@ -249,8 +306,8 @@ body {
   border-radius: 16px;
   background: var(--nav-bg-sticky);
   border: 1px solid var(--nav-pill-border);
-  backdrop-filter: blur(16px) saturate(150%);
-  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  backdrop-filter: blur(var(--blur-md)) saturate(var(--blur-sat));
+  -webkit-backdrop-filter: blur(var(--blur-md)) saturate(var(--blur-sat));
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
@@ -341,8 +398,8 @@ body {
   height: 45px;
   width: 42px;
   background: rgba(192, 105, 78, 0.3);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(var(--blur-md));
+  -webkit-backdrop-filter: blur(var(--blur-md));
   right: 30px;
   bottom: 10px;
   text-align: center;
@@ -404,8 +461,8 @@ body {
   }
 
   .navbar .max-width {
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(var(--blur-sm));
+    -webkit-backdrop-filter: blur(var(--blur-sm));
   }
 }
 
@@ -472,8 +529,8 @@ body {
   margin-top: 20px;
   padding: 12px 35px;
   background: var(--accent-dim);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(var(--blur-md));
+  -webkit-backdrop-filter: blur(var(--blur-md));
   font-size: 17px;
   font-weight: 500;
   color: var(--pain-text);
@@ -697,7 +754,7 @@ section .title::after {
   transform: translateX(-50%);
   width: 1400px;
   height: 400px;
-  filter: blur(120px);
+  filter: blur(var(--blur-xl));
   mix-blend-mode: screen;
   opacity: 0.7;
   z-index: 2;
@@ -1011,8 +1068,8 @@ section .title::after {
   padding: 9px 16px;
   border: 1px solid var(--border);
   background: var(--switcher-bg);
-  backdrop-filter: blur(16px) saturate(150%);
-  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  backdrop-filter: blur(var(--blur-md)) saturate(var(--blur-sat));
+  -webkit-backdrop-filter: blur(var(--blur-md)) saturate(var(--blur-sat));
   color: var(--text-primary);
   transition: all 0.2s ease;
   cursor: pointer;
@@ -1246,7 +1303,7 @@ section .title::after {
   position: absolute;
   inset: 0;
   z-index: 0;
-  filter: blur(300px);
+  filter: blur(var(--blur-2xl));
   pointer-events: none;
   overflow: hidden;
   max-width: 100%;
@@ -1510,8 +1567,8 @@ body:not(.dark) .social-link:hover .fa-github {
   gap: 8px;
   padding: 7px 10px;
   background: var(--switcher-bg);
-  backdrop-filter: blur(16px) saturate(150%);
-  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  backdrop-filter: blur(var(--blur-md)) saturate(var(--blur-sat));
+  -webkit-backdrop-filter: blur(var(--blur-md)) saturate(var(--blur-sat));
   border: 1px solid var(--border);
   border-radius: 8px;
   cursor: pointer;
@@ -1688,7 +1745,8 @@ body:not(.dark) .social-link:hover .fa-github {
     font-size: 35px;
   }
 
-  .home .home-content a {
+  /* Исключаем .btn-commands — у неё свои размеры */
+  .home .home-content a:not(.btn-commands) {
     font-size: 23px;
     padding: 10px 30px;
   }
@@ -1726,7 +1784,8 @@ body:not(.dark) .social-link:hover .fa-github {
     font-size: 32px;
   }
 
-  .home .home-content a {
+  /* Исключаем .btn-commands — у неё свои размеры */
+  .home .home-content a:not(.btn-commands) {
     font-size: 20px;
     padding: 9px 25px;
     display: inline-block;
@@ -1798,7 +1857,7 @@ body:not(.dark) .social-link:hover .fa-github {
 
 @media (max-width: 950px) {
   .home .blob-outer-container {
-    filter: blur(80px);
+    filter: blur(var(--blur-lg));
     opacity: 0.25;
   }
 
@@ -1939,22 +1998,92 @@ body > :last-child:not(footer) {
   }
 }
 
-/* ================= ДОПОЛНИТЕЛЬНЫЕ ПЛАВНЫЕ ПЕРЕХОДЫ ДЛЯ ТЕМЫ ================= */
+/* ================= CTA-КНОПКА (Add to Discord) ================= */
+/*
+  font-size задан явно, чтобы кнопка НЕ наследовала его от родителя.
+  Без явного значения мобильные правила `.home .home-content a`
+  (font-size: 20px, padding: 9px 25px) перебивали .btn-commands
+  и кнопка раздувалась. Эти правила теперь исключают .btn-commands
+  через :not() — см. блоки @media (max-width: 950px) и (max-width: 690px).
+*/
 
-.features,
-.contributors,
-footer,
-.footer-bottom,
-.card,
-.contributors .carousel .cardd,
-.dropdown,
-.language-dropdown-js,
-.navbar,
-section .title,
-section .title::before,
-section .title::after,
-.this-is-pain {
-  transition: all 0.3s ease;
+.btn-commands {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;                          /* 👈 отступ между иконкой и текстом */
+
+  /* Тема-зависимые токены */
+  background-color: var(--accent-dim);
+  color: var(--hero-text);
+  border: 1px solid var(--accent-dim);
+
+  backdrop-filter: blur(var(--blur-md)) saturate(var(--blur-sat));
+  -webkit-backdrop-filter: blur(var(--blur-md)) saturate(var(--blur-sat));
+
+  /* Явный размер текста — не наследуется от родителя */
+  font-size: 1rem;                      /* 16px на десктопе */
+  line-height: 1.2;
+  font-weight: 600;                     /* font-semibold */
+  text-decoration: none;
+
+  padding: 1rem 2rem;                   /* py-4 px-8 */
+  border-radius: 0.75rem;               /* rounded-xl */
+
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
+
+  margin: 8px;
+  margin-top: 20px;
+}
+
+.btn-commands:hover {
+  background-color: transparent;
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 25px var(--accent-dim);
+  transform: translateY(-2px);
+}
+
+.btn-commands:active {
+  transform: translateY(0);
+}
+
+.btn-commands:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* Иконка Discord */
+.btn-commands i {
+  display: inline-flex;
+  align-items: center;
+  font-size: 1.1em;
+  transition: transform 0.3s ease;
+}
+
+.btn-commands:hover i {
+  transform: scale(1.1);
+}
+
+/* Мобильные размеры — компактнее десктопа */
+@media (max-width: 690px) {
+  .btn-commands {
+    font-size: 0.9375rem;    /* 15px */
+    padding: 0.875rem 1.5rem; /* 14px 24px */
+    gap: 0.4375rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .btn-commands {
+    font-size: 0.875rem;      /* 14px */
+    padding: 0.75rem 1.25rem; /* 12px 20px */
+  }
 }
 
 /* ================= BLOB CANVAS (fistashkin blobs.js) ================= */

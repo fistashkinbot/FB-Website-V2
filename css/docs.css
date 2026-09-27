@@ -12,6 +12,17 @@
   --docs-text-strong: #18181b;
   --docs-body-text: #3f3f46;
 
+  /* ================= GLOBAL BLUR CONSTANTS ================= */
+  /* Все размытия в проекте — через эти переменные.
+     Меняешь значение здесь → обновляется везде. */
+  --blur-xs: 4px;    /* overlay backgrounds */
+  --blur-sm: 8px;    /* iOS fallback */
+  --blur-md: 16px;   /* панели, кнопки, dropdown */
+  --blur-lg: 80px;   /* mobile blob-outer */
+  --blur-xl: 120px;  /* features::after */
+  --blur-2xl: 300px; /* blob-outer (desktop) */
+  --blur-sat: 150%;  /* saturate() рядом с blur() */
+
   --docs-nav-bg: rgba(255, 255, 255, 0.75);
   --docs-nav-text: #18181b;
   --docs-nav-glow: rgba(0, 0, 0, 0.2);
@@ -149,29 +160,28 @@
   --hint-warning-heading: #fef08c;
 }
 
-/* ─── ПЛАВНОЕ ПЕРЕКЛЮЧЕНИЕ ТЕМЫ ─── */
-html {
-  transition: background-color 0.3s ease, color 0.3s ease;
+/* ================= ПЛАВНОЕ ПЕРЕКЛЮЧЕНИЕ ТЕМЫ (View Transitions) ================= */
+/*
+  Отключаем стандартный кроссфейд — theme.js запускает анимацию
+  clip-path: circle() из точки клика.
+
+  pointer-events на псевдо-элементах здесь не работает: браузер
+  замораживает ввод на своём уровне (не CSS). За кликабельность
+  кнопки отвечает pointerdown-хак в theme.js — он вызывает
+  skipTransition() до того, как браузер съест клик.
+*/
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
 }
 
-body {
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-/* Синхронная смена темы: пока на <html> висит .theme-transitioning,
-   все элементы меняют цвета разом за 0.3s. Класс ставит/снимает JS. */
-html.theme-transitioning,
-html.theme-transitioning body,
-html.theme-transitioning body *,
-html.theme-transitioning body *::before,
-html.theme-transitioning body *::after {
-  transition:
-    background-color 0.3s ease,
-    border-color 0.3s ease,
-    color 0.3s ease,
-    fill 0.3s ease,
-    stroke 0.3s ease,
-    box-shadow 0.3s ease !important;
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+  }
 }
 
 /* ─── НАВБАР ─── */
@@ -186,8 +196,6 @@ html.theme-transitioning body *::after {
   font-family: "Ubuntu", sans-serif;
   transition: padding 0.3s ease;
   z-index: 9999;
-  /* FIX: iOS — держим навбар на отдельном GPU-слое, иначе backdrop-filter
-     внутри .max-width заставляет Safari "отклеивать" fixed от вьюпорта во время скролла */
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
   will-change: transform;
@@ -208,7 +216,7 @@ html.theme-transitioning body *::after {
   background: var(--docs-nav-bg);
   border: 1px solid var(--docs-nav-pill-border);
   backdrop-filter: blur(16px) saturate(150%);
-  -webkit-backdrop-filter: blur(16px) saturate(150%); /* FIX: iOS */
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
@@ -285,9 +293,6 @@ html.theme-transitioning body *::after {
   flex-shrink: 0;
 }
 
-/* Обёртка для кнопок справа (настройки + переключатель сайдбара на мобильном):
-   держит между ними фиксированный небольшой зазор и прижимает обе к правому краю,
-   вместо того чтобы каждая кнопка сама искала себе место в гриде. */
 .docs-nav-actions {
   display: flex;
   align-items: center;
@@ -355,7 +360,7 @@ html.theme-transitioning body *::after {
   border: 1px solid var(--docs-border-medium);
   background: var(--docs-panel-bg);
   backdrop-filter: blur(16px) saturate(150%);
-  -webkit-backdrop-filter: blur(16px) saturate(150%); /* FIX: iOS */
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
   color: var(--docs-nav-text);
   transition: all 0.2s ease;
   cursor: pointer;
@@ -394,8 +399,6 @@ html.theme-transitioning body *::after {
   width: 268px;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  /* FIX: iOS — свой GPU-слой, чтобы блюр сайдбара не рвался на стыке
-     с blur(4px) у .doc-sb-overlay рядом */
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
   will-change: transform;
@@ -534,6 +537,36 @@ html.theme-transitioning body *::after {
   to {
     border-left-color: var(--accent);
     background: var(--docs-hover-bg-active);
+  }
+}
+
+/* ================= ПЛАВНОЕ ОБНОВЛЕНИЕ ПРИ СМЕНЕ ЯЗЫКА ================= */
+/*
+  Сайдбар (#sb-nav-body), оглавление (#doc-toc-list) и пагинация
+  (#doc-pnav) перестраиваются мгновенным innerHTML при смене языка
+  (см. docs.js: buildSidebar/buildDocTOC/buildDocPageNav) — контент
+  меняется мгновенно, но это не мешает добавить лёгкий fade-in после
+  подмены, чтобы не было «жёсткого» щелчка. docs.js вызывает
+  playFadeIn(el) сразу после обновления innerHTML этих контейнеров.
+*/
+@keyframes doc-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.doc-fade-in {
+  animation: doc-fade-in 0.25s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .doc-fade-in {
+    animation: none;
   }
 }
 
@@ -1048,7 +1081,6 @@ pre:hover .code-copy {
   font-family: "Ubuntu", "Poppins", sans-serif;
 }
 
-/* Hint Type Styles - Dark theme adapted from modern GitBook */
 .gitbook-hint.hint-info {
   background-color: var(--hint-info-bg);
   border-color: #3b82f6;
@@ -1151,9 +1183,7 @@ pre:hover .code-copy {
   background: var(--docs-overlay-bg);
   z-index: 99;
   backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px); /* FIX: iOS */
-  /* FIX: iOS — свой GPU-слой, иначе блюр оверлея визуально "рвётся" на стыке
-     с blur(16px) у .docs-sidebar (тот же класс бага, что и с навбаром) */
+  -webkit-backdrop-filter: blur(4px);
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
   will-change: transform;
@@ -1170,7 +1200,6 @@ pre:hover .code-copy {
 }
 
 @media (max-width: 768px) {
-  /* ─── МОБИЛЬНОЕ МЕНЮ ДОКОВ — bottom sheet, отдельный UI от десктоп-сайдбара ─── */
   .docs-sidebar {
     top: auto;
     left: 0;
@@ -1255,11 +1284,85 @@ pre:hover .code-copy {
   }
 }
 
-/* FIX: iOS — тяжёлый backdrop-filter на fixed-навбаре лагает при скролле
-   и Safari визуально "отклеивает" пилюлю от вьюпорта; урезаем блюр только на iOS */
 @supports (-webkit-touch-callout: none) {
   .docs-navbar .max-width {
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
   }
+}
+
+/* ================= DOCS CONTENT SKELETON ================= */
+/*
+  Скелетон для контента документации. Используется при:
+    • первой загрузке docs.html (пока грузится SUMMARY.md)
+    • переключении страницы через сайдбар
+    • смене языка (initDocs → loadDocPage)
+
+  Базовый .sk-shimmer берётся из style.css (тот же, что на главной),
+  тут — только размеры под структуру markdown-страницы.
+*/
+
+.doc-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 4px 0;
+}
+
+/* Все блоки наследуют фон и волну от .sk-shimmer,
+   но с собственной длительностью и фазой (задаётся из JS) */
+.doc-skeleton .sk-shimmer {
+  border-radius: 6px;
+}
+
+/* Заголовки */
+.doc-sk-h1 {
+  width: 55%;
+  height: 32px;
+  margin-bottom: 6px;
+}
+.doc-sk-h2 {
+  width: 38%;
+  height: 22px;
+  margin-top: 20px;
+}
+.doc-sk-h3 {
+  width: 28%;
+  height: 18px;
+  margin-top: 8px;
+}
+
+/* Строки абзацев */
+.doc-sk-line {
+  height: 14px;
+}
+.doc-sk-w100 { width: 100%; }
+.doc-sk-w90  { width: 90%;  }
+.doc-sk-w70  { width: 70%;  }
+.doc-sk-w50  { width: 50%;  }
+
+/* Блок кода */
+.doc-sk-code {
+  width: 100%;
+  height: 100px;
+  margin-top: 10px;
+  border-radius: 8px;
+}
+
+/* Хинт-плашка (info / tip / danger) */
+.doc-sk-hint {
+  width: 100%;
+  height: 64px;
+  margin-top: 8px;
+  border-radius: 12px;
+}
+
+/* Мобильный вид — пропорционально компактнее */
+@media (max-width: 768px) {
+  .doc-skeleton { gap: 11px; }
+  .doc-sk-h1 { width: 75%; height: 26px; }
+  .doc-sk-h2 { width: 55%; height: 18px; }
+  .doc-sk-h3 { width: 40%; height: 15px; }
+  .doc-sk-code { height: 80px; }
+  .doc-sk-hint { height: 56px; }
 }

@@ -143,10 +143,79 @@ function formatLastUpdated(dateStr, lang = getDocLang()) {
   });
 }
 
+// ─── СКЕЛЕТОН ДЛЯ ДОКУМЕНТАЦИИ ───
+/*
+  Разметка повторяет структуру реальной markdown-страницы:
+  h1 → 3 строки параграфа → h2 → 2 строки → хинт → h3 → 3 строки
+  → код → h2 → 3 строки. Так при появлении контента не будет
+  визуального «прыжка» — блоки лягут точно по своим местам.
+
+  Используется:
+    • в initDocs — пока грузится SUMMARY.md и/или происходит смена языка;
+    • в loadDocPage — при клике по пункту сайдбара.
+*/
+function renderDocSkeleton() {
+  return `
+    <div class="doc-skeleton" aria-hidden="true">
+      <div class="sk-shimmer doc-sk-h1"></div>
+      <div class="sk-shimmer doc-sk-line doc-sk-w100"></div>
+      <div class="sk-shimmer doc-sk-line doc-sk-w90"></div>
+      <div class="sk-shimmer doc-sk-line doc-sk-w70"></div>
+
+      <div class="sk-shimmer doc-sk-h2"></div>
+      <div class="sk-shimmer doc-sk-line doc-sk-w100"></div>
+      <div class="sk-shimmer doc-sk-line doc-sk-w90"></div>
+
+      <div class="sk-shimmer doc-sk-hint"></div>
+
+      <div class="sk-shimmer doc-sk-h3"></div>
+      <div class="sk-shimmer doc-sk-line doc-sk-w100"></div>
+      <div class="sk-shimmer doc-sk-line doc-sk-w90"></div>
+      <div class="sk-shimmer doc-sk-line doc-sk-w50"></div>
+
+      <div class="sk-shimmer doc-sk-code"></div>
+
+      <div class="sk-shimmer doc-sk-h2"></div>
+      <div class="sk-shimmer doc-sk-line doc-sk-w100"></div>
+      <div class="sk-shimmer doc-sk-line doc-sk-w90"></div>
+      <div class="sk-shimmer doc-sk-line doc-sk-w70"></div>
+    </div>
+  `;
+}
+
+// Каждому блоку — своя длительность и фаза волны,
+// чтобы они не мигали синхронно (как на главной)
+function applySkeletonDelays(root) {
+  root.querySelectorAll('.sk-shimmer').forEach((node) => {
+    node.style.setProperty('--sk-dur',   (1.05 + Math.random() * 0.7).toFixed(2) + 's');
+    node.style.setProperty('--sk-delay', (-Math.random() * 1.6).toFixed(2) + 's');
+  });
+}
+
+// ─── ПЛАВНОЕ ПОЯВЛЕНИЕ ПОСЛЕ ПЕРЕСТРОЙКИ ───
+// Сайдбар/оглавление/пагинация перестраиваются мгновенным innerHTML —
+// вызываем это сразу после подмены, чтобы контент не «щёлкал», а мягко
+// проявлялся (см. .doc-fade-in в docs.css).
+function playFadeIn(el) {
+  if (!el) return;
+  if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+  el.classList.remove('doc-fade-in');
+  void el.offsetWidth; // форсируем reflow, чтобы анимация перезапустилась
+  el.classList.add('doc-fade-in');
+}
+
 // ─── ИНИЦИАЛИЗАЦИЯ ───
 async function initDocs(lang) {
   lang = lang || getDocLang();
   const BASE_PATH = getBasePath(lang);
+
+  // Показываем скелетон сразу — до сетевого запроса.
+  // Так при смене языка пользователь не увидит старый контент
+  // на другом языке и не будет «пустого» мигания.
+  const docEl = document.getElementById("doc-content");
+  docEl.innerHTML = renderDocSkeleton();
+  applySkeletonDelays(docEl);
+
   try {
     const resp = await fetch(BASE_PATH + "SUMMARY.md");
     if (!resp.ok) throw new Error("SUMMARY.md not found");
@@ -201,6 +270,7 @@ function buildSidebar() {
     });
   });
   body.innerHTML = html;
+  playFadeIn(body);
 }
 
 function toggleGroup(gid) {
@@ -344,7 +414,8 @@ async function loadDocPage(file, lang) {
   closeDocSearch();
 
   const doc = document.getElementById("doc-content");
-  doc.innerHTML = '<div class="doc-spinner"></div>';
+  doc.innerHTML = renderDocSkeleton();
+  applySkeletonDelays(doc);
 
   document.getElementById("doc-toc-list").innerHTML = "";
   document.getElementById("doc-pnav").style.display = "none";
@@ -410,6 +481,7 @@ async function loadDocPage(file, lang) {
   const lm = cache[file]?.lastModified;
   document.getElementById("doc-last-updated").style.display = "block";
   document.getElementById("doc-lu-text").textContent = formatLastUpdated(lm, lang);
+  playFadeIn(document.getElementById("doc-lu-text"));
 
   document.getElementById("doc-toolbar").style.display = "flex";
 
@@ -432,11 +504,13 @@ function buildDocTOC() {
   const list = document.getElementById("doc-toc-list");
   if (!headings.length) {
     list.innerHTML = '<li style="font-size:12px;color:var(--doc-text-dim)">—</li>';
+    playFadeIn(list);
     return;
   }
   list.innerHTML = headings.map(h => 
     `<li><a class="toc-link ${h.tagName === "H3" ? "h3" : ""}" href="#${h.id}">${h.textContent}</a></li>`
   ).join("");
+  playFadeIn(list);
 
   const links = [...list.querySelectorAll(".toc-link")];
   tocObserver = new IntersectionObserver((entries) => {
@@ -473,6 +547,7 @@ function buildDocPageNav(file) {
         <div class="pnav-title">${next.title}</div>
       </div>` : "<div></div>"}
   `;
+  playFadeIn(nav);
 }
 
 // ─── ПОИСК ───
