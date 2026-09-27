@@ -4,77 +4,14 @@ const ctx = canvas.getContext('2d');
 let blobs = [];
 let animationId;
 
-// FIX: .home и #particles-js раньше считали высоту через голый 100vh,
-// а на iOS 100vh физически меняется вместе с адрес-баром при скролле —
-// сам блок .home то выше, то ниже, поэтому канвас внутри него всё равно
-// чуть растягивался/сдвигался, даже когда мы перестали трогать его
-// разрешение напрямую. Фиксируем высоту через CSS-переменную --vh.
-// Меряем не просто window.innerHeight (он может быть снят как в момент
-// свёрнутого, так и развёрнутого адрес-бара — от этого зависело бы,
-// станет ли .home чуть выше или чуть ниже реального экрана), а МАКСИМУМ
-// из innerHeight и screen.height — то есть сразу берём высоту, которой
-// заведомо хватит на самый большой возможный видимый вьюпорт устройства.
-// Тогда .home никогда не нужно "дорастать" при скрытии тулбара, и блобам
-// внутри канваса физически некуда сдвигаться — секция уже максимального
-// размера с самого начала. Обновляем --vh только при реальном изменении
-// ШИРИНЫ (поворот экрана), см. ниже.
-function getMaxViewportHeight() {
-  return Math.max(window.innerHeight, window.screen.height || 0);
-}
-
-function setViewportHeightVar() {
-  document.documentElement.style.setProperty('--vh', getMaxViewportHeight() * 0.01 + 'px');
-}
-setViewportHeightVar();
-
 function resizeCanvas() {
   canvas.width = window.innerWidth;
-  canvas.height = getMaxViewportHeight();
+  canvas.height = window.innerHeight;
   blobs = [];
   createBlobs();
 }
 
-// FIX: на мобильных браузерах скролл сворачивает/разворачивает адресную
-// строку, а это меняет window.innerHeight и раньше вызывало срабатывание
-// resize -> resizeCanvas() -> полный сброс blobs[] и createBlobs() с
-// НОВЫМИ случайными цветами и позициями (резкая вспышка цвета), а затем —
-// даже после того как случайную смену цвета убрали — простое обновление
-// canvas.width/height на каждый такой resize всё равно растягивало/сжимало
-// уже отрисованную картинку свечения (то ярче, то тусклее).
-// Теперь при resize вообще ничего не трогаем (ни блобы, ни разрешение
-// канваса), если изменилась только высота (мобильная адресная строка).
-// Пересоздаём блобы и меняем разрешение канваса только при реальном
-// изменении ШИРИНЫ окна (поворот экрана, ресайз окна на десктопе).
-let lastWidth = window.innerWidth;
-let resizeDebounce;
-
-function handleResize() {
-  clearTimeout(resizeDebounce);
-  resizeDebounce = setTimeout(() => {
-    const newWidth = window.innerWidth;
-    const widthChanged = Math.abs(newWidth - lastWidth) > 50;
-
-    // ВАЖНО: canvas.width/height трогаем ТОЛЬКО при реальном изменении
-    // ширины. Раньше мы обновляли внутреннее разрешение канваса при
-    // любом resize, включая чисто высотные срабатывания от схлопывания
-    // адресной строки iOS при скролле. Из-за этого браузер каждый раз
-    // растягивал/сжимал уже отрисованную картинку свечения под новый
-    // размер битмапа — визуально это выглядело как то более яркий, то
-    // более тусклый фон при скролле. Если ширину не трогать, CSS
-    // (#blobCanvas { width:100%; height:100% }) сам плавно растянет уже
-    // готовую картинку под новый размер блока — без скачков яркости.
-    if (widthChanged) {
-      setViewportHeightVar();
-      canvas.width = newWidth;
-      canvas.height = getMaxViewportHeight();
-      blobs = [];
-      createBlobs();
-      lastWidth = newWidth;
-    }
-  }, 150);
-}
-
-window.addEventListener('resize', handleResize);
+window.addEventListener('resize', resizeCanvas);
 
 // Новая палитра (RGB)
 const colors = [

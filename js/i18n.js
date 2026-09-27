@@ -412,47 +412,23 @@ function setLanguage(lang) {
 }
 
 // === Toast ===
-let currentToast = null;
-
-const flagStyle = 'width:24px;height:16px;border-radius:4px;object-fit:cover;display:block;box-shadow:0 1px 4px rgba(0,0,0,0.5);flex-shrink:0;';
-
+// Сам тост рисует js/toast.js (window.toast), стили — css/toast.css.
+// Здесь только тексты и флаги для уведомления о смене языка.
 const toastMessages = {
-    ru: `<img src="./assets/flags/flag-russia.svg" style="${flagStyle}"> Язык изменён на Русский`,
-    uk: `<img src="./assets/flags/flag-ukraine.svg" style="${flagStyle}"> Мову змінено на Українську`,
-    en: `<img src="./assets/flags/flag-united-states.svg" style="${flagStyle}"> Language changed to English`
+    ru: { flag: './assets/flags/flag-russia.svg', text: 'Язык изменён на Русский' },
+    uk: { flag: './assets/flags/flag-ukraine.svg', text: 'Мову змінено на Українську' },
+    en: { flag: './assets/flags/flag-united-states.svg', text: 'Language changed to English' }
 };
 
 function showLanguageToast(lang) {
-    if (currentToast) currentToast.remove();
+    if (!window.toast) return;
+    const msg = toastMessages[lang];
 
-    // FIX: позиционирование (position/bottom/right + центрирование на мобильном)
-    // теперь целиком в CSS-классе .toast (см. style.css), инлайном задаём только
-    // то, что не завязано на брейкпоинты — иначе inline-стили всегда перебивали
-    // бы media query для мобильного центрирования.
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-
-    toast.innerHTML = toastMessages[lang] || 'Language changed';
-    document.body.appendChild(toast);
-    currentToast = toast;
-
-    setTimeout(() => {
-        toast.classList.add('toast-show');
-        toast.style.opacity = '1';
-    }, 10);
-
-    setTimeout(() => {
-        if (currentToast === toast) {
-            toast.classList.remove('toast-show');
-            toast.style.opacity = '0';
-            setTimeout(() => {
-                if (currentToast === toast) {
-                    toast.remove();
-                    currentToast = null;
-                }
-            }, 350);
-        }
-    }, 2600);
+    window.toast.add({
+        title: msg ? msg.text : 'Language changed',
+        icon: msg ? msg.flag : undefined,
+        timeout: 2600
+    });
 }
 
 // === Typed ===

@@ -1,0 +1,328 @@
+/* =====================================================================
+   TOAST — стек уведомлений (порт shadcn/ui Toast на нативный CSS)
+   Логика: js/toast.js  ·  Тема: класс .dark на <html>, токены из style.css
+   ===================================================================== */
+
+.toaster {
+  /* Токены подхватываются из style.css (:root / .dark) */
+  --toast-bg: var(--dropdown-lang-bg, rgba(255, 255, 255, 0.3));
+  --toast-solid: var(--surface, #ffffff);
+  --toast-fg: var(--text-primary, #18181b);
+  --toast-muted: var(--text-muted, #71717a);
+  --toast-border: var(--border, #e4e4e7);
+  --toast-primary: var(--toast-fg);
+  --toast-primary-fg: var(--toast-solid);
+  --toast-ring: var(--toast-fg);
+  --toast-radius: 10px;
+  --toast-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+
+  --toast-success: #16a34a;
+  --toast-info: #2563eb;
+  --toast-warning: #d97706;
+  --toast-error: #dc2626;
+
+  --toast-width: min(356px, calc(100vw - 32px));
+  --gap: 14px; /* дублируется из JS (toast.config({ gap })) */
+
+  position: fixed;
+  z-index: 100010; /* выше дропдаунов (100001) */
+  width: var(--toast-width);
+  height: 0;
+  pointer-events: none;
+  font-family: "Poppins", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.dark .toaster {
+  --toast-success: #4ade80;
+  --toast-info: #60a5fa;
+  --toast-warning: #fbbf24;
+  --toast-error: #f87171;
+}
+
+/* ---------- позиции ---------- */
+.toaster[data-position^="bottom"] {
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+}
+.toaster[data-position^="top"] {
+  top: calc(20px + env(safe-area-inset-top, 0px));
+}
+.toaster[data-position$="right"] {
+  right: 20px;
+}
+.toaster[data-position$="left"] {
+  left: 20px;
+}
+.toaster[data-position$="center"] {
+  left: 50%;
+  margin-left: calc(var(--toast-width) / -2);
+}
+
+/* ---------- один тост ---------- */
+.toast {
+  --y: 0px;
+  --s: 1;
+  --dx: 0px;
+  --dy: 0px;
+  --z: 1;
+  --enter: 100%;
+  --ease: cubic-bezier(0.21, 1.02, 0.73, 1);
+
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: var(--z);
+  pointer-events: auto;
+  opacity: 1;
+  transform: translate3d(var(--dx), calc(var(--y) + var(--dy)), 0)
+    scale(var(--s));
+  transform-origin: center bottom;
+  transition: transform 0.45s var(--ease), opacity 0.35s ease,
+    height 0.35s var(--ease);
+  will-change: transform, height;
+}
+.toaster[data-position^="bottom"] .toast {
+  bottom: 0;
+}
+.toaster[data-position^="top"] .toast {
+  top: 0;
+  transform-origin: center top;
+  --enter: -100%;
+}
+.toaster[data-swipe="x"] .toast {
+  touch-action: pan-y;
+}
+.toaster[data-swipe="y"] .toast {
+  touch-action: pan-x;
+}
+
+/* состояние «до появления» — снимается в JS через data-mounted */
+.toast:not([data-mounted]) {
+  opacity: 0;
+  transform: translate3d(0, var(--enter), 0) scale(0.96);
+}
+.toast[data-hidden="true"] {
+  opacity: 0;
+  pointer-events: none;
+}
+.toast[data-closing] {
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.4s var(--ease), opacity 0.3s ease;
+}
+.toast[data-swiping] {
+  transition: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* невидимый «мостик», чтобы hover не пропадал в зазоре между тостами */
+.toast::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: calc(var(--gap) + 2px);
+}
+.toaster[data-position^="bottom"] .toast::before {
+  bottom: 100%;
+}
+.toaster[data-position^="top"] .toast::before {
+  top: 100%;
+}
+
+.toast-card {
+  height: 100%;
+  overflow: hidden;
+  background: var(--toast-bg);
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  color: var(--toast-fg);
+  border: 1px solid var(--toast-border);
+  border-radius: var(--toast-radius);
+  box-shadow: var(--toast-shadow);
+}
+.toast-inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  transition: opacity 0.25s ease;
+}
+/* старые тосты в свёрнутом стеке показывают только край */
+.toaster[data-expanded="false"] .toast[data-front="false"] .toast-inner {
+  opacity: 0;
+}
+
+/* ---------- иконка ---------- */
+.toast-icon {
+  display: flex;
+  flex: none;
+  margin-top: 2px;
+}
+.toast-icon[hidden] {
+  display: none;
+}
+.toast-icon svg {
+  display: block;
+}
+/* своя иконка через опцию icon (например, флаг языка) */
+.toast-icon img {
+  display: block;
+  width: 24px;
+  height: 16px;
+  border-radius: 4px;
+  object-fit: cover;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+/* Font Awesome иконка (например fa-sun / fa-moon в тосте смены темы) */
+.toast-icon i {
+  display: block;
+  font-size: 15px;
+  line-height: 20px;
+  color: var(--toast-fg);
+}
+.toast[data-type="success"] .toast-icon {
+  color: var(--toast-success);
+}
+.toast[data-type="info"] .toast-icon {
+  color: var(--toast-info);
+}
+.toast[data-type="warning"] .toast-icon {
+  color: var(--toast-warning);
+}
+.toast[data-type="error"] .toast-icon {
+  color: var(--toast-error);
+}
+.toast[data-type="loading"] .toast-icon {
+  color: var(--toast-muted);
+}
+.toast-spin {
+  animation: toast-spin 0.8s linear infinite;
+}
+@keyframes toast-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- текст ---------- */
+.toast-content {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.toast-title {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+}
+.toast-description {
+  margin-top: 2px;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--toast-muted);
+}
+.toast-title[hidden],
+.toast-description[hidden] {
+  display: none;
+}
+
+/* ---------- кнопки ---------- */
+.toast-action {
+  flex: none;
+  align-self: center;
+  height: 32px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--toast-primary);
+  color: var(--toast-primary-fg);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+.toast-action:hover {
+  opacity: 0.88;
+}
+
+.toast-close {
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid var(--toast-border);
+  border-radius: 999px;
+  background: var(--toast-bg);
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  color: var(--toast-muted);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease, color 0.15s ease;
+}
+.toast-close svg {
+  width: 12px;
+  height: 12px;
+}
+.toast:hover .toast-close,
+.toast-close:focus-visible {
+  opacity: 1;
+}
+.toast-close:hover {
+  color: var(--toast-fg);
+}
+.toaster[data-expanded="false"] .toast[data-front="false"] .toast-close {
+  display: none;
+}
+
+.toast-action:focus-visible,
+.toast-close:focus-visible {
+  outline: 2px solid var(--toast-ring);
+  outline-offset: 2px;
+}
+
+/* ---------- мобильный вид: центрирование + компактность ----------
+   Тот же брейкпоинт (950px), что и у остальной мобильной адаптации
+   в style.css. Десктоп остаётся как в оригинальном shadcn (иконка
+   слева, текст обычным блоком). */
+@media (max-width: 950px) {
+  .toaster {
+    --toast-width: min(260px, calc(100vw - 88px));
+  }
+  .toast-inner {
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 11px 16px;
+  }
+  .toast-icon {
+    margin-top: 0;
+  }
+  .toast-content {
+    flex: 0 1 auto;
+  }
+  .toast-title,
+  .toast-description {
+    text-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast,
+  .toast[data-closing] {
+    transition-duration: 0.01ms;
+  }
+  .toast-spin {
+    animation-duration: 2s;
+  }
+}

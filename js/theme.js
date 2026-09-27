@@ -7,6 +7,29 @@ const lightBtn = document.getElementById('light-btn');
 const darkBtn = document.getElementById('dark-btn');
 const themeToggleItemEl = document.getElementById('theme-toggle-item');
 
+// Тексты тоста о смене темы (тот же паттерн, что и у языкового тоста в i18n.js)
+const themeToastMessages = {
+    ru: { light: 'Включена светлая тема', dark: 'Включена тёмная тема' },
+    uk: { light: 'Увімкнено світлу тему', dark: 'Увімкнено темну тему' },
+    en: { light: 'Light theme enabled', dark: 'Dark theme enabled' }
+};
+
+function showThemeToast(theme) {
+    if (!window.toast) return;
+    const lang = (window.getCurrentLanguage && window.getCurrentLanguage()) || 'ru';
+    const msg = themeToastMessages[lang] || themeToastMessages.ru;
+
+    // Та же иконка, что и в дропдауне (fa-sun / fa-moon), см. updateThemeToggleUI()
+    const iconEl = document.createElement('i');
+    iconEl.className = theme === 'dark' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
+
+    window.toast.add({
+        title: theme === 'dark' ? msg.dark : msg.light,
+        icon: iconEl,
+        timeout: 2600
+    });
+}
+
 // Основная функция переключения
 function setTheme(theme, saveToStorage = true) {
     if (theme === 'dark') {
@@ -21,8 +44,12 @@ function setTheme(theme, saveToStorage = true) {
         lightBtn?.classList.add('active');
     }
 
+    // Тост только при реальном переключении пользователем, не при
+    // восстановлении сохранённой/системной темы на загрузке страницы
+    // (initTheme() всегда вызывает setTheme с saveToStorage=false).
     if (saveToStorage) {
         localStorage.setItem('theme', theme);
+        showThemeToast(theme);
     }
 
     updateThemeToggleUI();
