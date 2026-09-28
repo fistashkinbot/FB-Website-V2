@@ -15,6 +15,29 @@ const isTouch = window.matchMedia && window.matchMedia('(pointer: coarse)').matc
 // градиенты, разницы глазом нет, а пикселей для заливки в 4 раза меньше.
 const RENDER_SCALE = isTouch ? 0.5 : 1;
 
+// FIX (текст hero не по центру на мобильных): 100vh/100svh на iOS/Android могут
+// не совпадать с реально видимой областью (зависит от состояния панелей
+// браузера), из-за чего hero выше экрана, а контент, отцентрованный внутри него,
+// уезжает вниз. Берём фактическую видимую высоту (window.innerHeight) и кладём
+// её в --hero-h (используется в style.css для .home и #particles-js).
+// На тач-устройствах игнорируем resize, при котором поменялась только высота
+// (сворачивание адресной строки при скролле) — иначе hero «прыгал» бы на скролле.
+(function setupHeroHeight() {
+  const root = document.documentElement;
+  let lastWidth = -1;
+
+  function apply(force) {
+    const w = window.innerWidth;
+    if (isTouch && !force && w === lastWidth) return;
+    lastWidth = w;
+    root.style.setProperty('--hero-h', window.innerHeight + 'px');
+  }
+
+  apply(true);
+  window.addEventListener('resize', () => apply(false));
+  window.addEventListener('orientationchange', () => setTimeout(() => apply(true), 300));
+})();
+
 // FIX (мерцание в Chrome при скролле): пока палец/инерция скроллят страницу,
 // не перерисовываем канвас — иначе главный поток и растеризация конкурируют
 // с композитором, и слои моргают. Во время скролла показывается последний
