@@ -51,6 +51,80 @@ const THEME_ANIM_MS = 750;
 const THEME_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
 const THEME_COOLDOWN_MS = 750;
 
+// FIX: на мобильных (iOS / Chrome iOS) View Transitions API рисует страницу как набор
+// «плоских» снимков — backdrop-filter (блюр) и часть эффектов в них пропадают на всё
+// время анимации, а dropdown выглядит сломанным. На тач-устройствах круговой reveal
+// заменён плавным переходом цветов по ЖИВОМУ DOM: блюр, тени и анимации дропдауна
+// работают всё время переключения.
+//
+// Как это устроено: все цветовые токены темы (--bg, --nav-bg, --hero-* и т.д.) один
+// раз регистрируются как <color> через CSS.registerProperty. Такие переменные браузер
+// умеет интерполировать, а раз они наследуются — достаточно повесить transition на
+// <html>, и все элементы, использующие эти переменные, плавно меняют цвет. Никаких
+// глобальных `* { transition: ... !important }`, которые ломали бы собственные
+// transition дропдауна/навбара.
+const THEME_SOFT_MS = 350;
+const IS_TOUCH_DEVICE =
+    window.matchMedia('(pointer: coarse)').matches ||
+    window.matchMedia('(hover: none)').matches ||
+    /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // iPadOS в режиме «как на Mac»
+let softThemeTimer = null;
+let themeColorTokens = null;
+
+function collectThemeColorTokens() {
+    if (themeColorTokens) return themeColorTokens;
+    themeColorTokens = [];
+    if (!(window.CSS && typeof CSS.registerProperty === 'function')) return themeColorTokens;
+
+    const themeSelector = /(^|[\s,>+~])(:root|html)(?![\w-])|\.dark(?![\w-])/;
+    const colorValue = /^\s*(#[0-9a-f]{3,8}\b|rgba?\(|hsla?\(|hwb\(|lab\(|lch\(|oklab\(|oklch\(|color\()/i;
+    const found = new Set();
+
+    const visit = rules => {
+        for (const rule of rules) {
+            if (rule.style && rule.selectorText) {
+                if (!themeSelector.test(rule.selectorText)) continue;
+                for (let i = 0; i < rule.style.length; i++) {
+                    const name = rule.style[i];
+                    if (name.startsWith('--') && colorValue.test(rule.style.getPropertyValue(name))) {
+                        found.add(name);
+                    }
+                }
+            } else if (rule.cssRules) {
+                try { visit(rule.cssRules); } catch (_) {}
+            }
+        }
+    };
+
+    for (const sheet of document.styleSheets) {
+        try { visit(sheet.cssRules); } catch (_) {} // чужие stylesheet (CDN) недоступны — пропускаем
+    }
+
+    const rootStyle = getComputedStyle(html);
+    found.forEach(name => {
+        try {
+            CSS.registerProperty({
+                name,
+                syntax: '<color>',
+                inherits: true,
+                initialValue: rootStyle.getPropertyValue(name).trim() || 'transparent'
+            });
+            themeColorTokens.push(name);
+        } catch (_) {} // уже зарегистрирован или значение не подошло — не критично
+    });
+    return themeColorTokens;
+}
+
+function applyThemeSoft(apply) {
+    const tokens = collectThemeColorTokens();
+    clearTimeout(softThemeTimer);
+    html.style.transition = tokens.map(n => `${n} ${THEME_SOFT_MS}ms ease`).join(', ');
+    void html.offsetWidth; // зафиксировать transition до смены темы, иначе он не запустится
+    apply();
+    softThemeTimer = setTimeout(() => { html.style.transition = ''; }, THEME_SOFT_MS + 60);
+}
+
 let activeTransition = null;
 let activeAnim = null;
 let animGeneration = 0;
@@ -127,10 +201,24 @@ function setTheme(theme, event, saveToStorage = true) {
         body.classList.toggle('dark', isDark);
         lightBtn?.classList.toggle('active', !isDark);
         darkBtn?.classList.toggle('active', isDark);
+        // FIX: раньше updateThemeToggleUI() вызывался сразу после startViewTransition,
+        // то есть ДО выполнения apply() (callback запускается асинхронно) — иконка и
+        // подпись пункта «тема» показывали состояние прошлой темы.
+        updateThemeToggleUI();
     };
 
     const supportsVT = typeof document.startViewTransition === 'function';
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Тач-устройства: без View Transitions, см. комментарий у THEME_SOFT_MS
+    if (saveToStorage && IS_TOUCH_DEVICE && !reducedMotion) {
+        lastSwitchTime = performance.now();
+        cancelActiveTransition();
+        applyThemeSoft(apply);
+        localStorage.setItem('theme', theme);
+        showThemeToast(theme);
+        return;
+    }
 
     if (!saveToStorage || !supportsVT || reducedMotion) {
         apply();
