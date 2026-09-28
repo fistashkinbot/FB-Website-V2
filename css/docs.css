@@ -1229,6 +1229,25 @@ pre:hover .code-copy {
   .doc-sb-overlay.open {
     display: block;
   }
+  /* Скролл только внутри списка, не «протекает» на страницу */
+  .docs-sidebar {
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  .doc-sb-overlay {
+    touch-action: none;
+    overscroll-behavior: none;
+  }
+  html.doc-scroll-lock,
+  body.doc-scroll-lock {
+    overflow: hidden;
+  }
+  body.doc-scroll-lock {
+    position: fixed;
+    left: 0;
+    right: 0;
+    width: 100%;
+  }
   .docs-main {
     margin-left: 0;
     padding: 28px 20px 60px;
