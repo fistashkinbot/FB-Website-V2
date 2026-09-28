@@ -2104,4 +2104,10 @@ body > :last-child:not(footer) {
   z-index: 0;
   pointer-events: none;
   display: block;
+  /* Отдельный GPU-слой: на iOS Safari без него канвас перекрашивается
+     при скролле и моргает (см. также правку в blobs.js) */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
