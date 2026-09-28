@@ -466,6 +466,17 @@ body {
   }
 }
 
+/* FIX: background-attachment: fixed на .home переопределялся только для iOS
+   (-webkit-touch-callout). В Chrome на Android фиксированный фон заставляет
+   браузер перерисовывать секцию на каждом кадре скролла — слои над ним
+   (канвас блобов, частицы, оверлеи) при этом моргают. Отключаем для всех
+   тач-устройств. */
+@media (hover: none), (pointer: coarse) {
+  .home {
+    background-attachment: scroll;
+  }
+}
+
 .home::before {
   content: "";
   position: absolute;
