@@ -7,6 +7,20 @@ let running = false;
 let heroVisible = true;
 let lastW = 0;
 let lastH = 0;
+let W = 0; // логические размеры сцены (CSS px) — физика и рисование работают в них
+let H = 0;
+
+const isTouch = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+// На тач-устройствах рисуем в половинном разрешении: блобы — это мягкие
+// градиенты, разницы глазом нет, а пикселей для заливки в 4 раза меньше.
+const RENDER_SCALE = isTouch ? 0.5 : 1;
+
+// FIX (мерцание в Chrome при скролле): пока палец/инерция скроллят страницу,
+// не перерисовываем канвас — иначе главный поток и растеризация конкурируют
+// с композитором, и слои моргают. Во время скролла показывается последний
+// кадр, после остановки (120 мс) анимация продолжается.
+let scrolling = false;
+let scrollTimer = 0;
 
 // FIX (мерцание блобов при скролле на мобайле):
 // раньше canvas мерился по window.innerHeight и слушал window 'resize'.
@@ -38,8 +52,11 @@ function resizeCanvas() {
   lastW = w;
   lastH = h;
 
-  canvas.width = w;   // сброс размера очищает канвас — перерисуем ниже
-  canvas.height = h;
+  W = w;
+  H = h;
+  canvas.width = Math.round(w * RENDER_SCALE);   // сброс размера очищает канвас — перерисуем ниже
+  canvas.height = Math.round(h * RENDER_SCALE);
+  ctx.setTransform(RENDER_SCALE, 0, 0, RENDER_SCALE, 0, 0);
 
   if (!blobs.length || !oldW || !oldH) {
     blobs = [];
@@ -105,7 +122,7 @@ function randomColorIndex(exclude = -1) {
 
 function createBlobs() {
   const numBlobs = 5;
-  const minDim = Math.min(canvas.width, canvas.height);
+  const minDim = Math.min(W, H);
 
   for (let i = 0; i < numBlobs; i++) {
     const radius = minDim * 0.55 + Math.random() * minDim * 0.4;
@@ -113,10 +130,10 @@ function createBlobs() {
     const colorIndex = randomColorIndex();
     const nextColorIndex = randomColorIndex(colorIndex);
 
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
-    const spreadX = canvas.width * 0.35;
-    const spreadY = canvas.height * 0.35;
+    const centerX = W / 2;
+    const centerY = H / 2;
+    const spreadX = W * 0.35;
+    const spreadY = H * 0.35;
 
     blobs.push({
       x: centerX + (Math.random() - 0.5) * spreadX * 2,
@@ -190,10 +207,10 @@ function updateBlob(blob) {
   const dist = Math.sqrt(dx * dx + dy * dy);
 
   if (dist < 80) {
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
-    const spreadX = canvas.width * 0.4;
-    const spreadY = canvas.height * 0.4;
+    const centerX = W / 2;
+    const centerY = H / 2;
+    const spreadX = W * 0.4;
+    const spreadY = H * 0.4;
 
     blob.targetX = centerX + (Math.random() - 0.5) * spreadX * 2;
     blob.targetY = centerY + (Math.random() - 0.5) * spreadY * 2;
@@ -216,17 +233,17 @@ function updateBlob(blob) {
   blob.y += blob.vy;
 
   const padding = blob.radius * 0.7;
-  if (blob.x < -padding) blob.x = canvas.width + padding;
-  if (blob.x > canvas.width + padding) blob.x = -padding;
-  if (blob.y < -padding) blob.y = canvas.height + padding;
-  if (blob.y > canvas.height + padding) blob.y = -padding;
+  if (blob.x < -padding) blob.x = W + padding;
+  if (blob.x > W + padding) blob.x = -padding;
+  if (blob.y < -padding) blob.y = H + padding;
+  if (blob.y > H + padding) blob.y = -padding;
 }
 
 function render(time, advance = true) {
   // clearRect очищает канвас в прозрачный, и сквозь него виден настоящий фон
   // темы (светлый или тёмный), а блобы просто добавляют цветное свечение
   // поверх (через 'lighter' composite при отрисовке).
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, W, H);
 
   blobs.forEach(blob => {
     if (advance) {
@@ -240,8 +257,8 @@ function render(time, advance = true) {
 }
 
 function loop(time) {
-  if (!heroVisible || document.hidden) {
-    running = false; // не жжём батарею, пока хиро не на экране
+  if (!heroVisible || document.hidden || scrolling) {
+    running = false; // не жжём батарею: хиро не на экране / вкладка скрыта / идёт скролл
     return;
   }
   render(time);
@@ -259,6 +276,17 @@ if (typeof IntersectionObserver !== 'undefined' && canvas.parentElement) {
     heroVisible = entries[0].isIntersecting;
     if (heroVisible) startLoop();
   }).observe(canvas.parentElement);
+}
+
+if (isTouch) {
+  window.addEventListener('scroll', () => {
+    scrolling = true;
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(() => {
+      scrolling = false;
+      startLoop();
+    }, 120);
+  }, { passive: true });
 }
 
 document.addEventListener('visibilitychange', () => {
