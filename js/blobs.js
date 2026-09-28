@@ -2,16 +2,69 @@ const canvas = document.getElementById('blobCanvas');
 const ctx = canvas.getContext('2d');
 
 let blobs = [];
-let animationId;
+let animationId = 0;
+let running = false;
+let heroVisible = true;
+let lastW = 0;
+let lastH = 0;
 
-function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-  blobs = [];
-  createBlobs();
+// FIX (мерцание блобов при скролле на мобайле):
+// раньше canvas мерился по window.innerHeight и слушал window 'resize'.
+// В мобильных браузерах (iOS Safari, Chrome Android) при скролле сворачивается
+// адресная строка → innerHeight меняется → летит 'resize' → resizeCanvas()
+// обнулял canvas.width/height (это стирает канвас) и пересоздавал ВСЕ блобы
+// со случайными позициями и цветами. Отсюда «моргание» и смена цветов при
+// скролле. Теперь:
+//  1) размер берём у контейнера .home (у него height: 100vh — он стабилен);
+//  2) реагируем только на реальное изменение размера (ResizeObserver);
+//  3) блобы НЕ пересоздаём, а масштабируем координаты под новый размер;
+//  4) сразу после смены размера канвас перерисовывается в том же кадре,
+//     чтобы не было пустого кадра.
+function getHostSize() {
+  const host = canvas.parentElement;
+  return {
+    w: (host && host.clientWidth) || window.innerWidth,
+    h: (host && host.clientHeight) || window.innerHeight,
+  };
 }
 
-window.addEventListener('resize', resizeCanvas);
+function resizeCanvas() {
+  const { w, h } = getHostSize();
+  if (!w || !h) return;
+  if (w === lastW && h === lastH) return; // размер не менялся — ничего не трогаем
+
+  const oldW = lastW;
+  const oldH = lastH;
+  lastW = w;
+  lastH = h;
+
+  canvas.width = w;   // сброс размера очищает канвас — перерисуем ниже
+  canvas.height = h;
+
+  if (!blobs.length || !oldW || !oldH) {
+    blobs = [];
+    createBlobs();
+  } else {
+    const kx = w / oldW;
+    const ky = h / oldH;
+    const kr = Math.min(w, h) / Math.min(oldW, oldH);
+    blobs.forEach(b => {
+      b.x *= kx;
+      b.targetX *= kx;
+      b.y *= ky;
+      b.targetY *= ky;
+      b.radius *= kr;
+    });
+  }
+
+  render(performance.now(), false); // без шага симуляции, просто вернуть картинку
+}
+
+if (typeof ResizeObserver !== 'undefined' && canvas.parentElement) {
+  new ResizeObserver(resizeCanvas).observe(canvas.parentElement);
+} else {
+  window.addEventListener('resize', resizeCanvas);
+}
 
 // Новая палитра (RGB)
 const colors = [
@@ -169,23 +222,47 @@ function updateBlob(blob) {
   if (blob.y > canvas.height + padding) blob.y = -padding;
 }
 
-function animate(time) {
-  // FIX: раньше здесь был ctx.fillStyle = '#0a0a0a'; ctx.fillRect(...) —
-  // канвас каждый кадр заново красился в непрозрачный почти-чёрный цвет.
-  // Это полностью перекрывало собственный CSS-фон .home (--hero-grad-*),
-  // из-за чего на светлой теме хиро-секция выглядела серо-тёмной вместо
-  // светлой. clearRect очищает канвас в прозрачный, и сквозь него виден
-  // настоящий фон темы — светлый или тёмный, — а блобы просто добавляют
-  // цветное свечение поверх (через 'lighter' composite при отрисовке).
+function render(time, advance = true) {
+  // clearRect очищает канвас в прозрачный, и сквозь него виден настоящий фон
+  // темы (светлый или тёмный), а блобы просто добавляют цветное свечение
+  // поверх (через 'lighter' composite при отрисовке).
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   blobs.forEach(blob => {
-    updateBlob(blob);
-    updateBlobColor(blob);
+    if (advance) {
+      updateBlob(blob);
+      updateBlobColor(blob);
+    } else if (!blob.currentColor) {
+      updateBlobColor(blob); // первый кадр после создания блобов
+    }
     drawBlob(blob, time);
   });
-
-  animationId = requestAnimationFrame(animate);
 }
 
-animationId = requestAnimationFrame(animate);
+function loop(time) {
+  if (!heroVisible || document.hidden) {
+    running = false; // не жжём батарею, пока хиро не на экране
+    return;
+  }
+  render(time);
+  animationId = requestAnimationFrame(loop);
+}
+
+function startLoop() {
+  if (running) return;
+  running = true;
+  animationId = requestAnimationFrame(loop);
+}
+
+if (typeof IntersectionObserver !== 'undefined' && canvas.parentElement) {
+  new IntersectionObserver(entries => {
+    heroVisible = entries[0].isIntersecting;
+    if (heroVisible) startLoop();
+  }).observe(canvas.parentElement);
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) startLoop();
+});
+
+startLoop();
