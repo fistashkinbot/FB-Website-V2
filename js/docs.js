@@ -295,44 +295,10 @@ function setActive(file) {
   });
 }
 
-// ─── БЛОКИРОВКА СКРОЛЛА СТРАНИЦЫ ПОД МОБИЛЬНЫМ МЕНЮ ───
-// Пока открыт bottom-sheet с навигацией, страница под ним не должна
-// прокручиваться — скроллится только список внутри сайдбара.
-// overflow:hidden на body iOS Safari игнорирует, поэтому фиксируем body
-// через position:fixed и запоминаем позицию, чтобы вернуть её при закрытии.
-let docScrollLockY = 0;
-
-function lockPageScroll() {
-  if (document.body.classList.contains("doc-scroll-lock")) return;
-  docScrollLockY = window.scrollY || document.documentElement.scrollTop || 0;
-  document.body.style.top = `-${docScrollLockY}px`;
-  document.documentElement.classList.add("doc-scroll-lock");
-  document.body.classList.add("doc-scroll-lock");
-}
-
-function unlockPageScroll() {
-  if (!document.body.classList.contains("doc-scroll-lock")) return;
-  document.body.classList.remove("doc-scroll-lock");
-  document.documentElement.classList.remove("doc-scroll-lock");
-  document.body.style.top = "";
-  window.scrollTo({ top: docScrollLockY, behavior: "instant" });
-}
-
-function setDocSidebarOpen(open) {
-  document.getElementById("docs-sidebar").classList.toggle("open", open);
-  document.getElementById("doc-sb-overlay").classList.toggle("open", open);
-  open ? lockPageScroll() : unlockPageScroll();
-}
-
 function toggleDocSidebar() {
-  const isOpen = document.getElementById("docs-sidebar").classList.contains("open");
-  setDocSidebarOpen(!isOpen);
+  document.getElementById("docs-sidebar").classList.toggle("open");
+  document.getElementById("doc-sb-overlay").classList.toggle("open");
 }
-
-// Если окно растянули до десктопа при открытом меню — снимаем блокировку
-window.addEventListener("resize", () => {
-  if (window.innerWidth > 768) setDocSidebarOpen(false);
-});
 
 // ─── РЕНДЕРИНГ ХИНТОВ ───
 const HINT_ICONS = {
@@ -443,7 +409,8 @@ async function loadDocPage(file, lang) {
   history.pushState({ file }, "", "#" + slugFile(file));
   setActive(file);
 
-  setDocSidebarOpen(false);
+  document.getElementById("docs-sidebar").classList.remove("open");
+  document.getElementById("doc-sb-overlay").classList.remove("open");
   closeDocSearch();
 
   const doc = document.getElementById("doc-content");

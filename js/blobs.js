@@ -2,109 +2,16 @@ const canvas = document.getElementById('blobCanvas');
 const ctx = canvas.getContext('2d');
 
 let blobs = [];
-let animationId = 0;
-let running = false;
-let heroVisible = true;
-let lastW = 0;
-let lastH = 0;
-let W = 0; // логические размеры сцены (CSS px) — физика и рисование работают в них
-let H = 0;
-
-const isTouch = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
-// На тач-устройствах рисуем в половинном разрешении: блобы — это мягкие
-// градиенты, разницы глазом нет, а пикселей для заливки в 4 раза меньше.
-const RENDER_SCALE = isTouch ? 0.5 : 1;
-
-// FIX (текст hero не по центру на мобильных): 100vh/100svh на iOS/Android могут
-// не совпадать с реально видимой областью (зависит от состояния панелей
-// браузера), из-за чего hero выше экрана, а контент, отцентрованный внутри него,
-// уезжает вниз. Берём фактическую видимую высоту (window.innerHeight) и кладём
-// её в --hero-h (используется в style.css для .home и #particles-js).
-// На тач-устройствах игнорируем resize, при котором поменялась только высота
-// (сворачивание адресной строки при скролле) — иначе hero «прыгал» бы на скролле.
-(function setupHeroHeight() {
-  const root = document.documentElement;
-  let lastWidth = -1;
-
-  function apply(force) {
-    const w = window.innerWidth;
-    if (isTouch && !force && w === lastWidth) return;
-    lastWidth = w;
-    root.style.setProperty('--hero-h', window.innerHeight + 'px');
-  }
-
-  apply(true);
-  window.addEventListener('resize', () => apply(false));
-  window.addEventListener('orientationchange', () => setTimeout(() => apply(true), 300));
-})();
-
-// FIX (мерцание в Chrome при скролле): пока палец/инерция скроллят страницу,
-// не перерисовываем канвас — иначе главный поток и растеризация конкурируют
-// с композитором, и слои моргают. Во время скролла показывается последний
-// кадр, после остановки (120 мс) анимация продолжается.
-let scrolling = false;
-let scrollTimer = 0;
-
-// FIX (мерцание блобов при скролле на мобайле):
-// раньше canvas мерился по window.innerHeight и слушал window 'resize'.
-// В мобильных браузерах (iOS Safari, Chrome Android) при скролле сворачивается
-// адресная строка → innerHeight меняется → летит 'resize' → resizeCanvas()
-// обнулял canvas.width/height (это стирает канвас) и пересоздавал ВСЕ блобы
-// со случайными позициями и цветами. Отсюда «моргание» и смена цветов при
-// скролле. Теперь:
-//  1) размер берём у контейнера .home (у него height: 100vh — он стабилен);
-//  2) реагируем только на реальное изменение размера (ResizeObserver);
-//  3) блобы НЕ пересоздаём, а масштабируем координаты под новый размер;
-//  4) сразу после смены размера канвас перерисовывается в том же кадре,
-//     чтобы не было пустого кадра.
-function getHostSize() {
-  const host = canvas.parentElement;
-  return {
-    w: (host && host.clientWidth) || window.innerWidth,
-    h: (host && host.clientHeight) || window.innerHeight,
-  };
-}
+let animationId;
 
 function resizeCanvas() {
-  const { w, h } = getHostSize();
-  if (!w || !h) return;
-  if (w === lastW && h === lastH) return; // размер не менялся — ничего не трогаем
-
-  const oldW = lastW;
-  const oldH = lastH;
-  lastW = w;
-  lastH = h;
-
-  W = w;
-  H = h;
-  canvas.width = Math.round(w * RENDER_SCALE);   // сброс размера очищает канвас — перерисуем ниже
-  canvas.height = Math.round(h * RENDER_SCALE);
-  ctx.setTransform(RENDER_SCALE, 0, 0, RENDER_SCALE, 0, 0);
-
-  if (!blobs.length || !oldW || !oldH) {
-    blobs = [];
-    createBlobs();
-  } else {
-    const kx = w / oldW;
-    const ky = h / oldH;
-    const kr = Math.min(w, h) / Math.min(oldW, oldH);
-    blobs.forEach(b => {
-      b.x *= kx;
-      b.targetX *= kx;
-      b.y *= ky;
-      b.targetY *= ky;
-      b.radius *= kr;
-    });
-  }
-
-  render(performance.now(), false); // без шага симуляции, просто вернуть картинку
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  blobs = [];
+  createBlobs();
 }
 
-if (typeof ResizeObserver !== 'undefined' && canvas.parentElement) {
-  new ResizeObserver(resizeCanvas).observe(canvas.parentElement);
-} else {
-  window.addEventListener('resize', resizeCanvas);
-}
+window.addEventListener('resize', resizeCanvas);
 
 // Новая палитра (RGB)
 const colors = [
@@ -145,7 +52,7 @@ function randomColorIndex(exclude = -1) {
 
 function createBlobs() {
   const numBlobs = 5;
-  const minDim = Math.min(W, H);
+  const minDim = Math.min(canvas.width, canvas.height);
 
   for (let i = 0; i < numBlobs; i++) {
     const radius = minDim * 0.55 + Math.random() * minDim * 0.4;
@@ -153,10 +60,10 @@ function createBlobs() {
     const colorIndex = randomColorIndex();
     const nextColorIndex = randomColorIndex(colorIndex);
 
-    const centerX = W / 2;
-    const centerY = H / 2;
-    const spreadX = W * 0.35;
-    const spreadY = H * 0.35;
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const spreadX = canvas.width * 0.35;
+    const spreadY = canvas.height * 0.35;
 
     blobs.push({
       x: centerX + (Math.random() - 0.5) * spreadX * 2,
@@ -230,10 +137,10 @@ function updateBlob(blob) {
   const dist = Math.sqrt(dx * dx + dy * dy);
 
   if (dist < 80) {
-    const centerX = W / 2;
-    const centerY = H / 2;
-    const spreadX = W * 0.4;
-    const spreadY = H * 0.4;
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const spreadX = canvas.width * 0.4;
+    const spreadY = canvas.height * 0.4;
 
     blob.targetX = centerX + (Math.random() - 0.5) * spreadX * 2;
     blob.targetY = centerY + (Math.random() - 0.5) * spreadY * 2;
@@ -256,64 +163,29 @@ function updateBlob(blob) {
   blob.y += blob.vy;
 
   const padding = blob.radius * 0.7;
-  if (blob.x < -padding) blob.x = W + padding;
-  if (blob.x > W + padding) blob.x = -padding;
-  if (blob.y < -padding) blob.y = H + padding;
-  if (blob.y > H + padding) blob.y = -padding;
+  if (blob.x < -padding) blob.x = canvas.width + padding;
+  if (blob.x > canvas.width + padding) blob.x = -padding;
+  if (blob.y < -padding) blob.y = canvas.height + padding;
+  if (blob.y > canvas.height + padding) blob.y = -padding;
 }
 
-function render(time, advance = true) {
-  // clearRect очищает канвас в прозрачный, и сквозь него виден настоящий фон
-  // темы (светлый или тёмный), а блобы просто добавляют цветное свечение
-  // поверх (через 'lighter' composite при отрисовке).
-  ctx.clearRect(0, 0, W, H);
+function animate(time) {
+  // FIX: раньше здесь был ctx.fillStyle = '#0a0a0a'; ctx.fillRect(...) —
+  // канвас каждый кадр заново красился в непрозрачный почти-чёрный цвет.
+  // Это полностью перекрывало собственный CSS-фон .home (--hero-grad-*),
+  // из-за чего на светлой теме хиро-секция выглядела серо-тёмной вместо
+  // светлой. clearRect очищает канвас в прозрачный, и сквозь него виден
+  // настоящий фон темы — светлый или тёмный, — а блобы просто добавляют
+  // цветное свечение поверх (через 'lighter' composite при отрисовке).
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   blobs.forEach(blob => {
-    if (advance) {
-      updateBlob(blob);
-      updateBlobColor(blob);
-    } else if (!blob.currentColor) {
-      updateBlobColor(blob); // первый кадр после создания блобов
-    }
+    updateBlob(blob);
+    updateBlobColor(blob);
     drawBlob(blob, time);
   });
+
+  animationId = requestAnimationFrame(animate);
 }
 
-function loop(time) {
-  if (!heroVisible || document.hidden || scrolling) {
-    running = false; // не жжём батарею: хиро не на экране / вкладка скрыта / идёт скролл
-    return;
-  }
-  render(time);
-  animationId = requestAnimationFrame(loop);
-}
-
-function startLoop() {
-  if (running) return;
-  running = true;
-  animationId = requestAnimationFrame(loop);
-}
-
-if (typeof IntersectionObserver !== 'undefined' && canvas.parentElement) {
-  new IntersectionObserver(entries => {
-    heroVisible = entries[0].isIntersecting;
-    if (heroVisible) startLoop();
-  }).observe(canvas.parentElement);
-}
-
-if (isTouch) {
-  window.addEventListener('scroll', () => {
-    scrolling = true;
-    clearTimeout(scrollTimer);
-    scrollTimer = setTimeout(() => {
-      scrolling = false;
-      startLoop();
-    }, 120);
-  }, { passive: true });
-}
-
-document.addEventListener('visibilitychange', () => {
-  if (!document.hidden) startLoop();
-});
-
-startLoop();
+animationId = requestAnimationFrame(animate);

@@ -29,6 +29,9 @@
   --docs-nav-pill-border: rgba(0, 0, 0, 0.08);
   --docs-mobile-menu-bg: #ffffff;
 
+  /* Блюр-подложка под навбаром на всю ширину страницы */
+  --docs-nav-strip-tint: rgba(248, 249, 250, 0.28);
+
   --docs-panel-bg: rgba(255, 255, 255, 0.7);
   --docs-hover-bg: rgba(0, 0, 0, 0.04);
   --docs-hover-bg-active: rgba(192, 105, 78, 0.2);
@@ -101,6 +104,8 @@
   --docs-nav-glow: rgba(255, 255, 255, 0.7);
   --docs-nav-pill-border: rgba(255, 255, 255, 0.08);
   --docs-mobile-menu-bg: #121212;
+
+  --docs-nav-strip-tint: rgba(14, 14, 14, 0.28);
 
   --docs-panel-bg: rgba(18, 18, 18, 0.3);
   --docs-hover-bg: rgba(255, 255, 255, 0.04);
@@ -203,6 +208,104 @@
 .docs-navbar.sticky {
   padding: 12px 24px 0;
 }
+
+/* ─── БЛЮР-ПОДЛОЖКА НА ВСЮ ШИРИНУ СТРАНИЦЫ ─── */
+/*
+  Степени прозрачности блюра (сверху вниз):
+    0%   — полный блюр
+    25%  — 75% непрозрачности
+    50%  — 50% (середина навбара)
+    75%  — 25%
+    100% — прозрачно (низ навбара)
+  В доках .sticky не вешается → opacity: 1 всегда.
+*/
+.docs-navbar {
+  --docs-nav-strip-extra: 20px;
+}
+
+.docs-navbar.sticky {
+  --docs-nav-strip-extra: 24px;
+}
+
+.docs-navbar::before,
+.docs-navbar::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: calc(100% + var(--docs-nav-strip-extra));
+  z-index: -1;
+  pointer-events: none;
+  opacity: 1;
+}
+
+.docs-navbar::before {
+  background: var(--docs-nav-strip-tint);
+  backdrop-filter: blur(14px) saturate(var(--blur-sat));
+  -webkit-backdrop-filter: blur(14px) saturate(var(--blur-sat));
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    rgba(0, 0, 0, 0.92) 20%,
+    rgba(0, 0, 0, 0.70) 40%,
+    rgba(0, 0, 0, 0.50) 50%,
+    rgba(0, 0, 0, 0.32) 65%,
+    rgba(0, 0, 0, 0.14) 80%,
+    rgba(0, 0, 0, 0.04) 90%,
+    transparent 96%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    rgba(0, 0, 0, 0.92) 20%,
+    rgba(0, 0, 0, 0.70) 40%,
+    rgba(0, 0, 0, 0.50) 50%,
+    rgba(0, 0, 0, 0.32) 65%,
+    rgba(0, 0, 0, 0.14) 80%,
+    rgba(0, 0, 0, 0.04) 90%,
+    transparent 96%
+  );
+}
+
+.docs-navbar::after {
+  backdrop-filter: blur(6px) saturate(var(--blur-sat));
+  -webkit-backdrop-filter: blur(6px) saturate(var(--blur-sat));
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    rgba(0, 0, 0, 0.92) 20%,
+    rgba(0, 0, 0, 0.70) 40%,
+    rgba(0, 0, 0, 0.50) 50%,
+    rgba(0, 0, 0, 0.32) 65%,
+    rgba(0, 0, 0, 0.14) 80%,
+    rgba(0, 0, 0, 0.04) 90%,
+    transparent 96%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    rgba(0, 0, 0, 0.92) 20%,
+    rgba(0, 0, 0, 0.70) 40%,
+    rgba(0, 0, 0, 0.50) 50%,
+    rgba(0, 0, 0, 0.32) 65%,
+    rgba(0, 0, 0, 0.14) 80%,
+    rgba(0, 0, 0, 0.04) 90%,
+    transparent 96%
+  );
+}
+
+@supports (-webkit-touch-callout: none) {
+  .docs-navbar::before {
+    backdrop-filter: blur(10px) saturate(var(--blur-sat));
+    -webkit-backdrop-filter: blur(10px) saturate(var(--blur-sat));
+  }
+  .docs-navbar::after {
+    backdrop-filter: blur(4px) saturate(var(--blur-sat));
+    -webkit-backdrop-filter: blur(4px) saturate(var(--blur-sat));
+  }
+}
+
 .docs-navbar .max-width {
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -1229,25 +1332,6 @@ pre:hover .code-copy {
   .doc-sb-overlay.open {
     display: block;
   }
-  /* Скролл только внутри списка, не «протекает» на страницу */
-  .docs-sidebar {
-    overscroll-behavior: contain;
-    -webkit-overflow-scrolling: touch;
-  }
-  .doc-sb-overlay {
-    touch-action: none;
-    overscroll-behavior: none;
-  }
-  html.doc-scroll-lock,
-  body.doc-scroll-lock {
-    overflow: hidden;
-  }
-  body.doc-scroll-lock {
-    position: fixed;
-    left: 0;
-    right: 0;
-    width: 100%;
-  }
   .docs-main {
     margin-left: 0;
     padding: 28px 20px 60px;
@@ -1308,6 +1392,7 @@ pre:hover .code-copy {
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
   }
+
 }
 
 /* ================= DOCS CONTENT SKELETON ================= */

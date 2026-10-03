@@ -115,18 +115,60 @@ let suppressClickTimer = null;
 // ==================== ОВЕРЛЕЙ-КРУГ ДЛЯ МОБИЛЬНЫХ ====================
 /*
   Круг рисуется отдельным fixed-слоем поверх страницы:
-    1. слой цвета НОВОЙ темы раскрывается кругом из точки клика;
-    2. когда круг закрыл экран — под ним применяется тема;
-    3. слой плавно гаснет, открывая уже новую тему.
-  Страница сама не трогается и не снимается в картинку, поэтому
-  backdrop-filter не пропадает.
+    1. круг цвета НОВОЙ темы раскрывается из точки касания (с акцентным
+       свечением по краю);
+    2. когда круг закрыл экран — под ним мгновенно применяется тема;
+    3. слой плавно гаснет, открывая уже новую тему; иконка в меню
+       «проворачивается».
+  Страница сама не снимается в картинку, поэтому backdrop-filter живой.
+
+  Что сделано ради плавности на iOS:
+    • круг анимируется через transform: scale() — это композитная
+      GPU-анимация, без перерисовки (clip-path на весь экран её требует);
+    • на время смены темы отключаются все CSS-transition
+      (html.theme-switching), иначе под слоем цвета «доезжают» по 0.3 с,
+      нагружают GPU и заметно мерцают при затухании;
+    • тема применяется, пока слой полностью непрозрачен, а затухание
+      стартует только после двух отрисованных кадров.
+
   Цвета = --bg-page из style.css (светлая #f8f9fa, тёмная #09090b).
 */
 const OVERLAY_COLORS = { light: '#f8f9fa', dark: '#09090b' };
-const OVERLAY_GROW_MS = 600;
-const OVERLAY_FADE_MS = 300;
+const OVERLAY_ACCENT_RGB = '192, 105, 78'; // --accent: #c0694e
+const OVERLAY_GROW_MS = 650;
+const OVERLAY_FADE_MS = 380;
 
-let activeOverlay = null; // { el, animations: [], applied, apply, finalize }
+let activeOverlay = null; // { el, animations, applied, apply, finalize }
+
+function injectOverlayStyles() {
+    if (document.getElementById('theme-overlay-style')) return;
+    const st = document.createElement('style');
+    st.id = 'theme-overlay-style';
+    st.textContent = `
+        html.theme-switching *,
+        html.theme-switching *::before,
+        html.theme-switching *::after {
+            transition: none !important;
+        }
+    `;
+    document.head.appendChild(st);
+}
+
+// Небольшая «прокрутка» иконки солнца/луны после смены темы
+function spinThemeIcon() {
+    const icon = document.getElementById('theme-toggle-icon');
+    if (!icon || typeof icon.animate !== 'function') return;
+    if (getComputedStyle(icon).display === 'inline') {
+        icon.style.display = 'inline-block'; // transform не работает на inline
+    }
+    icon.animate(
+        [
+            { transform: 'rotate(-140deg) scale(0.4)', opacity: 0 },
+            { transform: 'rotate(0deg) scale(1)', opacity: 1 }
+        ],
+        { duration: 480, easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)' }
+    );
+}
 
 function cancelOverlay() {
     if (!activeOverlay) return;
@@ -141,51 +183,84 @@ function cancelOverlay() {
         o.applied = true;
         o.apply();
     }
+    html.classList.remove('theme-switching');
     o.finalize();
 }
 
 function runOverlayReveal(theme, apply, x, y, onApplied) {
     cancelOverlay();
+    injectOverlayStyles();
     const gen = ++animGeneration;
 
-    const el = document.createElement('div');
-    el.setAttribute('aria-hidden', 'true');
-    el.style.cssText = [
+    const radius = Math.hypot(
+        Math.max(x, window.innerWidth - x),
+        Math.max(y, window.innerHeight - y)
+    );
+    const color = OVERLAY_COLORS[theme] || OVERLAY_COLORS.dark;
+
+    // Контейнер: прозрачный, на весь экран, им управляем затуханием
+    const wrap = document.createElement('div');
+    wrap.setAttribute('aria-hidden', 'true');
+    wrap.style.cssText = [
         'position: fixed',
         'top: 0',
         'left: 0',
         'width: 100%',
         'height: 100%',
+        'overflow: hidden',
         'z-index: 2147483647',
         'pointer-events: none',
-        `background: ${OVERLAY_COLORS[theme] || OVERLAY_COLORS.dark}`,
-        'will-change: clip-path, opacity',
-        `clip-path: circle(0px at ${x}px ${y}px)`,
-        `-webkit-clip-path: circle(0px at ${x}px ${y}px)`
+        'will-change: opacity'
     ].join(';');
-    document.body.appendChild(el);
 
-    const maxRadius = Math.hypot(
-        Math.max(x, window.innerWidth - x),
-        Math.max(y, window.innerHeight - y)
-    );
+    // Круг: размером с «радиус до самого дальнего угла», растёт через scale
+    const circle = document.createElement('div');
+    circle.style.cssText = [
+        'position: absolute',
+        `left: ${x - radius}px`,
+        `top: ${y - radius}px`,
+        `width: ${radius * 2}px`,
+        `height: ${radius * 2}px`,
+        'border-radius: 50%',
+        `background: ${color}`,
+        `box-shadow: 0 0 0 2px rgba(${OVERLAY_ACCENT_RGB}, 0.55), 0 0 40px 12px rgba(${OVERLAY_ACCENT_RGB}, 0.35)`,
+        'transform: translate3d(0, 0, 0) scale(0)',
+        'will-change: transform',
+        'backface-visibility: hidden',
+        '-webkit-backface-visibility: hidden'
+    ].join(';');
+
+    wrap.appendChild(circle);
+    document.body.appendChild(wrap);
+
+    // Уведомление (тост/иконка) должно сработать ровно один раз
+    let notified = false;
+    const notify = () => {
+        if (notified) return;
+        notified = true;
+        if (onApplied) onApplied();
+    };
 
     const state = {
-        el,
+        el: wrap,
         animations: [],
         applied: false,
         apply,
-        finalize: () => { if (onApplied) onApplied(); refreshBackdropBlur(); }
+        finalize: () => {
+            notify();
+            refreshBackdropBlur();
+        }
     };
     activeOverlay = state;
 
-    const grow = el.animate(
-        {
-            clipPath: [
-                `circle(0px at ${x}px ${y}px)`,
-                `circle(${maxRadius}px at ${x}px ${y}px)`
-            ]
-        },
+    // Лёгкий тактильный отклик там, где он поддерживается (Android)
+    try { if (navigator.vibrate) navigator.vibrate(8); } catch (_) {}
+
+    const grow = circle.animate(
+        [
+            { transform: 'translate3d(0, 0, 0) scale(0)' },
+            { transform: 'translate3d(0, 0, 0) scale(1)' }
+        ],
         { duration: OVERLAY_GROW_MS, easing: THEME_EASING, fill: 'forwards' }
     );
     state.animations.push(grow);
@@ -194,25 +269,31 @@ function runOverlayReveal(theme, apply, x, y, onApplied) {
         .then(() => {
             if (gen !== animGeneration || activeOverlay !== state) return;
 
+            // Экран полностью закрыт — меняем тему без каких-либо transition
+            html.classList.add('theme-switching');
             state.applied = true;
             apply();
+            void html.offsetWidth; // форсируем пересчёт стилей под слоем
 
-            // Ждём два кадра, чтобы новая тема успела отрисоваться под слоем
+            // Ждём два отрисованных кадра, затем плавно гасим слой
             requestAnimationFrame(() => requestAnimationFrame(() => {
                 if (gen !== animGeneration || activeOverlay !== state) return;
 
-                const fade = el.animate(
+                html.classList.remove('theme-switching');
+                notify();
+                spinThemeIcon();
+
+                const fade = wrap.animate(
                     { opacity: [1, 0] },
                     { duration: OVERLAY_FADE_MS, easing: 'ease-out', fill: 'forwards' }
                 );
                 state.animations.push(fade);
-                if (onApplied) onApplied(); // тост и иконка — когда тема уже видна
 
                 fade.finished
                     .then(() => {
                         if (activeOverlay !== state) return;
                         activeOverlay = null;
-                        el.remove();
+                        wrap.remove();
                         refreshBackdropBlur();
                     })
                     .catch(() => {});
