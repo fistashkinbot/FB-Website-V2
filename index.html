@@ -61,6 +61,7 @@
       defer
     ></script>
     <script src="./js/aos/aos.js" defer></script>
+    <script src="./js/ablur.js" defer></script>
 
     <!-- Meta -->
     <meta name="theme-color" content="#C0694E" />
@@ -88,6 +89,12 @@
     </div>
 
     <nav class="navbar">
+      <ablur-layer
+        layers="5"
+        base-blur="22"
+        end-at="72"
+        flip
+      ></ablur-layer>
       <div class="max-width">
         <div class="logo">
           <a href="#home">Fistashkin<span></span></a>

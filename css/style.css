@@ -317,116 +317,6 @@ body {
   box-shadow: 0 10px 34px rgba(0, 0, 0, 0.4);
 }
 
-/* ================= NAVBAR: БЛЮР-ПОДЛОЖКА НА ВСЮ ШИРИНУ СТРАНИЦЫ ================= */
-:root {
-  --nav-strip-tint: rgba(248, 249, 250, 0.28);
-}
-
-.dark {
-  --nav-strip-tint: rgba(9, 9, 11, 0.28);
-}
-
-/*
-  Степени прозрачности блюра (сверху вниз):
-    0%   — полный блюр
-    25%  — 75% непрозрачности
-    50%  — 50% (середина навбара)
-    75%  — 25%
-    100% — прозрачно (низ навбара)
-*/
-.navbar {
-  --nav-strip-extra: 20px;
-}
-
-.navbar.sticky {
-  --nav-strip-extra: 24px;
-}
-
-.navbar::before,
-.navbar::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: calc(100% + var(--nav-strip-extra));
-  z-index: -1;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.navbar.sticky::before,
-.navbar.sticky::after {
-  opacity: 1;
-}
-
-.navbar::before {
-  background: var(--nav-strip-tint);
-  backdrop-filter: blur(14px) saturate(var(--blur-sat));
-  -webkit-backdrop-filter: blur(14px) saturate(var(--blur-sat));
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    #000 0%,
-    rgba(0, 0, 0, 0.92) 20%,
-    rgba(0, 0, 0, 0.70) 40%,
-    rgba(0, 0, 0, 0.50) 50%,
-    rgba(0, 0, 0, 0.32) 65%,
-    rgba(0, 0, 0, 0.14) 80%,
-    rgba(0, 0, 0, 0.04) 90%,
-    transparent 96%
-  );
-  mask-image: linear-gradient(
-    to bottom,
-    #000 0%,
-    rgba(0, 0, 0, 0.92) 20%,
-    rgba(0, 0, 0, 0.70) 40%,
-    rgba(0, 0, 0, 0.50) 50%,
-    rgba(0, 0, 0, 0.32) 65%,
-    rgba(0, 0, 0, 0.14) 80%,
-    rgba(0, 0, 0, 0.04) 90%,
-    transparent 96%
-  );
-}
-
-.navbar::after {
-  backdrop-filter: blur(6px) saturate(var(--blur-sat));
-  -webkit-backdrop-filter: blur(6px) saturate(var(--blur-sat));
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    #000 0%,
-    rgba(0, 0, 0, 0.92) 20%,
-    rgba(0, 0, 0, 0.70) 40%,
-    rgba(0, 0, 0, 0.50) 50%,
-    rgba(0, 0, 0, 0.32) 65%,
-    rgba(0, 0, 0, 0.14) 80%,
-    rgba(0, 0, 0, 0.04) 90%,
-    transparent 96%
-  );
-  mask-image: linear-gradient(
-    to bottom,
-    #000 0%,
-    rgba(0, 0, 0, 0.92) 20%,
-    rgba(0, 0, 0, 0.70) 40%,
-    rgba(0, 0, 0, 0.50) 50%,
-    rgba(0, 0, 0, 0.32) 65%,
-    rgba(0, 0, 0, 0.14) 80%,
-    rgba(0, 0, 0, 0.04) 90%,
-    transparent 96%
-  );
-}
-
-@supports (-webkit-touch-callout: none) {
-  .navbar::before {
-    backdrop-filter: blur(10px) saturate(var(--blur-sat));
-    -webkit-backdrop-filter: blur(10px) saturate(var(--blur-sat));
-  }
-  .navbar::after {
-    backdrop-filter: blur(4px) saturate(var(--blur-sat));
-    -webkit-backdrop-filter: blur(4px) saturate(var(--blur-sat));
-  }
-}
-
 .navbar .logo {
   grid-column: 1;
   justify-self: start;
@@ -2214,4 +2104,21 @@ body > :last-child:not(footer) {
   z-index: 0;
   pointer-events: none;
   display: block;
+}
+
+/* Позиционирование ablur-слоя под навбаром */
+.navbar > ablur-layer,
+.docs-navbar > ablur-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: calc(100% + 20px);   /* чуть выходит вниз, как раньше ::before */
+  pointer-events: none;
+  z-index: -1;
+}
+
+.navbar.sticky > ablur-layer,
+.docs-navbar.sticky > ablur-layer {
+  height: calc(100% + 24px);
 }
