@@ -92,10 +92,18 @@ const translations = {
 
         docs_btn_copy: "Копировать",
         docs_btn_copy_copied: "Скопировано!",
+        docs_btn_copy_page_copied: "Скопировано",
         docs_search_placeholder: "Поиск...",
         docs_input_search_placeholder: "Поиск в документации...",
         docs_input_search_empty: "Начните вводить текст для поиска...",
+        docs_search_hint: "Ищите по заголовкам и названиям страниц",
         docs_search_no_results: "Ничего не найдено",
+        docs_search_try_another: "Попробуйте изменить запрос",
+        docs_search_on_page: "На этой странице",
+        docs_search_other_pages: "На других страницах",
+        docs_search_all_pages: "Результаты поиска",
+        docs_search_kbd_nav: "— навигация",
+        docs_search_kbd_go: "— перейти",
 
         docs_btn_page_nav_prev: "Предыдущая страница",
         docs_btn_page_nav_next: "Следующая страница",
@@ -111,10 +119,12 @@ const translations = {
         docs_reltime_months: "мес. назад",
         docs_reltime_years: "г. назад",
         docs_reltime_unknown: "неизвестно",
+        docs_yesterday_at: "вчера в",
 
         docs_sidebar_made_with: "Made with ❤️",
         docs_load_error_heading: "Ошибка загрузки",
         docs_load_error_message: "Не удалось загрузить SUMMARY.md. Убедитесь, что файл существует в папке",
+        docs_load_error_message_doc: "Не удалось загрузить документацию.",
         docs_page_not_found_heading: "Страница не найдена",
         docs_page_not_found_message: "Файл не найден в папке",
     },
@@ -210,10 +220,18 @@ const translations = {
 
         docs_btn_copy: "Копіювати",
         docs_btn_copy_copied: "Скопійовано!",
+        docs_btn_copy_page_copied: "Скопійовано",
         docs_search_placeholder: "Пошук...",
         docs_input_search_placeholder: "Пошук у документації...",
         docs_input_search_empty: "Почніть вводити текст для пошуку...",
+        docs_search_hint: "Шукайте за заголовками та назвами сторінок",
         docs_search_no_results: "Нічого не знайдено",
+        docs_search_try_another: "Спробуйте змінити запит",
+        docs_search_on_page: "На цій сторінці",
+        docs_search_other_pages: "На інших сторінках",
+        docs_search_all_pages: "Результати пошуку",
+        docs_search_kbd_nav: "— навігація",
+        docs_search_kbd_go: "— перейти",
 
         docs_btn_page_nav_prev: "Попередня сторінка",
         docs_btn_page_nav_next: "Наступна сторінка",
@@ -229,10 +247,12 @@ const translations = {
         docs_reltime_months: "міс. тому",
         docs_reltime_years: "р. тому",
         docs_reltime_unknown: "невідомо",
+        docs_yesterday_at: "вчора о",
 
         docs_sidebar_made_with: "Made with ❤️",
         docs_load_error_heading: "Помилка завантаження",
         docs_load_error_message: "Не вдалося завантажити SUMMARY.md. Переконайтеся, що файл існує в папці",
+        docs_load_error_message_doc: "Не вдалося завантажити документацію.",
         docs_page_not_found_heading: "Сторінку не знайдено",
         docs_page_not_found_message: "Файл не знайдено в папці",
     },
@@ -328,10 +348,19 @@ const translations = {
 
         docs_btn_copy: "Copy",
         docs_btn_copy_copied: "Copied!",
+        docs_btn_copy_page_copied: "Copied",
         docs_search_placeholder: "Search...",
         docs_input_search_placeholder: "Search documentation...",
         docs_input_search_empty: "Start typing to search...",
+        docs_search_hint: "Search by headings and page titles",
         docs_search_no_results: "Nothing found",
+        docs_search_try_another: "Try a different query",
+        docs_search_on_page: "On this page",
+        docs_search_other_pages: "On other pages",
+        docs_search_all_pages: "Search results",
+        docs_search_kbd_nav: "— navigate",
+        docs_search_kbd_go: "— open",
+
         docs_btn_page_nav_prev: "Previous page",
         docs_btn_page_nav_next: "Next page",
         docs_page_nav_not_found: "Page not found",
@@ -345,10 +374,12 @@ const translations = {
         docs_reltime_months: "months ago",
         docs_reltime_years: "years ago",
         docs_reltime_unknown: "unknown",
+        docs_yesterday_at: "yesterday at",
 
         docs_sidebar_made_with: "Made with ❤️",
         docs_load_error_heading: "Load Error",
         docs_load_error_message: "Failed to load SUMMARY.md. Make sure the file exists in the folder",
+        docs_load_error_message_doc: "Failed to load documentation.",
         docs_page_not_found_heading: "Page not found",
         docs_page_not_found_message: "File not found in folder",
     }
@@ -375,27 +406,36 @@ function updateMetaTags(lang) {
     });
 }
 
+// Хелпер: получить строку перевода по ключу (с fallback на ru и сам ключ).
+// Используется из docs.js, чтобы не дублировать проверки window.translations.
+function t(key, lang) {
+    lang = lang || window.getCurrentLanguage?.() || 'ru';
+    const pack = (window.translations && window.translations[lang]) || {};
+    const fallback = (window.translations && window.translations.ru) || {};
+    return pack[key] != null ? pack[key] : (fallback[key] != null ? fallback[key] : key);
+}
+
 // === Основная функция перевода ===
 function translatePage(lang) {
-    const t = translations[lang];
-    if (!t) return;
+    const pack = translations[lang];
+    if (!pack) return;
 
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.dataset.i18n;
-        if (key in t) el.textContent = t[key];
+        if (key in pack) el.textContent = pack[key];
     });
 
     // Плейсхолдеры для input-полей
     document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
         const key = el.dataset.i18nPlaceholder;
-        if (key in t) el.placeholder = t[key];
+        if (key in pack) el.placeholder = pack[key];
     });
 
     // Обновляем динамические части docs, если они уже отрендерены
     const copyBtn = document.getElementById('doc-copy-btn');
-    if (copyBtn && t.docs_btn_copy) {
+    if (copyBtn && pack.docs_btn_copy) {
         const span = copyBtn.querySelector('span[data-i18n="docs_btn_copy"]');
-        if (span) span.textContent = t.docs_btn_copy;
+        if (span) span.textContent = pack.docs_btn_copy;
     }
 
     initTyped(lang);
@@ -404,24 +444,15 @@ function translatePage(lang) {
 
 // Доступ к переводам/текущему языку для других скриптов (например theme.js)
 window.translations = translations;
+window.t = t;
 window.getCurrentLanguage = function () {
     return document.documentElement.dataset.lang || localStorage.getItem('siteLanguage') || 'ru';
 };
 
 // === Плавная подмена текста при смене языка ===
-// Затемняем все переводимые элементы, ждём конца transition (см. style.css,
-// .i18n-fading), подменяем текст и отпускаем класс — получается кроссфейд
-// вместо мгновенного «моргания» текста.
 const I18N_FADE_MS = 200;
 
-// afterUpdate вызывается СРАЗУ ПОСЛЕ translatePage(lang), а не до него —
-// это важно для updateLanguageSwitcher(): она вручную дописывает название
-// языка к лейблу ("Язык: Русский"), и если вызвать её раньше отложенного
-// translatePage(), он позже перетрёт лейбл обратно на голое "Язык:" через
-// его собственный data-i18n.
 function translatePageAnimated(lang, afterUpdate) {
-    // .typing (Typed.js) и #current-flag тоже участвуют в кроссфейде —
-    // см. комментарий в style.css у их правил .i18n-fading.
     const elements = document.querySelectorAll(
         '[data-i18n], [data-i18n-placeholder], .typing, #current-flag'
     );
@@ -441,7 +472,6 @@ function translatePageAnimated(lang, afterUpdate) {
 
     setTimeout(() => {
         applyUpdate();
-        // Форсируем reflow, чтобы браузер не «схлопнул» fade-out и fade-in в один кадр
         void document.body.offsetHeight;
         elements.forEach(el => el.classList.remove('i18n-fading'));
     }, I18N_FADE_MS);
@@ -454,8 +484,6 @@ function setLanguage(lang) {
     document.documentElement.lang = lang;
     document.documentElement.dataset.lang = lang;
 
-    // updateLanguageSwitcher обновляет лейбл/флаг/чекмарки в переключателе —
-    // выполняем её после подмены текста, см. комментарий в translatePageAnimated.
     translatePageAnimated(lang, () => updateLanguageSwitcher(lang));
     localStorage.setItem('siteLanguage', lang);
 
@@ -471,8 +499,6 @@ function setLanguage(lang) {
 }
 
 // === Toast ===
-// Сам тост рисует js/toast.js (window.toast), стили — css/toast.css.
-// Здесь только тексты и флаги для уведомления о смене языка.
 const toastMessages = {
     ru: { flag: './assets/flags/flag-russia.svg', text: 'Язык изменён на Русский' },
     uk: { flag: './assets/flags/flag-ukraine.svg', text: 'Мову змінено на Українську' },
@@ -525,8 +551,6 @@ function createLanguageDropdown() {
 
     const dropdown = document.createElement('div');
     dropdown.className = 'language-dropdown-js';
-    // Позиционирование и backdrop оставляем через inline (нужно для fixed + JS positioning),
-    // но цвета и фон теперь полностью контролируются CSS-переменными в .language-dropdown-js и .language-option
     dropdown.style.cssText = `
         position: fixed;
         backdrop-filter: blur(16px);
@@ -538,8 +562,6 @@ function createLanguageDropdown() {
         option.className = 'language-option';
         option.dataset.lang = key;
 
-        // Убрали все hardcoded цвета и background.
-        // Теперь опции стилизуются через CSS-класс .language-option + CSS-переменные (светлая/тёмная тема)
         option.style.cssText = `
             display: flex; align-items: center; gap: 12px;
             padding: 12px 18px; cursor: pointer;
@@ -562,15 +584,12 @@ function createLanguageDropdown() {
             e.stopPropagation();
             const currentLang = document.documentElement.dataset.lang || localStorage.getItem('siteLanguage') || 'ru';
             if (key === currentLang) {
-                return; // ничего не делаем, меню остаётся открытым
+                return;
             }
             setLanguage(key);
             showLanguageToast(key);
             closeDropdown();
         };
-
-        // Убрали onmouseenter/onmouseleave с hardcoded цветами.
-        // Теперь hover-стили берутся из CSS (уже поддерживают тему через переменные)
 
         dropdown.appendChild(option);
     });
@@ -579,7 +598,6 @@ function createLanguageDropdown() {
     return currentDropdown = dropdown;
 }
 
-// === Позиция ===
 function positionDropdown() {
     if (!currentDropdown || !currentButton) return;
     const rect = currentButton.getBoundingClientRect();
@@ -588,7 +606,6 @@ function positionDropdown() {
     currentDropdown.style.left = `${rect.left + rect.width / 2}px`;
 }
 
-// === Tracking ===
 function startTracking() {
     const loop = () => {
         if (!isDropdownOpen) return;
@@ -603,7 +620,6 @@ function stopTracking() {
     rafId = null;
 }
 
-// === OPEN / CLOSE ===
 function openDropdown(button) {
     if (!currentDropdown) createLanguageDropdown();
 
@@ -644,14 +660,13 @@ function updateLanguageSwitcher(lang) {
 
     const label = document.getElementById('lang-switcher-label');
     if (label && languages[lang]) {
-        const t = translations[lang] || translations.ru;
-        label.textContent = `${t.dropdown_language} ${languages[lang].name}`;
+        const pack = translations[lang] || translations.ru;
+        label.textContent = `${pack.dropdown_language} ${languages[lang].name}`;
     }
 
     renderInlineLangOptions(lang);
 }
 
-// === Inline language accordion (unified with the settings panel, no floating box) ===
 function renderInlineLangOptions(current) {
     const container = document.getElementById('lang-inline-list-inner');
     if (!container) return;
@@ -673,7 +688,7 @@ function renderInlineLangOptions(current) {
             e.stopPropagation();
             const currentLang = document.documentElement.dataset.lang || localStorage.getItem('siteLanguage') || 'ru';
             if (key === currentLang) {
-                return; // ничего не делаем, меню остаётся открытым
+                return;
             }
             setLanguage(key);
             showLanguageToast(key);
@@ -710,9 +725,6 @@ function initLanguageSwitcher() {
     });
 }
 
-// === INIT ===
-// Скрипт подключён с defer — DOMContentLoaded уже сработал к этому моменту,
-// поэтому используем прямой вызов вместо listener'а.
 (function init() {
     const savedLang = localStorage.getItem('siteLanguage') || 'ru';
 
@@ -725,7 +737,7 @@ function initLanguageSwitcher() {
             const lang = btn.dataset.lang;
             const currentLang = document.documentElement.dataset.lang || localStorage.getItem('siteLanguage') || 'ru';
             if (lang === currentLang) {
-                return; // ничего не делаем
+                return;
             }
             setLanguage(lang);
             showLanguageToast(lang);
