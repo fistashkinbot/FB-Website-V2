@@ -54,12 +54,12 @@ const THEME_COOLDOWN_MS = 750;
 /*
   FIX (мобильный блюр): во время View Transition браузер рисует страницу
   из снимков (::view-transition-old/new), а в снимках backdrop-filter
-  теряется — особенно в iOS Safari. Отсюда «пропал весь блюр» при смене
-  темы на телефоне (и иногда он не возвращается после анимации).
-  На сенсорных устройствах и в iOS Safari анимацию круга не запускаем:
-  тему меняем напрямую, а blur-слои после этого принудительно пересоздаём.
+  теряется — особенно в iOS Safari. Поэтому на сенсорных устройствах и в
+  iOS Safari вместо View Transition используется отдельный слой-оверлей
+  (см. runOverlayReveal): страница не снимается в картинку, blur живой.
+  Десктоп по-прежнему использует View Transition.
 */
-function shouldSkipViewTransition() {
+function isTouchOrIOS() {
     const isTouch = window.matchMedia('(pointer: coarse)').matches;
     const isIOSWebKit =
         typeof CSS !== 'undefined' &&
@@ -112,6 +112,115 @@ let lastSwitchTime = 0;
 let suppressNextClick = false;
 let suppressClickTimer = null;
 
+// ==================== ОВЕРЛЕЙ-КРУГ ДЛЯ МОБИЛЬНЫХ ====================
+/*
+  Круг рисуется отдельным fixed-слоем поверх страницы:
+    1. слой цвета НОВОЙ темы раскрывается кругом из точки клика;
+    2. когда круг закрыл экран — под ним применяется тема;
+    3. слой плавно гаснет, открывая уже новую тему.
+  Страница сама не трогается и не снимается в картинку, поэтому
+  backdrop-filter не пропадает.
+  Цвета = --bg-page из style.css (светлая #f8f9fa, тёмная #09090b).
+*/
+const OVERLAY_COLORS = { light: '#f8f9fa', dark: '#09090b' };
+const OVERLAY_GROW_MS = 600;
+const OVERLAY_FADE_MS = 300;
+
+let activeOverlay = null; // { el, animations: [], applied, apply, finalize }
+
+function cancelOverlay() {
+    if (!activeOverlay) return;
+    const o = activeOverlay;
+    activeOverlay = null;
+    o.animations.forEach((a) => {
+        try { a.cancel(); } catch (_) {}
+    });
+    o.el.remove();
+    // Если тема ещё не применилась — применяем, чтобы состояние не рассинхронизировалось
+    if (!o.applied) {
+        o.applied = true;
+        o.apply();
+    }
+    o.finalize();
+}
+
+function runOverlayReveal(theme, apply, x, y, onApplied) {
+    cancelOverlay();
+    const gen = ++animGeneration;
+
+    const el = document.createElement('div');
+    el.setAttribute('aria-hidden', 'true');
+    el.style.cssText = [
+        'position: fixed',
+        'top: 0',
+        'left: 0',
+        'width: 100%',
+        'height: 100%',
+        'z-index: 2147483647',
+        'pointer-events: none',
+        `background: ${OVERLAY_COLORS[theme] || OVERLAY_COLORS.dark}`,
+        'will-change: clip-path, opacity',
+        `clip-path: circle(0px at ${x}px ${y}px)`,
+        `-webkit-clip-path: circle(0px at ${x}px ${y}px)`
+    ].join(';');
+    document.body.appendChild(el);
+
+    const maxRadius = Math.hypot(
+        Math.max(x, window.innerWidth - x),
+        Math.max(y, window.innerHeight - y)
+    );
+
+    const state = {
+        el,
+        animations: [],
+        applied: false,
+        apply,
+        finalize: () => { if (onApplied) onApplied(); refreshBackdropBlur(); }
+    };
+    activeOverlay = state;
+
+    const grow = el.animate(
+        {
+            clipPath: [
+                `circle(0px at ${x}px ${y}px)`,
+                `circle(${maxRadius}px at ${x}px ${y}px)`
+            ]
+        },
+        { duration: OVERLAY_GROW_MS, easing: THEME_EASING, fill: 'forwards' }
+    );
+    state.animations.push(grow);
+
+    grow.finished
+        .then(() => {
+            if (gen !== animGeneration || activeOverlay !== state) return;
+
+            state.applied = true;
+            apply();
+
+            // Ждём два кадра, чтобы новая тема успела отрисоваться под слоем
+            requestAnimationFrame(() => requestAnimationFrame(() => {
+                if (gen !== animGeneration || activeOverlay !== state) return;
+
+                const fade = el.animate(
+                    { opacity: [1, 0] },
+                    { duration: OVERLAY_FADE_MS, easing: 'ease-out', fill: 'forwards' }
+                );
+                state.animations.push(fade);
+                if (onApplied) onApplied(); // тост и иконка — когда тема уже видна
+
+                fade.finished
+                    .then(() => {
+                        if (activeOverlay !== state) return;
+                        activeOverlay = null;
+                        el.remove();
+                        refreshBackdropBlur();
+                    })
+                    .catch(() => {});
+            }));
+        })
+        .catch(() => {});
+}
+
 function getThemeButtonAtPoint(x, y) {
     const buttons = document.querySelectorAll('#light-btn, #dark-btn, #theme-toggle-item');
     for (const btn of buttons) {
@@ -154,6 +263,7 @@ function markNextClickSuppressed() {
 }
 
 function cancelActiveTransition() {
+    cancelOverlay();
     if (activeAnim) {
         try { activeAnim.cancel(); } catch (_) {}
         activeAnim = null;
@@ -184,8 +294,11 @@ function setTheme(theme, event, saveToStorage = true) {
 
     const supportsVT = typeof document.startViewTransition === 'function';
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // Телефоны/iOS: круг рисуем отдельным слоем, без View Transition (иначе пропадает blur)
+    const overlayMode =
+        isTouchOrIOS() && typeof document.documentElement.animate === 'function';
 
-    if (!saveToStorage || !supportsVT || reducedMotion || shouldSkipViewTransition()) {
+    if (!saveToStorage || reducedMotion || (!supportsVT && !overlayMode)) {
         apply();
         if (saveToStorage) {
             lastSwitchTime = performance.now();
@@ -217,6 +330,16 @@ function setTheme(theme, event, saveToStorage = true) {
     }
 
     cancelActiveTransition();
+
+    if (overlayMode) {
+        localStorage.setItem('theme', theme);
+        runOverlayReveal(theme, apply, x, y, () => {
+            showThemeToast(theme);
+            updateThemeToggleUI();
+        });
+        return;
+    }
+
     const gen = ++animGeneration;
 
     const transition = document.startViewTransition(() => {
