@@ -51,6 +51,59 @@ const THEME_ANIM_MS = 750;
 const THEME_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
 const THEME_COOLDOWN_MS = 750;
 
+/*
+  FIX (мобильный блюр): во время View Transition браузер рисует страницу
+  из снимков (::view-transition-old/new), а в снимках backdrop-filter
+  теряется — особенно в iOS Safari. Отсюда «пропал весь блюр» при смене
+  темы на телефоне (и иногда он не возвращается после анимации).
+  На сенсорных устройствах и в iOS Safari анимацию круга не запускаем:
+  тему меняем напрямую, а blur-слои после этого принудительно пересоздаём.
+*/
+function shouldSkipViewTransition() {
+    const isTouch = window.matchMedia('(pointer: coarse)').matches;
+    const isIOSWebKit =
+        typeof CSS !== 'undefined' &&
+        CSS.supports &&
+        CSS.supports('-webkit-touch-callout', 'none');
+    return isTouch || isIOSWebKit;
+}
+
+// Пересоздаёт слои с backdrop-filter. Inline-значения (например, у .dropdown,
+// которому blur задаётся через style.cssText в dropdown.js) сохраняются
+// и восстанавливаются, а не стираются.
+function refreshBackdropBlur() {
+    const targets = [];
+    document.querySelectorAll('*').forEach((el) => {
+        const cs = getComputedStyle(el);
+        const bf = cs.backdropFilter || cs.webkitBackdropFilter;
+        if (bf && bf !== 'none') {
+            targets.push({
+                el,
+                inline: el.style.getPropertyValue('backdrop-filter'),
+                inlineWebkit: el.style.getPropertyValue('-webkit-backdrop-filter')
+            });
+        }
+    });
+    if (!targets.length) return;
+
+    targets.forEach(({ el }) => {
+        el.style.setProperty('-webkit-backdrop-filter', 'none');
+        el.style.setProperty('backdrop-filter', 'none');
+    });
+
+    void document.body.offsetWidth; // принудительный reflow
+
+    requestAnimationFrame(() => {
+        targets.forEach(({ el, inline, inlineWebkit }) => {
+            if (inlineWebkit) el.style.setProperty('-webkit-backdrop-filter', inlineWebkit);
+            else el.style.removeProperty('-webkit-backdrop-filter');
+
+            if (inline) el.style.setProperty('backdrop-filter', inline);
+            else el.style.removeProperty('backdrop-filter');
+        });
+    });
+}
+
 let activeTransition = null;
 let activeAnim = null;
 let animGeneration = 0;
@@ -127,20 +180,19 @@ function setTheme(theme, event, saveToStorage = true) {
         body.classList.toggle('dark', isDark);
         lightBtn?.classList.toggle('active', !isDark);
         darkBtn?.classList.toggle('active', isDark);
-        // FIX: раньше updateThemeToggleUI() вызывался сразу после startViewTransition,
-        // то есть ДО выполнения apply() (callback запускается асинхронно) — иконка и
-        // подпись пункта «тема» показывали состояние прошлой темы.
-        updateThemeToggleUI();
     };
 
     const supportsVT = typeof document.startViewTransition === 'function';
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    if (!saveToStorage || !supportsVT || reducedMotion) {
+    if (!saveToStorage || !supportsVT || reducedMotion || shouldSkipViewTransition()) {
         apply();
         if (saveToStorage) {
+            lastSwitchTime = performance.now();
             localStorage.setItem('theme', theme);
             showThemeToast(theme);
+            // Страховка для iOS: пересоздаём blur-слои после смены темы
+            requestAnimationFrame(refreshBackdropBlur);
         }
         updateThemeToggleUI();
         return;
