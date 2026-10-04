@@ -1876,15 +1876,15 @@ pre:hover .code-copy {
 .navbar > ablur-layer,
 .docs-navbar > ablur-layer {
   position: absolute;
-  top: 0;
+  top: -80px;                      /* заходит под статус-бар */
   left: 0;
   right: 0;
-  height: calc(100% + 20px);
+  height: calc(100% + 80px + 20px);
   pointer-events: none;
   z-index: -1;
 }
 
 .navbar.sticky > ablur-layer,
 .docs-navbar.sticky > ablur-layer {
-  height: calc(100% + 24px);
+  height: calc(100% + 80px + 24px);
 }
