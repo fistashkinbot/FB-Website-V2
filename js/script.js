@@ -41,4 +41,12 @@ $(document).ready(function () {
       1000: { items: 3, nav: false },
     },
   });
+
+  // FIX iOS Safari: слой ablur вынесен вверх на 60px (см. @supports в style.css),
+  // поэтому процентная маска растягивается — подгоняем end-at под новую высоту
+  if (window.CSS && CSS.supports("-webkit-touch-callout", "none")) {
+    document.querySelectorAll("ablur-layer").forEach(function (el) {
+      el.endAt = 50;
+    });
+  }
 });

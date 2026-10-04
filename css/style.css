@@ -32,6 +32,7 @@
   --blur-xl: 120px;  /* features::after */
   --blur-2xl: 300px; /* blob-outer (desktop) */
   --blur-sat: 150%;  /* saturate() рядом с blur() */
+  --ablur-tint: rgba(255, 255, 255, 0.7);   /* светлая тема */
 
   /* ===== Светлая тема: адаптированные токены секций сайта ===== */
   --nav-bg-sticky: rgba(255, 255, 255, 0.75);
@@ -105,6 +106,8 @@
   --badge-default-text: #fafafa;
   --badge-secondary-bg: #27272a;
   --badge-secondary-text: #e4e4e7;
+
+  --ablur-tint: rgba(7, 3, 3, 0.9);         /* цвет фона со скрина */
 
   /* ===== Тёмная тема: оригинальные значения, без изменений ===== */
   --nav-bg-sticky: rgba(0, 0, 0, 0.3);
@@ -2110,15 +2113,28 @@ body > :last-child:not(footer) {
 .navbar > ablur-layer,
 .docs-navbar > ablur-layer {
   position: absolute;
-  top: -200px;
+  top: 0;
   left: 0;
   right: 0;
-  height: calc(100% + 200px + 20px);
+  height: calc(100% + 20px);
   pointer-events: none;
   z-index: -1;
 }
 
 .navbar.sticky > ablur-layer,
 .docs-navbar.sticky > ablur-layer {
-  height: calc(100% + 200px + 24px);
+  height: calc(100% + 24px);
+}
+
+/* iOS: слой заходит под статус-бар */
+@supports (-webkit-touch-callout: none) {
+  .navbar > ablur-layer,
+  .docs-navbar > ablur-layer {
+    top: -60px;
+    height: calc(100% + 60px + 20px);
+  }
+  .navbar.sticky > ablur-layer,
+  .docs-navbar.sticky > ablur-layer {
+    height: calc(100% + 60px + 24px);
+  }
 }
