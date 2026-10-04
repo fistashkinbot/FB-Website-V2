@@ -426,6 +426,7 @@ body {
 
 #particles-js {
   height: 100vh;
+  height: 100svh; /* iOS: 100vh включает зону под тулбаром Safari/Chrome */
   width: 100%;
   position: absolute;
   top: 0;
@@ -450,6 +451,9 @@ body {
   background-size: cover;
   background-attachment: fixed;
   height: 100vh;
+  /* FIX iOS: 100vh = «большой» вьюпорт (с учётом свёрнутых тулбаров), поэтому
+     flex-центрирование уезжало вниз. svh = реально видимая высота. */
+  height: 100svh;
   color: var(--hero-text);
   min-height: 500px;
   font-family: "Ubuntu", sans-serif;
@@ -1775,7 +1779,8 @@ body:not(.dark) .social-link:hover .fa-github {
   }
 
   .home .home-content {
-    padding-top: 80px;
+    /* FIX: убран padding-top: 80px — он смещал блок вниз от центра экрана */
+    padding-top: 0;
     text-align: center;
   }
 
@@ -2106,6 +2111,12 @@ body > :last-child:not(footer) {
   z-index: 0;
   pointer-events: none;
   display: block;
+  /* FIX iOS: отдельный GPU-слой для канваса — анимация блобов не
+     перерисовывается вместе со скроллом страницы (мерцание) */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 /* Позиционирование ablur-слоя под навбаром */
