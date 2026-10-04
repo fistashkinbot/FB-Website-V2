@@ -2135,3 +2135,26 @@ body > :last-child:not(footer) {
 .docs-navbar.sticky > ablur-layer {
   height: calc(100% + 24px);
 }
+
+@supports (-webkit-touch-callout: none) {
+  .navbar > ablur-layer,
+  .docs-navbar > ablur-layer {
+    display: none;
+  }
+
+  .navbar::before,
+  .docs-navbar::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: -20px;
+    z-index: -1;
+    pointer-events: none;
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 55%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 0, #000 55%, transparent 100%);
+  }
+}
