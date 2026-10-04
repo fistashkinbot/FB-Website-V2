@@ -32,6 +32,7 @@
   --blur-xl: 120px;  /* features::after */
   --blur-2xl: 300px; /* blob-outer (desktop) */
   --blur-sat: 150%;  /* saturate() рядом с blur() */
+  --ablur-tint: rgba(255, 255, 255, 0.7);   /* светлая тема */
 
   /* ===== Светлая тема: адаптированные токены секций сайта ===== */
   --nav-bg-sticky: rgba(255, 255, 255, 0.75);
@@ -105,6 +106,8 @@
   --badge-default-text: #fafafa;
   --badge-secondary-bg: #27272a;
   --badge-secondary-text: #e4e4e7;
+
+  --ablur-tint: rgba(7, 3, 3, 0.9);         /* цвет фона со скрина */
 
   /* ===== Тёмная тема: оригинальные значения, без изменений ===== */
   --nav-bg-sticky: rgba(0, 0, 0, 0.3);
@@ -282,9 +285,7 @@ body {
   width: 100%;
   display: flex;
   justify-content: center;
-  /* viewport-fit=cover: навбар начинается от самого верха экрана, поэтому
-     отступ включает safe-area (статус-бар / Dynamic Island) */
-  padding: calc(env(safe-area-inset-top, 0px) + 20px) 24px 0;
+  padding: 20px 24px 0;
   font-family: "Ubuntu", sans-serif;
   transition: padding 0.3s ease;
   z-index: 9999;
@@ -294,7 +295,7 @@ body {
 }
 
 .navbar.sticky {
-  padding: calc(env(safe-area-inset-top, 0px) + 12px) 24px 0;
+  padding: 12px 24px 0;
 }
 
 .navbar .max-width {
@@ -426,7 +427,6 @@ body {
 
 #particles-js {
   height: 100vh;
-  height: 100svh; /* iOS: 100vh включает зону под тулбаром Safari/Chrome */
   width: 100%;
   position: absolute;
   top: 0;
@@ -451,9 +451,6 @@ body {
   background-size: cover;
   background-attachment: fixed;
   height: 100vh;
-  /* FIX iOS: 100vh = «большой» вьюпорт (с учётом свёрнутых тулбаров), поэтому
-     flex-центрирование уезжало вниз. svh = реально видимая высота. */
-  height: 100svh;
   color: var(--hero-text);
   min-height: 500px;
   font-family: "Ubuntu", sans-serif;
@@ -1779,8 +1776,6 @@ body:not(.dark) .social-link:hover .fa-github {
   }
 
   .home .home-content {
-    /* FIX: убран padding-top: 80px — он смещал блок вниз от центра экрана */
-    padding-top: 0;
     text-align: center;
   }
 
@@ -2103,7 +2098,7 @@ body > :last-child:not(footer) {
    и при этом ниже .home::before (z-index:1), #particles-js (z-index:1)
    и контента .home .max-width (z-index:4), как и задумано. */
 #blobCanvas {
-  position: absolute;   /* было fixed */
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
@@ -2111,12 +2106,19 @@ body > :last-child:not(footer) {
   z-index: 0;
   pointer-events: none;
   display: block;
-  /* FIX iOS: отдельный GPU-слой для канваса — анимация блобов не
-     перерисовывается вместе со скроллом страницы (мерцание) */
-  -webkit-transform: translateZ(0);
+
+  /* === FIX: против мерцания на мобайле === */
+  /* Промоутим канвас в отдельный compositing layer — при скролле
+     браузер двигает готовый слой, а не пересобирает его каждый кадр. */
   transform: translateZ(0);
-  -webkit-backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
   backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+
+  /* Изолируем перерисовку канваса — его repaint не задевает соседей
+     и наоборот, соседние repaint'ы (navbar с backdrop-filter, particles)
+     не дёргают канвас. */
+  contain: layout paint;
 }
 
 /* Позиционирование ablur-слоя под навбаром */
@@ -2136,25 +2138,20 @@ body > :last-child:not(footer) {
   height: calc(100% + 24px);
 }
 
-@supports (-webkit-touch-callout: none) {
-  .navbar > ablur-layer,
-  .docs-navbar > ablur-layer {
-    display: none;
-  }
-
-  .navbar::before,
-  .docs-navbar::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: -20px;
-    z-index: -1;
-    pointer-events: none;
-    -webkit-backdrop-filter: blur(16px);
-    backdrop-filter: blur(16px);
-    -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 55%, transparent 100%);
-    mask-image: linear-gradient(to bottom, #000 0, #000 55%, transparent 100%);
-  }
+/* ================================================================
+   iOS / Safari: убираем ablur-слой полностью.
+   На остальных браузерах (Chrome, Firefox, Edge, Android) — оставляем.
+   
+   `-webkit-touch-callout: none` поддерживается только WebKit-движком,
+   то есть Safari и все браузеры на iOS (Chrome iOS, Firefox iOS и т.д.
+   тоже используют WebKit под капотом — это требование Apple).
+   
+   Никакого фолбэк-блюра не ставим: лучше никакого размытия в зоне
+   статус-бара, чем сломанный backdrop-filter + mask, который WebKit
+   отрисовывает как чёрную полосу.
+   ================================================================ */
+/* Скрываем ablur только в iOS Safari (по классу с <html>, который ставит JS) */
+html.is-ios-safari .navbar > ablur-layer,
+html.is-ios-safari .docs-navbar > ablur-layer {
+  display: none !important;
 }

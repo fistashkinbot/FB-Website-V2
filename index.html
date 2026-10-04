@@ -61,6 +61,32 @@
       defer
     ></script>
     <script src="./js/aos/aos.js" defer></script>
+    <script>
+      (function () {
+        var ua = navigator.userAgent;
+        var platform = navigator.platform || "";
+        var maxTouch = navigator.maxTouchPoints || 0;
+
+        // iPhone / iPad / iPod + iPad в режиме "desktop site" (iPadOS 13+ маскируется под Mac)
+        var isIOS =
+          /iPad|iPhone|iPod/.test(ua) ||
+          (platform === "MacIntel" && maxTouch > 1);
+
+        // Все не-Safari браузеры на iOS — у них в UA есть свой маркер
+        var isOtherIOSBrowser =
+          /CriOS/.test(ua) ||   // Chrome iOS
+          /FxiOS/.test(ua) ||   // Firefox iOS
+          /EdgiOS/.test(ua) ||  // Edge iOS
+          /OPiOS/.test(ua) ||   // Opera iOS
+          /GSA/.test(ua);       // Google Search App
+
+        var isIOSSafari = isIOS && !isOtherIOSBrowser;
+
+        if (isIOSSafari) {
+          document.documentElement.classList.add("is-ios-safari");
+        }
+      })();
+    </script>
     <script src="./js/ablur.js" defer></script>
 
     <!-- Meta -->
