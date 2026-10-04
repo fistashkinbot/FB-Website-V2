@@ -1056,20 +1056,3 @@ w([T({ type: Number, attribute: "end-at" })], g.prototype, "endAt", 2);
 w([T({ type: String })], g.prototype, "height", 2);
 w([T({ type: Boolean, reflect: !0 })], g.prototype, "flip", 2);
 g = w([Ht("ablur-layer")], g);
-const f = document.getElementById("ablur"),
-  u = (r) => document.getElementById(r),
-  ct = () => {
-    ((f.layers = Number(u("layers").value)),
-      (f.baseBlur = Number(u("baseBlur").value)),
-      (f.endAt = Number(u("endAt").value)),
-      (f.height = u("height").value + "%"),
-      (f.flip = u("flip").checked),
-      (u("layersVal").textContent = f.layers),
-      (u("baseBlurVal").textContent = f.baseBlur),
-      (u("endAtVal").textContent = f.endAt),
-      (u("heightVal").textContent = f.height));
-  };
-["layers", "baseBlur", "endAt", "height", "flip"].forEach((r) =>
-  u(r).addEventListener("input", ct),
-);
-ct();

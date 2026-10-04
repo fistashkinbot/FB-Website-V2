@@ -42,8 +42,9 @@ $(document).ready(function () {
     },
   });
 
-  // FIX iOS Safari: слой ablur вынесен вверх на 60px (см. @supports в style.css),
-  // поэтому процентная маска растягивается — подгоняем end-at под новую высоту
+  // FIX iOS Safari: с viewport-fit=cover навбар (и слой ablur) начинается от верха
+  // экрана и выше на высоту статус-бара, поэтому процентная маска растягивается —
+  // подгоняем end-at под новую высоту
   if (window.CSS && CSS.supports("-webkit-touch-callout", "none")) {
     document.querySelectorAll("ablur-layer").forEach(function (el) {
       el.endAt = 50;

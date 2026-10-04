@@ -32,7 +32,6 @@
   --blur-xl: 120px;  /* features::after */
   --blur-2xl: 300px; /* blob-outer (desktop) */
   --blur-sat: 150%;  /* saturate() рядом с blur() */
-  --ablur-tint: rgba(255, 255, 255, 0.7);   /* светлая тема */
 
   /* ===== Светлая тема: адаптированные токены секций сайта ===== */
   --nav-bg-sticky: rgba(255, 255, 255, 0.75);
@@ -106,8 +105,6 @@
   --badge-default-text: #fafafa;
   --badge-secondary-bg: #27272a;
   --badge-secondary-text: #e4e4e7;
-
-  --ablur-tint: rgba(7, 3, 3, 0.9);         /* цвет фона со скрина */
 
   /* ===== Тёмная тема: оригинальные значения, без изменений ===== */
   --nav-bg-sticky: rgba(0, 0, 0, 0.3);
@@ -285,7 +282,9 @@ body {
   width: 100%;
   display: flex;
   justify-content: center;
-  padding: 20px 24px 0;
+  /* viewport-fit=cover: навбар начинается от самого верха экрана, поэтому
+     отступ включает safe-area (статус-бар / Dynamic Island) */
+  padding: calc(env(safe-area-inset-top, 0px) + 20px) 24px 0;
   font-family: "Ubuntu", sans-serif;
   transition: padding 0.3s ease;
   z-index: 9999;
@@ -295,7 +294,7 @@ body {
 }
 
 .navbar.sticky {
-  padding: 12px 24px 0;
+  padding: calc(env(safe-area-inset-top, 0px) + 12px) 24px 0;
 }
 
 .navbar .max-width {
@@ -2124,17 +2123,4 @@ body > :last-child:not(footer) {
 .navbar.sticky > ablur-layer,
 .docs-navbar.sticky > ablur-layer {
   height: calc(100% + 24px);
-}
-
-/* iOS: слой заходит под статус-бар */
-@supports (-webkit-touch-callout: none) {
-  .navbar > ablur-layer,
-  .docs-navbar > ablur-layer {
-    top: -60px;
-    height: calc(100% + 60px + 20px);
-  }
-  .navbar.sticky > ablur-layer,
-  .docs-navbar.sticky > ablur-layer {
-    height: calc(100% + 60px + 24px);
-  }
 }

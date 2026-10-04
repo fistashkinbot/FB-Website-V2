@@ -194,7 +194,7 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  padding: 20px 24px 0;
+  padding: calc(env(safe-area-inset-top, 0px) + 20px) 24px 0;
   font-family: "Ubuntu", sans-serif;
   transition: padding 0.3s ease;
   z-index: 9999;
@@ -203,7 +203,7 @@
   will-change: transform;
 }
 .docs-navbar.sticky {
-  padding: 12px 24px 0;
+  padding: calc(env(safe-area-inset-top, 0px) + 12px) 24px 0;
 }
 
 .docs-navbar .max-width {
