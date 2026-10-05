@@ -29,7 +29,6 @@
   --docs-nav-pill-border: rgba(0, 0, 0, 0.08);
   --docs-mobile-menu-bg: #ffffff;
 
-
   --docs-panel-bg: rgba(255, 255, 255, 0.7);
   --docs-hover-bg: rgba(0, 0, 0, 0.04);
   --docs-hover-bg-active: rgba(192, 105, 78, 0.2);
@@ -103,7 +102,6 @@
   --docs-nav-pill-border: rgba(255, 255, 255, 0.08);
   --docs-mobile-menu-bg: #121212;
 
-
   --docs-panel-bg: rgba(18, 18, 18, 0.3);
   --docs-hover-bg: rgba(255, 255, 255, 0.04);
   --docs-hover-bg-active: rgba(192, 105, 78, 0.1);
@@ -163,16 +161,6 @@
 }
 
 /* ================= ПЛАВНОЕ ПЕРЕКЛЮЧЕНИЕ ТЕМЫ (View Transitions) ================= */
-/*
-  Отключаем стандартный кроссфейд — theme.js запускает анимацию
-  clip-path: circle() из точки клика.
-
-  pointer-events на псевдо-элементах здесь не работает: браузер
-  замораживает ввод на своём уровне (не CSS). За кликабельность
-  кнопки отвечает pointerdown-хак в theme.js — он вызывает
-  skipTransition() до того, как браузер съест клик.
-*/
-
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none;
@@ -573,7 +561,7 @@
 .sb-powered {
   display: flex;
   align-items: center;
-  gap: 90px;
+  gap: 12px; /* Изменено с 90px, чтобы аватарка и текст были рядом */
   font-size: 12px;
   color: var(--docs-text-muted);
   text-decoration: none;
@@ -584,6 +572,13 @@
 }
 .sb-powered svg {
   opacity: 0.5;
+}
+
+/* НОВЫЙ СТИЛЬ: Аватарка в сайдбаре доков */
+.sb-avatar-img {
+  width: 24px;
+  height: 24px;
+  object-fit: cover;
 }
 
 /* ─── ОСНОВНОЙ КОНТЕНТ ─── */
@@ -998,13 +993,11 @@
   color: var(--docs-text-muted);
   opacity: 0.85;
 }
-/* Убираем нативный крестик в WebKit — эстетика */
 #doc-s-inp::-webkit-search-cancel-button {
   -webkit-appearance: none;
   appearance: none;
 }
 
-/* Хоткей ESC справа от строки ввода (только desktop) */
 .doc-search-kbd {
   display: inline-flex;
   align-items: center;
@@ -1027,8 +1020,6 @@
   max-height: min(60vh, 480px);
   overflow-y: auto;
   overscroll-behavior: contain;
-  /* Верхний padding 14px — «воздух» над первым результатом, чтобы
-     подсветка активного элемента (↑/↓) не упиралась в кромку скролла. */
   padding: 14px 8px 12px;
   scrollbar-width: thin;
   scrollbar-color: var(--docs-scrollbar-thumb) transparent;
@@ -1044,14 +1035,10 @@
   background: var(--docs-border-strong);
 }
 
-/* ─── Заголовок группы («На этой странице», «На других страницах») ─── */
 .doc-s-group-head {
   display: flex;
   align-items: center;
   gap: 8px;
-  /* Нижний отступ 14px — воздух между заголовком группы и первым
-     результатом, чтобы подсветка первого элемента не пересекалась
-     с подписью «НА ЭТОЙ СТРАНИЦЕ». */
   padding: 14px 12px 14px;
   font-size: 10.5px;
   font-weight: 700;
@@ -1068,16 +1055,10 @@
   background: var(--docs-search-row-border);
   margin-left: 4px;
 }
-/* Первому элементу после заголовка группы даём дополнительный запас
-   сверху — подсветка активного (↑/↓) не упирается в заголовок.
-   ВАЖНО: border-top здесь НЕ трогаем. Раньше стояло border-top: none —
-   у первого результата под заголовком («На этой странице») пропадала
-   верхняя грань рамки, и выделение выглядело «открытым» сверху. */
 .doc-s-group-head + .doc-s-item {
   margin-top: 4px;
 }
 
-/* ─── Элемент результата ─── */
 .doc-s-item {
   display: flex;
   flex-direction: column;
@@ -1099,7 +1080,6 @@
   outline: none;
 }
 
-/* Иконка-якорь у заголовков-страниц (#) */
 .doc-s-item.doc-s-item-heading {
   position: relative;
   padding-left: 42px;
@@ -1152,7 +1132,6 @@
   white-space: nowrap;
 }
 
-/* ─── Группа по странице (результаты с других страниц) ─── */
 .doc-s-page-group {
   margin: 4px 0 2px;
   padding: 4px 0 6px;
@@ -1164,7 +1143,6 @@
   margin-top: 2px;
 }
 
-/* «Шапка» страницы: название + раздел */
 .doc-s-page-head {
   display: flex;
   align-items: center;
@@ -1196,7 +1174,6 @@
   line-height: 1.4;
 }
 
-/* Вложенные якоря — компактнее */
 .doc-s-item.doc-s-item-nested {
   padding: 7px 12px 7px 42px;
   margin-left: 0;
@@ -1224,7 +1201,6 @@
   border-color: var(--accent);
 }
 
-/* ─── Подсветка совпадений ─── */
 .doc-s-hl {
   background: rgba(192, 105, 78, 0.22);
   color: inherit;
@@ -1236,14 +1212,6 @@
   background: rgba(224, 160, 112, 0.22);
 }
 
-/* ─── Активный результат при навигации ↑/↓ ─── */
-/* Активный элемент выглядит ровно так же, как :hover — скруглённая
-   плашка с тонкой рамкой по всему периметру и акцентной иконкой «#».
-   Раньше активный получал border-left 2px + срезанные левые углы и
-   компенсацию padding-left: плашка получалась кривой (квадратная слева,
-   круглая справа), а контент съезжал на 2px. Теперь рамка у всех
-   состояний одинаковая (1px, меняется только цвет), поэтому layout не
-   «прыгает» и ничего не нужно компенсировать. */
 .doc-s-item.doc-s-item--active {
   background: var(--docs-search-item-hover);
   border-color: var(--docs-border-subtle);
@@ -1263,7 +1231,6 @@
   color: var(--docs-text-strong);
 }
 
-/* ─── Пустое состояние ─── */
 .doc-s-empty {
   display: flex;
   flex-direction: column;
@@ -1314,7 +1281,6 @@
   font-family: "Poppins", sans-serif;
 }
 
-/* ─── Каскадное появление ─── */
 @keyframes doc-s-item-in {
   from {
     opacity: 0;
@@ -1330,9 +1296,6 @@
   animation-delay: var(--s-delay, 0ms);
 }
 
-/* На узких экранах, где H1 может занять всю строку и налезть
-   на кнопку, отключаем абсолютное позиционирование и возвращаем
-   кнопку в обычный поток — тогда она встанет над H1, как раньше. */
 @media (max-width: 900px) {
   .doc-toolbar {
     position: static;
@@ -1342,7 +1305,6 @@
   }
 }
 
-/* ─── Отключение анимаций ─── */
 @media (prefers-reduced-motion: reduce) {
   .doc-search-overlay,
   .doc-search-modal {
@@ -1354,7 +1316,6 @@
   }
 }
 
-/* ─── Мобильный вид поиска ─── */
 @media (max-width: 640px) {
   .doc-search-overlay {
     padding: calc(84px + env(safe-area-inset-top, 0px)) 12px 16px;
@@ -1387,15 +1348,12 @@
   }
   .doc-search-res {
     max-height: min(72vh, 560px);
-    /* Держим тот же «воздух» сверху, что и на десктопе */
     padding: 14px 6px 10px;
   }
   .doc-s-group-head {
-    /* Симметрично десктопу: 14px сверху, 14px снизу */
     padding: 14px 10px 14px;
     font-size: 10px;
   }
-  /* И на мобиле тот же запас для первого элемента группы */
   .doc-s-group-head + .doc-s-item {
     margin-top: 6px;
   }

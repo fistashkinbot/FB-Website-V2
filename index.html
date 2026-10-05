@@ -118,7 +118,10 @@
       <ablur-layer layers="5" base-blur="22" end-at="72" flip></ablur-layer>
       <div class="max-width">
         <div class="logo">
-          <a href="#home">Fistashkin<span></span></a>
+          <a href="#home">
+            <img src="assets/icon.ico" alt="Fistashkin Avatar" class="nav-avatar" />
+            Fistashkin<span></span>
+          </a>
         </div>
         <ul class="menu">
           <li>
@@ -153,8 +156,7 @@
           </button>
 
           <div id="dropdown-menu" class="dropdown">
-            <!-- Пункты навигации: видны только на мобильном (см. .dropdown-mobile-nav
-                 в style.css), на десктопе скрыты — там навигация уже видна в .navbar .menu -->
+            <!-- Пункты навигации: видны только на мобильном -->
             <div class="dropdown-mobile-nav">
               <div class="dropdown-label" data-i18n="dropdown_navigation"></div>
               <a href="#home" class="dropdown-item">
@@ -353,9 +355,12 @@
       <div class="footer-top">
         <div class="container">
           <div class="footer-brand">
-            <a href="#" class="logo">
-              <img src="assets/logo.svg" alt="FistashkinBot Logo" />
-            </a>
+            <!-- НОВЫЙ БЛОК: Аватарка и имя рядом -->
+            <div class="footer-brand-header">
+              <img src="assets/icon.ico" alt="FistashkinBot Logo" class="footer-avatar-img" />
+              <span class="footer-brand-name">Fistashkin</span>
+            </div>
+            
             <p class="footer-brand-text" data-i18n="footer_not_affiliated"></p>
             <h3 class="h4 social-title" data-i18n="footer_social_title"></h3>
             <ul class="social-list">
@@ -507,12 +512,6 @@
           }, 400);
         }
       }
-      // FIX: раньше ждали window.load — оно срабатывает только когда ДОГРУЗИТСЯ
-      // абсолютно всё (шрифты, cdnjs-скрипты, картинки). На слабой мобильной
-      // сети это может занимать много секунд — экран всё это время чёрный
-      // под лоадером. DOMContentLoaded фактически совпадает с готовностью
-      // видимого контента (HTML распарсен, defer-скрипты выполнены), поэтому
-      // прячем лоадер по нему, а window.load/pageshow оставляем как подстраховку.
       document.addEventListener("DOMContentLoaded", hideLoader);
       window.addEventListener("load", hideLoader);
       window.addEventListener("pageshow", hideLoader);

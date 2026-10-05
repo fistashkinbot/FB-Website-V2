@@ -85,7 +85,10 @@
       <ablur-layer layers="5" base-blur="22" end-at="72" flip></ablur-layer>
       <div class="max-width">
         <div class="logo">
-          <a href="./index.html">Fistashkin<span></span></a>
+          <a href="./index.html">
+            <img src="assets/icon.ico" alt="Fistashkin Avatar" class="nav-avatar" />
+            Fistashkin<span></span>
+          </a>
         </div>
         <div class="docs-nav-search" onclick="openDocSearch()">
           <svg
@@ -109,8 +112,6 @@
             </button>
 
             <div id="dropdown-menu" class="dropdown">
-              <!-- Пункты навигации: видны только на мобильном (см. .dropdown-mobile-nav
-                   в style.css), на десктопе скрыты — там навигация уже видна в .navbar .menu -->
               <div class="dropdown-mobile-nav">
                 <a href="./index.html" class="dropdown-item">
                   <i class="fas fa-home"></i>
@@ -192,7 +193,7 @@
         <div class="sb-nav-body" id="sb-nav-body"></div>
         <div class="sb-footer">
           <a href="./index.html" class="sb-powered">
-            <img src="assets/logo.svg" alt="FistashkinBot Logo" />
+            <img src="assets/icon.ico" alt="FistashkinBot Logo" class="sb-avatar-img" />
             <span data-i18n="docs_sidebar_made_with"></span>
           </a>
         </div>

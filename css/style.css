@@ -2155,3 +2155,35 @@ html.is-ios-safari .navbar > ablur-layer,
 html.is-ios-safari .docs-navbar > ablur-layer {
   display: none !important;
 }
+
+/* ================= НОВЫЕ СТИЛИ: АВАТАРКИ ================= */
+
+/* Аватарка в навбаре (верхняя панель) */
+.nav-avatar {
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+}
+
+/* Обертка для аватарки и имени в футере */
+.footer-brand-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+/* Аватарка в футере */
+.footer-avatar-img {
+  width: 36px;
+  height: 36px;
+  object-fit: cover;
+}
+
+/* Имя рядом с аватаркой в футере */
+.footer-brand-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--footer-heading);
+  font-family: "Ubuntu", sans-serif;
+}

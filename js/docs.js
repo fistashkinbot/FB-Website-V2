@@ -3,9 +3,6 @@
    ================================================================================= */
 
 // ─── ХЕЛПЕР ПЕРЕВОДА ───
-// Единая точка получения строки из translations. window.t() определяет
-// текущий язык сам, но мы всегда передаём явный lang, если он у нас есть —
-// так строки совпадают с языком загружаемой страницы документации.
 function tr(key, lang) {
   const fallbackLang = lang || getDocLang();
   if (typeof window.t === "function") return window.t(key, fallbackLang);
@@ -48,6 +45,37 @@ function loadManifest() {
       .catch(() => ({}));
   }
   return manifestPromise;
+}
+
+// ─── FALLBACK: дата последнего коммита через GitHub API ───
+// Если manifest.json недоступен или в нём нет ключа для файла — спрашиваем
+// у GitHub API дату последнего коммита, затронувшего этот файл.
+// Кэш — чтобы не дёргать API повторно для одной и той же страницы.
+const githubCommitDateCache = {};
+async function getLastModifiedFromGitHub(file, lang) {
+  const key = `${lang}/${file}`;
+  if (githubCommitDateCache[key] !== undefined) return githubCommitDateCache[key];
+
+  const path = `docs/${lang}/${file}`;
+  const url = `https://api.github.com/repos/${DOCS_REPO_OWNER}/${DOCS_REPO_NAME}/commits?path=${encodeURIComponent(path)}&page=1&per_page=1`;
+
+  try {
+    const resp = await fetch(url);
+    if (!resp.ok) {
+      githubCommitDateCache[key] = null;
+      return null;
+    }
+    const data = await resp.json();
+    const date = Array.isArray(data) && data[0] && data[0].commit && data[0].commit.committer
+      ? data[0].commit.committer.date
+      : null;
+    githubCommitDateCache[key] = date;
+    return date;
+  } catch (e) {
+    console.warn("GitHub API last-modified fallback failed:", e);
+    githubCommitDateCache[key] = null;
+    return null;
+  }
 }
 
 // ─── КЭШ ───
@@ -299,7 +327,6 @@ async function initDocs(lang) {
     applySkeletonDelays(docEl);
   }
 
-  // ESC-хинт в строке поиска
   (function initSearchKbd() {
     const row = document.querySelector(".doc-search-row");
     const inp = document.getElementById("doc-s-inp");
@@ -311,7 +338,6 @@ async function initDocs(lang) {
     }
   })();
 
-  // Актуальная заглушка поиска
   (function initSearchPlaceholder() {
     const res = document.getElementById("doc-s-res");
     if (res) res.innerHTML = renderSearchEmpty();
@@ -548,12 +574,20 @@ async function loadDocPage(file, lang) {
       if (!resp.ok) throw new Error("not ok");
       raw = await resp.text();
       cache[file] = { content: raw };
-      const lastModified = manifest[getDocsRepoPath(lang, file)];
+      let lastModified = manifest[getDocsRepoPath(lang, file)];
+      // Fallback: если в manifest.json нет ключа — спрашиваем GitHub API.
+      if (!lastModified) {
+        lastModified = await getLastModifiedFromGitHub(file, lang);
+      }
       if (lastModified) cache[file].lastModified = lastModified;
     } catch (e) {
       doc.innerHTML = `<h1>${tr("docs_page_not_found_heading", lang)}</h1>`;
       return;
     }
+  } else if (!cache[file].lastModified) {
+    // Файл взят из кэша, но даты в кэше нет — запрашиваем API.
+    const lastModified = await getLastModifiedFromGitHub(file, lang);
+    if (lastModified) cache[file].lastModified = lastModified;
   }
 
   doc.innerHTML = `<div data-aos="fade-up" data-aos-duration="600" data-aos-once="true">${renderDocMd(raw)}</div>`;
@@ -725,15 +759,9 @@ function renderSearchEmpty() {
   `;
 }
 
-function getSearchOnPageText() {
-  return tr("docs_search_on_page", getDocLang());
-}
-function getSearchAllText() {
-  return tr("docs_search_all_pages", getDocLang());
-}
-function getSearchOtherPagesText() {
-  return tr("docs_search_other_pages", getDocLang());
-}
+function getSearchOnPageText() { return tr("docs_search_on_page", getDocLang()); }
+function getSearchAllText() { return tr("docs_search_all_pages", getDocLang()); }
+function getSearchOtherPagesText() { return tr("docs_search_other_pages", getDocLang()); }
 
 (function initOverlayClick() {
   const ov = document.getElementById("doc-search-overlay");
@@ -1038,7 +1066,6 @@ document.addEventListener("keydown", (e) => {
       <polyline points="20 6 9 17 4 12"></polyline>
     </svg>`;
 
-  // Если в HTML уже лежит span[data-i18n] — сохраняем его, иначе создаём.
   let labelSpan = btn.querySelector('span[data-i18n="docs_btn_copy"]');
   if (!labelSpan) {
     labelSpan = document.createElement("span");
@@ -1046,8 +1073,6 @@ document.addEventListener("keydown", (e) => {
     labelSpan.textContent = tr("docs_btn_copy", getDocLang());
   }
 
-  // Обёртка иконки содержит обе иконки — CSS переключает между ними
-  // через класс .is-copied на самой кнопке.
   const iconWrap = document.createElement("span");
   iconWrap.className = "doc-copy-icon-wrap";
   iconWrap.innerHTML = ICON_COPY + ICON_CHECK;
@@ -1061,7 +1086,6 @@ document.addEventListener("keydown", (e) => {
     const content = document.getElementById("doc-content");
     if (content) navigator.clipboard.writeText(content.innerText).catch(() => {});
 
-    // Меняем текст на «Скопировано» — иконка меняется через CSS .is-copied.
     labelSpan.textContent = tr("docs_btn_copy_page_copied", getDocLang());
     btn.classList.add("is-copied");
 

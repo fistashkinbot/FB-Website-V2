@@ -1,0 +1,323 @@
+/* =====================================================================
+   POLISH — аддитивный слой визуальных улучшений
+   Подключать ПОСЛЕДНИМ (после style.css / docs.css / toast.css).
+   Ничего не переопределяет глобально: только тонкая доводка.
+   Удалить файл = вернуться к исходному виду.
+   ===================================================================== */
+
+:root {
+  --pl-accent: var(--accent, #c0694e);
+  --pl-accent-soft: rgba(192, 105, 78, 0.14);
+  --pl-accent-glow: rgba(192, 105, 78, 0.35);
+  --pl-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --pl-radius: 14px;
+}
+
+/* ---------- Общее ---------- */
+::selection {
+  background: var(--pl-accent-soft);
+  color: var(--pl-accent);
+}
+
+/* Единое, заметное и аккуратное кольцо фокуса (a11y) */
+a:focus-visible,
+button:focus-visible,
+.card:focus-visible,
+.dropdown-item:focus-visible,
+.sb-item:focus-visible,
+.toc-link:focus-visible {
+  outline: 2px solid var(--pl-accent);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+/* Красивее переносы заголовков и абзацев */
+h1, h2, h3, .title, .card .text { text-wrap: balance; }
+p, .card p { text-wrap: pretty; }
+
+/* ---------- Hero ---------- */
+/* Градиентный акцент на названии бота */
+.home .home-content .text-2 {
+  background: linear-gradient(
+    120deg,
+    var(--hero-text) 30%,
+    var(--pl-accent) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+}
+
+/* CTA: мягкое свечение + «пружинистый» hover */
+.btn-commands {
+  box-shadow: 0 8px 28px -8px var(--pl-accent-glow);
+  transition: transform 0.35s var(--pl-ease), box-shadow 0.35s var(--pl-ease),
+    filter 0.35s ease;
+}
+@media (hover: hover) {
+  .btn-commands:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 36px -10px var(--pl-accent-glow);
+  }
+}
+.btn-commands:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* ---------- Заголовки секций ---------- */
+section .title {
+  letter-spacing: -0.015em;
+}
+section .title > i {
+  display: inline-grid;
+  place-items: center;
+  width: 1.5em;
+  height: 1.5em;
+  margin-right: 10px;
+  font-size: 0.55em;
+  vertical-align: middle;
+  color: var(--pl-accent);
+  background: var(--pl-accent-soft);
+  border-radius: 12px;
+}
+
+/* ---------- Карточки возможностей ---------- */
+.card {
+  border-radius: var(--pl-radius);
+  transition: transform 0.45s var(--pl-ease), border-color 0.35s ease,
+    box-shadow 0.45s var(--pl-ease), background-color 0.3s ease;
+}
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.45),
+      0 0 0 1px var(--pl-accent-soft);
+  }
+}
+.card .text {
+  letter-spacing: -0.01em;
+}
+/* Тонкий акцент-штрих над заголовком карточки */
+.card .box > .text::before {
+  content: "";
+  display: block;
+  width: 28px;
+  height: 3px;
+  margin-bottom: 14px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--pl-accent), transparent);
+  transition: width 0.45s var(--pl-ease);
+}
+@media (hover: hover) {
+  .card:hover .box > .text::before {
+    width: 56px;
+  }
+}
+
+/* ---------- Контрибьюторы ---------- */
+.cardd {
+  border-radius: var(--pl-radius);
+  transition: border-color 0.4s ease, transform 0.45s var(--pl-ease),
+    box-shadow 0.45s var(--pl-ease);
+}
+@media (hover: hover) {
+  .cardd:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 36px -18px rgba(0, 0, 0, 0.45);
+  }
+}
+.cardd .boxx img {
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px var(--card-bg), 0 0 0 5px var(--pl-accent-soft);
+  transition: box-shadow 0.4s ease, transform 0.45s var(--pl-ease);
+}
+@media (hover: hover) {
+  .cardd:hover .boxx img {
+    box-shadow: 0 0 0 3px var(--card-bg), 0 0 0 5px var(--pl-accent);
+    transform: scale(1.04);
+  }
+}
+
+/* ---------- Навбар / меню ---------- */
+.navbar .menu li a,
+.docs-navbar .menu li a {
+  position: relative;
+}
+.navbar .menu li a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--pl-accent);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.35s var(--pl-ease);
+}
+.navbar .menu li a:hover::after {
+  transform: scaleX(1);
+}
+
+.dropdown-item {
+  transition: background-color 0.18s ease, color 0.18s ease,
+    transform 0.18s var(--pl-ease);
+}
+@media (hover: hover) {
+  .dropdown-item:hover {
+    transform: translateX(2px);
+  }
+}
+
+/* ---------- Прокрутка вверх ---------- */
+.scroll-up-btn {
+  border-radius: 12px;
+  border: 1px solid var(--pl-accent-soft);
+  box-shadow: 0 8px 24px -10px var(--pl-accent-glow);
+}
+
+/* =====================================================================
+   ДОКУМЕНТАЦИЯ
+   ===================================================================== */
+
+/* Читаемая ширина и ритм текста */
+#doc-content {
+  line-height: 1.75;
+}
+#doc-content h1 {
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+#doc-content h2 {
+  margin-top: 2.4em;
+  padding-bottom: 0.35em;
+  letter-spacing: -0.01em;
+  border-bottom: 1px solid var(--docs-border-subtle, var(--border));
+}
+#doc-content h3 {
+  margin-top: 1.8em;
+}
+#doc-content :is(h1, h2, h3, h4) {
+  scroll-margin-top: 96px; /* заголовок не прячется под навбаром */
+}
+#doc-content a {
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+#doc-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
+/* Код */
+#doc-content pre {
+  border-radius: 12px;
+  border: 1px solid var(--docs-border-subtle, var(--border));
+  box-shadow: 0 10px 30px -18px rgba(0, 0, 0, 0.5);
+}
+#doc-content :not(pre) > code {
+  padding: 0.15em 0.45em;
+  border-radius: 6px;
+}
+
+/* Таблицы: скруглённая рамка и аккуратный hover строки */
+#doc-content table {
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--docs-border-subtle, var(--border));
+  border-radius: 12px;
+  overflow: hidden;
+}
+#doc-content tbody tr {
+  transition: background-color 0.15s ease;
+}
+@media (hover: hover) {
+  #doc-content tbody tr:hover {
+    background: var(--docs-hover-bg, rgba(127, 127, 127, 0.06));
+  }
+}
+
+/* Сайдбар: активный пункт с акцентной полоской */
+.sb-item,
+.sb-child {
+  position: relative;
+  transition: background-color 0.18s ease, color 0.18s ease;
+}
+.sb-item.active::before,
+.sb-child.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 22%;
+  bottom: 22%;
+  width: 3px;
+  border-radius: 3px;
+  background: var(--pl-accent);
+}
+
+/* TOC: плавная подсветка активного раздела */
+.toc-link {
+  transition: color 0.2s ease, transform 0.2s var(--pl-ease);
+}
+.toc-link.active {
+  transform: translateX(3px);
+}
+
+/* Карточки «назад / вперёд» внизу страницы */
+.page-nav-btn {
+  border-radius: var(--pl-radius);
+  transition: transform 0.35s var(--pl-ease), border-color 0.25s ease,
+    box-shadow 0.35s var(--pl-ease);
+}
+@media (hover: hover) {
+  .page-nav-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 30px -16px rgba(0, 0, 0, 0.45);
+  }
+}
+
+/* Поиск: мягче модал */
+.doc-search-modal {
+  border-radius: 16px;
+}
+
+/* ---------- Toast ---------- */
+.toast-card {
+  border-radius: 12px;
+}
+
+/* ---------- Тонкая прокрутка ---------- */
+html {
+  scrollbar-color: rgba(192, 105, 78, 0.35) transparent;
+}
+
+/* ---------- Движение: уважаем системную настройку ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .cardd,
+  .btn-commands,
+  .page-nav-btn,
+  .dropdown-item,
+  .toc-link,
+  .navbar .menu li a::after,
+  .card .box > .text::before {
+    transition: none !important;
+  }
+  .card:hover,
+  .cardd:hover,
+  .btn-commands:hover,
+  .page-nav-btn:hover {
+    transform: none !important;
+  }
+}
+
+/* ---------- iOS Safari: без тяжёлых теней и сдвигов на тач ---------- */
+.is-ios-safari .card:hover,
+.is-ios-safari .cardd:hover {
+  box-shadow: none;
+}
