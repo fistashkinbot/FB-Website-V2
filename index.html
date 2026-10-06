@@ -228,6 +228,39 @@
       </div>
     </section>
 
+    <!-- Секция статуса (Таймер) -->
+    <section class="status-section" id="status">
+        <div class="max-width">
+            <h2 class="title">
+                <span data-i18n="status_title_1"></span><br>
+                <span data-i18n="status_title_2"></span>
+            </h2>
+            
+            <div class="countdown-wrapper">
+                <div class="countdown-container">
+                    <div class="countdown-item">
+                        <span class="number" id="days">00</span>
+                        <span class="label" data-i18n="status_days"></span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="number" id="hours">00</span>
+                        <span class="label" data-i18n="status_hours"></span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="number" id="minutes">00</span>
+                        <span class="label" data-i18n="status_minutes"></span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="number" id="seconds">00</span>
+                        <span class="label" data-i18n="status_seconds"></span>
+                    </div>
+                </div>
+            </div>
+
+            <p class="status-text" data-i18n="status_text"></p>
+        </div>
+    </section>
+
     <section class="features" id="features">
       <div data-aos="fade-down" data-aos-duration="1000" data-aos-once="true">
         <div class="max-width">
@@ -537,6 +570,54 @@
           AOS.init({ duration: 1000, once: true });
         }
       });
+    </script>
+
+    <script>
+        // Ждем, пока вся страница загрузится
+        document.addEventListener("DOMContentLoaded", () => {
+            console.log("Скрипт таймера запущен!"); // Это сообщение появится в консоли (F12)
+
+            // Целевая дата: 1 января 2027 года
+            const targetDate = new Date("2027-06-28T00:00:00").getTime();
+
+            // Проверяем, есть ли элементы на странице
+            const daysEl = document.getElementById("days");
+            if (!daysEl) {
+                console.error("ОШИБКА: Элемент с id='days' не найден! Проверьте HTML.");
+                return;
+            }
+
+            // Запускаем интервал (каждую секунду)
+            setInterval(function() {
+                const now = new Date().getTime();
+                const distance = targetDate - now;
+
+                // Если время вышло
+                if (distance < 0) {
+                    document.getElementById("days").innerText = "00";
+                    document.getElementById("hours").innerText = "00";
+                    document.getElementById("minutes").innerText = "00";
+                    document.getElementById("seconds").innerText = "00";
+                    return;
+                }
+
+                // Вычисления
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                // Функция добавления нуля (например, 5 -> 05)
+                const formatNumber = (num) => String(num).padStart(2, '0');
+
+                // Обновляем цифры на экране
+                document.getElementById("days").innerText = formatNumber(days);
+                document.getElementById("hours").innerText = formatNumber(hours);
+                document.getElementById("minutes").innerText = formatNumber(minutes);
+                document.getElementById("seconds").innerText = formatNumber(seconds);
+
+            }, 1000); // 1000 миллисекунд = 1 секунда
+        });
     </script>
   </body>
 </html>

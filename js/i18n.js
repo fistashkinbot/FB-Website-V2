@@ -127,6 +127,15 @@ const translations = {
         docs_load_error_message_doc: "Не удалось загрузить документацию.",
         docs_page_not_found_heading: "Страница не найдена",
         docs_page_not_found_message: "Файл не найден в папке",
+
+        // Секция статуса (Таймер)
+        status_title_1: "Мы придем,",
+        status_title_2: "но надо подождать",
+        status_days: "Дней",
+        status_hours: "Часов",
+        status_minutes: "Минут",
+        status_seconds: "Секунд",
+        status_text: "На данный момент я (главный разработчик) пережил сложный этап в своей жизни и проект был перенесен. Но я и моя команда сейчас активно разрабатывают его!",
     },
     uk: {
         // Мета-теги
@@ -255,6 +264,14 @@ const translations = {
         docs_load_error_message_doc: "Не вдалося завантажити документацію.",
         docs_page_not_found_heading: "Сторінку не знайдено",
         docs_page_not_found_message: "Файл не знайдено в папці",
+        // Секция статуса (Таймер)
+        status_title_1: "Ми прийдемо,",
+        status_title_2: "але треба зачекати",
+        status_days: "Днів",
+        status_hours: "Годин",
+        status_minutes: "Хвилин",
+        status_seconds: "Секунд",
+        status_text: "На даний момент я (головний розробник) пережив складний етап у своєму житті, і проєкт було перенесено. Але я та моя команда зараз активно розробляємо його!",
     },
     en: {
         // Meta tags
@@ -382,6 +399,14 @@ const translations = {
         docs_load_error_message_doc: "Failed to load documentation.",
         docs_page_not_found_heading: "Page not found",
         docs_page_not_found_message: "File not found in folder",
+        // Status section (Timer)
+        status_title_1: "We will come,",
+        status_title_2: "but we need to wait",
+        status_days: "Days",
+        status_hours: "Hours",
+        status_minutes: "Minutes",
+        status_seconds: "Seconds",
+        status_text: "At the moment, I (the lead developer) have gone through a difficult period in my life and the project was postponed. But my team and I are actively developing it right now!",
     }
 };
 

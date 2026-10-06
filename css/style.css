@@ -2187,3 +2187,148 @@ html.is-ios-safari .docs-navbar > ablur-layer {
   color: var(--footer-heading);
   font-family: "Ubuntu", sans-serif;
 }
+
+/* ================= СЕКЦИЯ СТАТУСА (ТАЙМЕР) ================= */
+/* Адаптировано под переменные вашего проекта */
+
+.status-section {
+    padding: 100px 0;
+    background: var(--section-bg);
+    color: var(--section-text);
+    font-family: "Ubuntu", sans-serif;
+    text-align: center;
+}
+
+.status-section .title {
+    /* Наследует стили из вашего глобального .title */
+    margin-bottom: 50px;
+}
+
+.countdown-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+.countdown-container {
+    display: inline-flex;
+    justify-content: center;
+    gap: 40px;
+    /* Стеклянный эффект как у навбара */
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 35px 60px;
+    backdrop-filter: blur(var(--blur-md)) saturate(var(--blur-sat));
+    -webkit-backdrop-filter: blur(var(--blur-md)) saturate(var(--blur-sat));
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    flex-wrap: wrap;
+}
+
+/* Эффект при наведении, похожий на карточки .card */
+.countdown-container:hover {
+    transform: translateY(-4px);
+    border-color: var(--card-border-hover);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+}
+
+.countdown-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 80px;
+}
+
+.countdown-item .number {
+    font-family: "Ubuntu", "JetBrains Mono", monospace;
+    font-size: 52px;
+    font-weight: 700;
+    color: var(--accent); /* Ваш акцентный цвет (оранжевый) */
+    line-height: 1;
+    margin-bottom: 10px;
+    font-variant-numeric: tabular-nums; /* Чтобы цифры не прыгали */
+    text-shadow: 0 0 25px var(--accent-dim); /* Легкое свечение */
+    transition: color 0.3s ease;
+}
+
+.countdown-item .label {
+    font-size: 14px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 500;
+}
+
+.status-text {
+    max-width: 650px;
+    margin: 0 auto;
+    color: var(--text-muted);
+    font-size: 16px;
+    line-height: 1.7;
+    font-family: "Poppins", sans-serif;
+}
+
+/* ================= АНИМАЦИИ ПОЯВЛЕНИЯ ================= */
+/* Если у вас уже есть .reveal и .visible в style.css, эти стили можно не добавлять */
+.reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ================= АДАПТИВНОСТЬ ================= */
+@media (max-width: 950px) {
+    .countdown-container {
+        gap: 25px;
+        padding: 25px 35px;
+    }
+    .countdown-item .number {
+        font-size: 42px;
+    }
+}
+
+@media (max-width: 690px) {
+    .status-section {
+        padding: 70px 0;
+    }
+    .countdown-container {
+        gap: 15px;
+        padding: 20px 25px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .countdown-item {
+        min-width: 60px;
+        flex: 1;
+    }
+    .countdown-item .number {
+        font-size: 32px;
+    }
+    .countdown-item .label {
+        font-size: 11px;
+        letter-spacing: 1px;
+    }
+    .status-text {
+        font-size: 14px;
+        padding: 0 20px;
+    }
+}
+
+@media (max-width: 500px) {
+    .countdown-item .number {
+        font-size: 26px;
+    }
+    .countdown-item .label {
+        font-size: 10px;
+    }
+    .countdown-container {
+        gap: 10px;
+        padding: 15px 10px;
+    }
+}
