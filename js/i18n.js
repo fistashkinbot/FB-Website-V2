@@ -135,7 +135,10 @@ const translations = {
         status_hours: "Часов",
         status_minutes: "Минут",
         status_seconds: "Секунд",
-        status_text: "На данный момент я (главный разработчик) пережил сложный этап в своей жизни и проект был перенесен. Но я и моя команда сейчас активно разрабатывают его!",
+        status_text: `
+            На данный момент я (главный разработчик) пережил сложный этап в своей жизни и проект был перенесен. Но я и моя команда сейчас понемногу пытаемся продолжать работать над ним!
+        `,
+        status_image_src: "./assets/stop-war-ru.jpg",
     },
     uk: {
         // Мета-теги
@@ -271,7 +274,10 @@ const translations = {
         status_hours: "Годин",
         status_minutes: "Хвилин",
         status_seconds: "Секунд",
-        status_text: "На даний момент я (головний розробник) пережив складний етап у своєму житті, і проєкт було перенесено. Але я та моя команда зараз активно розробляємо його!",
+        status_text: `
+            На даний момент я (головний розробник) пережив складний етап у своєму житті, і проєкт було перенесено. Але я та моя команда зараз потроху намагаємося продовжувати працювати над ним!
+        `,
+        status_image_src: "./assets/stop-war-ru.jpg",
     },
     en: {
         // Meta tags
@@ -406,7 +412,10 @@ const translations = {
         status_hours: "Hours",
         status_minutes: "Minutes",
         status_seconds: "Seconds",
-        status_text: "At the moment, I (the lead developer) have gone through a difficult period in my life and the project was postponed. But my team and I are actively developing it right now!",
+        status_text: `
+            At the moment I (the lead developer) have been through a difficult period in my life and the project was postponed. But my team and I are now slowly trying to keep working on it!
+        `,
+        status_image_src: "./assets/stop-war-en.jpg",
     }
 };
 
@@ -445,15 +454,28 @@ function translatePage(lang) {
     const pack = translations[lang];
     if (!pack) return;
 
+    // Обычный текст (безопасно, через textContent)
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.dataset.i18n;
         if (key in pack) el.textContent = pack[key];
+    });
+
+    // HTML-форматирование (через innerHTML) — для доверенных ключей
+    document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        const key = el.dataset.i18nHtml;
+        if (key in pack) el.innerHTML = pack[key];
     });
 
     // Плейсхолдеры для input-полей
     document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
         const key = el.dataset.i18nPlaceholder;
         if (key in pack) el.placeholder = pack[key];
+    });
+
+    // src для картинок (зависит от языка)
+    document.querySelectorAll('[data-i18n-src]').forEach(el => {
+        const key = el.dataset.i18nSrc;
+        if (key in pack) el.src = pack[key];
     });
 
     // Обновляем динамические части docs, если они уже отрендерены
@@ -479,7 +501,7 @@ const I18N_FADE_MS = 200;
 
 function translatePageAnimated(lang, afterUpdate) {
     const elements = document.querySelectorAll(
-        '[data-i18n], [data-i18n-placeholder], .typing, #current-flag'
+        '[data-i18n], [data-i18n-html], [data-i18n-placeholder], [data-i18n-src], .typing, #current-flag'
     );
 
     const applyUpdate = () => {
