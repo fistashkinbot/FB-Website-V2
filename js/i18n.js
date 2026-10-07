@@ -22,18 +22,24 @@ const translations = {
 
         // Секция возможностей
         features_title: "Мои возможности",
-        features_card1_title: "🎀 Утилиты",
+        features_card1_title: "🛠️ Утилиты",
         features_card1_text: "Со стандартным набором команд Вы можете посмотреть информацию про участников сервера и про сам сервер, посмотреть аватар пользователя и саму информацию о боте, установить уникальный текст в свой профиль!",
         features_card2_title: "✨ Экономика",
         features_card2_text: "Вы можете стать аристократом по балансу или лидером в топе по уровню среди участников просто общаясь! Если хотите потратить свои сбережения - для вас есть настраиваемый магазин с ролями, но для азартных игроков тоже найдётся местечко!",
         features_card3_title: "🛡️ Модерация",
-        features_card3_text: "Бот поддерживает AutoMod, с помощью которого создаёт автоматически правила для автомодерации (фильтр запрещённых слов, обычного спама и упоминаний и т.д.), что значительно упрощает модерацию сервера. Кроме этого имеются стандартные команды бан, кик, таймаут и прочее.",
-        features_card4_title: "🎭 Развлечение",
-        features_card4_text: "Есть несколько небольших забавных команд, которыми вы можете покормить, погладить, обнять, поцеловать, либо же узнать свою судьбу в шаре-гадалке и посмотреть милые картинки собачек с котиками!",
-        features_card5_title: "🎵 Музыка",
-        features_card5_text: "Музыка в бета тесте, но вы всё так же можете насладиться прослушиванием музыки с YouTube и Spotify!",
-        features_card6_title: "🤖 Слэш команды",
-        features_card6_text: "Бот поддерживает слэш команды, чтобы облегчить использование бота.",
+        features_card3_text: "Инструменты для поддержания порядка, безопасности и комфортной атмосферы на сервере: команды бана, кика и таймаута, а также другие инструменты модерации.",
+        features_card4_title: "🧹 Автомодерация",
+        features_card4_text: "Автоматическая модерация фильтрует спам, ссылки, упоминания и запрещённые слова по гибким правилам — сервер остаётся чистым без постоянного участия модераторов.",
+        features_card5_title: "🔒 Приватные комнаты",
+        features_card5_text: "Создавайте временные приватные текстовые и голосовые комнаты для себя и своих друзей — с гибкими правами доступа и автоматическим удалением, когда комната больше не нужна.",
+        features_card6_title: "📋 Система аудита",
+        features_card6_text: "Видит всё, что упускает стандартный аудит Discord: удаления и правки сообщений, вход и выход из голосовых каналов, смену ролей. Логи прилетают прямо к вам через вебхуки.",
+        features_card7_title: "🎭 Развлечение",
+        features_card7_text: "Обнимашки, подмигивания и другие реакции для общения с участниками сервера, свадьбы (бракосочетания), а также дуэли, крестики-нолики и другие мини-игры прямо в Discord!",
+        features_card8_title: "🧠 ИИ-чат",
+        features_card8_text: "Общайтесь с AI прямо в Discord и получайте ответы на вопросы без сторонних сервисов.",
+        features_card9_title: "🏆 Рейтинг участников",
+        features_card9_text: "Активность — это игра! Зарабатывайте фисташки за общение, поднимайтесь в топе лидеров и обменивайте статус на эксклюзивные роли.",
 
         // Секция команды
         contributors_title: "Команда",
@@ -86,10 +92,18 @@ const translations = {
 
         docs_btn_copy: "Копировать",
         docs_btn_copy_copied: "Скопировано!",
+        docs_btn_copy_page_copied: "Скопировано",
         docs_search_placeholder: "Поиск...",
         docs_input_search_placeholder: "Поиск в документации...",
         docs_input_search_empty: "Начните вводить текст для поиска...",
+        docs_search_hint: "Ищите по заголовкам и названиям страниц",
         docs_search_no_results: "Ничего не найдено",
+        docs_search_try_another: "Попробуйте изменить запрос",
+        docs_search_on_page: "На этой странице",
+        docs_search_other_pages: "На других страницах",
+        docs_search_all_pages: "Результаты поиска",
+        docs_search_kbd_nav: "— навигация",
+        docs_search_kbd_go: "— перейти",
 
         docs_btn_page_nav_prev: "Предыдущая страница",
         docs_btn_page_nav_next: "Следующая страница",
@@ -105,12 +119,26 @@ const translations = {
         docs_reltime_months: "мес. назад",
         docs_reltime_years: "г. назад",
         docs_reltime_unknown: "неизвестно",
+        docs_yesterday_at: "вчера в",
 
         docs_sidebar_made_with: "Made with ❤️",
         docs_load_error_heading: "Ошибка загрузки",
         docs_load_error_message: "Не удалось загрузить SUMMARY.md. Убедитесь, что файл существует в папке",
+        docs_load_error_message_doc: "Не удалось загрузить документацию.",
         docs_page_not_found_heading: "Страница не найдена",
         docs_page_not_found_message: "Файл не найден в папке",
+
+        // Секция статуса (Таймер)
+        status_title_1: "Мы придем,",
+        status_title_2: "но надо подождать",
+        status_days: "Дней",
+        status_hours: "Часов",
+        status_minutes: "Минут",
+        status_seconds: "Секунд",
+        status_text: `
+            На данный момент я (главный разработчик) пережил сложный этап в своей жизни и проект был перенесен. Но я и моя команда сейчас понемногу пытаемся продолжать работать над ним!
+        `,
+        status_image_src: "assets/stop-war-ru.jpg",
     },
     uk: {
         // Мета-теги
@@ -134,18 +162,24 @@ const translations = {
 
         // Секция возможностей
         features_title: "Мої можливості",
-        features_card1_title: "🎀 Утиліти",
+        features_card1_title: "🛠️ Утиліти",
         features_card1_text: "За допомогою стандартного набору команд ви можете переглянути інформацію про учасників сервера та про сам сервер, подивитися аватар користувача та інформацію про бота, встановити унікальний текст у свій профіль!",
         features_card2_title: "✨ Економіка",
         features_card2_text: "Ви можете стати аристократом за балансом або лідером у топі за рівнем просто спілкуючись! Якщо захочете витратити свої заощадження — для вас є налаштовуваний магазин з ролями, а для азартних гравців також знайдеться чим зайнятися!",
         features_card3_title: "🛡️ Модерація",
-        features_card3_text: "Бот підтримує AutoMod, за допомогою якого автоматично створює правила для автомодерації (фільтр заборонених слів, звичайного спаму, згадок тощо), що значно спрощує модерацію сервера. Крім цього, доступні стандартні команди бану, кіку, таймауту та інші.",
-        features_card4_title: "🎭 Розваги",
-        features_card4_text: "Є кілька невеликих веселих команд, за допомогою яких ви можете погодувати, погладити, обійняти, поцілувати, дізнатися свою долю в кулі-віщуні або подивитися милі картинки собачок та котиків!",
-        features_card5_title: "🎵 Музика",
-        features_card5_text: "Музика знаходиться в бета-тесті, але ви все одно можете насолоджуватися прослуховуванням музики з YouTube та Spotify!",
-        features_card6_title: "🤖 Слеш-команди",
-        features_card6_text: "Бот підтримує слеш-команди, щоб зробити використання бота максимально зручним.",
+        features_card3_text: "Інструменти для підтримання порядку, безпеки та комфортної атмосфери на сервері: команди бану, кіку та таймауту, а також інші інструменти модерації.",
+        features_card4_title: "🧹 Автомодерація",
+        features_card4_text: "Автоматична модерація фільтрує спам, посилання, згадки та заборонені слова за гнучкими правилами — сервер залишається чистим без постійної участі модераторів.",
+        features_card5_title: "🔒 Приватні кімнати",
+        features_card5_text: "Створюйте тимчасові приватні текстові та голосові кімнати для себе та своїх друзів — із гнучкими правами доступу та автоматичним видаленням, коли кімната більше не потрібна.",
+        features_card6_title: "📋 Система аудиту",
+        features_card6_text: "Бачить усе, що пропускає стандартний аудит Discord: видалення й редагування повідомлень, вхід і вихід із голосових каналів, зміну ролей. Логи летять просто до вас через вебхуки.",
+        features_card7_title: "🎭 Розваги",
+        features_card7_text: "Обійняшки, підморгування та інші реакції для спілкування з учасниками сервера, весілля (одруження), а також дуелі, хрестики-нолики та інші міні-ігри прямо в Discord!",
+        features_card8_title: "🧠 ШІ-чат",
+        features_card8_text: "Спілкуйтеся з AI прямо в Discord та отримуйте відповіді на запитання без сторонніх сервісів.",
+        features_card9_title: "🏆 Рейтинг учасників",
+        features_card9_text: "Активність — це гра! Заробляйте фісташки за спілкування, підіймайтеся в топі лідерів та обмінюйте статус на ексклюзивні ролі.",
 
         // Секция команды
         contributors_title: "Команда",
@@ -198,10 +232,18 @@ const translations = {
 
         docs_btn_copy: "Копіювати",
         docs_btn_copy_copied: "Скопійовано!",
+        docs_btn_copy_page_copied: "Скопійовано",
         docs_search_placeholder: "Пошук...",
         docs_input_search_placeholder: "Пошук у документації...",
         docs_input_search_empty: "Почніть вводити текст для пошуку...",
+        docs_search_hint: "Шукайте за заголовками та назвами сторінок",
         docs_search_no_results: "Нічого не знайдено",
+        docs_search_try_another: "Спробуйте змінити запит",
+        docs_search_on_page: "На цій сторінці",
+        docs_search_other_pages: "На інших сторінках",
+        docs_search_all_pages: "Результати пошуку",
+        docs_search_kbd_nav: "— навігація",
+        docs_search_kbd_go: "— перейти",
 
         docs_btn_page_nav_prev: "Попередня сторінка",
         docs_btn_page_nav_next: "Наступна сторінка",
@@ -217,12 +259,25 @@ const translations = {
         docs_reltime_months: "міс. тому",
         docs_reltime_years: "р. тому",
         docs_reltime_unknown: "невідомо",
+        docs_yesterday_at: "вчора о",
 
         docs_sidebar_made_with: "Made with ❤️",
         docs_load_error_heading: "Помилка завантаження",
         docs_load_error_message: "Не вдалося завантажити SUMMARY.md. Переконайтеся, що файл існує в папці",
+        docs_load_error_message_doc: "Не вдалося завантажити документацію.",
         docs_page_not_found_heading: "Сторінку не знайдено",
         docs_page_not_found_message: "Файл не знайдено в папці",
+        // Секция статуса (Таймер)
+        status_title_1: "Ми прийдемо,",
+        status_title_2: "але треба зачекати",
+        status_days: "Днів",
+        status_hours: "Годин",
+        status_minutes: "Хвилин",
+        status_seconds: "Секунд",
+        status_text: `
+            На даний момент я (головний розробник) пережив складний етап у своєму житті, і проєкт було перенесено. Але я та моя команда зараз потроху намагаємося продовжувати працювати над ним!
+        `,
+        status_image_src: "assets/stop-war-ru.jpg",
     },
     en: {
         // Meta tags
@@ -246,18 +301,24 @@ const translations = {
 
         // Features section
         features_title: "My Features",
-        features_card1_title: "🎀 Utilities",
+        features_card1_title: "🛠️ Utilities",
         features_card1_text: "With a standard set of commands, you can view information about server members and the server itself, view a user's avatar and information about the bot, set a unique text in your profile!",
         features_card2_title: "✨ Economy",
         features_card2_text: "You can become an aristocrat by balance or a leader in the level top among participants just by chatting! If you want to spend your savings - there is a customizable store with roles, but there is also a place for gambling players!",
         features_card3_title: "🛡️ Moderation",
-        features_card3_text: "The bot supports AutoMod, which automatically creates rules for automoderation (filter of forbidden words, regular spam, mentions, etc.), which significantly simplifies server moderation. In addition, there are standard commands like ban, kick, timeout, and more.",
-        features_card4_title: "🎭 Entertainment",
-        features_card4_text: "There are several fun commands that you can feed, pet, hug, kiss, or find out your fate in a fortune teller and look at cute pictures of dogs and cats!",
-        features_card5_title: "🎵 Music",
-        features_card5_text: "Music is in beta test, but you can still enjoy listening to music from YouTube and Spotify!",
-        features_card6_title: "🤖 Slash Commands",
-        features_card6_text: "The bot supports slash commands to make using the bot easier.",
+        features_card3_text: "Tools to keep your server orderly, safe, and welcoming: ban, kick, and timeout commands, plus other moderation tools.",
+        features_card4_title: "🧹 Automod",
+        features_card4_text: "Automatic moderation filters spam, links, mentions, and forbidden words using flexible rules — keeping your server clean without moderators having to watch it around the clock.",
+        features_card5_title: "🔒 Private Rooms",
+        features_card5_text: "Create temporary private text and voice rooms for you and your friends — with flexible access permissions and automatic deletion once the room is no longer needed.",
+        features_card6_title: "📋 Audit System",
+        features_card6_text: "Sees everything Discord's own audit log misses: message edits and deletions, voice channel joins and leaves, role changes — delivered straight to you via webhooks.",
+        features_card7_title: "🎭 Entertainment",
+        features_card7_text: "Hugs, winks and other reactions to interact with server members, marriages, plus duels, tic-tac-toe and other mini-games right in Discord!",
+        features_card8_title: "🧠 AI Chat",
+        features_card8_text: "Chat with AI right in Discord and get answers to your questions without third-party services.",
+        features_card9_title: "🏆 Member Leaderboard",
+        features_card9_text: "Activity is a game! Earn pistachios for chatting, climb the leaderboard, and cash in your status for exclusive roles.",
 
         // Contributors section
         contributors_title: "Team",
@@ -310,10 +371,19 @@ const translations = {
 
         docs_btn_copy: "Copy",
         docs_btn_copy_copied: "Copied!",
+        docs_btn_copy_page_copied: "Copied",
         docs_search_placeholder: "Search...",
         docs_input_search_placeholder: "Search documentation...",
         docs_input_search_empty: "Start typing to search...",
+        docs_search_hint: "Search by headings and page titles",
         docs_search_no_results: "Nothing found",
+        docs_search_try_another: "Try a different query",
+        docs_search_on_page: "On this page",
+        docs_search_other_pages: "On other pages",
+        docs_search_all_pages: "Search results",
+        docs_search_kbd_nav: "— navigate",
+        docs_search_kbd_go: "— open",
+
         docs_btn_page_nav_prev: "Previous page",
         docs_btn_page_nav_next: "Next page",
         docs_page_nav_not_found: "Page not found",
@@ -327,12 +397,25 @@ const translations = {
         docs_reltime_months: "months ago",
         docs_reltime_years: "years ago",
         docs_reltime_unknown: "unknown",
+        docs_yesterday_at: "yesterday at",
 
         docs_sidebar_made_with: "Made with ❤️",
         docs_load_error_heading: "Load Error",
         docs_load_error_message: "Failed to load SUMMARY.md. Make sure the file exists in the folder",
+        docs_load_error_message_doc: "Failed to load documentation.",
         docs_page_not_found_heading: "Page not found",
         docs_page_not_found_message: "File not found in folder",
+        // Status section (Timer)
+        status_title_1: "We will come,",
+        status_title_2: "but we need to wait",
+        status_days: "Days",
+        status_hours: "Hours",
+        status_minutes: "Minutes",
+        status_seconds: "Seconds",
+        status_text: `
+            At the moment I (the lead developer) have been through a difficult period in my life and the project was postponed. But my team and I are now slowly trying to keep working on it!
+        `,
+        status_image_src: "assets/stop-war-en.jpg",
     }
 };
 
@@ -357,27 +440,49 @@ function updateMetaTags(lang) {
     });
 }
 
+// Хелпер: получить строку перевода по ключу (с fallback на ru и сам ключ).
+// Используется из docs.js, чтобы не дублировать проверки window.translations.
+function t(key, lang) {
+    lang = lang || window.getCurrentLanguage?.() || 'ru';
+    const pack = (window.translations && window.translations[lang]) || {};
+    const fallback = (window.translations && window.translations.ru) || {};
+    return pack[key] != null ? pack[key] : (fallback[key] != null ? fallback[key] : key);
+}
+
 // === Основная функция перевода ===
 function translatePage(lang) {
-    const t = translations[lang];
-    if (!t) return;
+    const pack = translations[lang];
+    if (!pack) return;
 
+    // Обычный текст (безопасно, через textContent)
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.dataset.i18n;
-        if (key in t) el.textContent = t[key];
+        if (key in pack) el.textContent = pack[key];
+    });
+
+    // HTML-форматирование (через innerHTML) — для доверенных ключей
+    document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        const key = el.dataset.i18nHtml;
+        if (key in pack) el.innerHTML = pack[key];
     });
 
     // Плейсхолдеры для input-полей
     document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
         const key = el.dataset.i18nPlaceholder;
-        if (key in t) el.placeholder = t[key];
+        if (key in pack) el.placeholder = pack[key];
+    });
+
+    // src для картинок (зависит от языка)
+    document.querySelectorAll('[data-i18n-src]').forEach(el => {
+        const key = el.dataset.i18nSrc;
+        if (key in pack) el.src = pack[key];
     });
 
     // Обновляем динамические части docs, если они уже отрендерены
     const copyBtn = document.getElementById('doc-copy-btn');
-    if (copyBtn && t.docs_btn_copy) {
+    if (copyBtn && pack.docs_btn_copy) {
         const span = copyBtn.querySelector('span[data-i18n="docs_btn_copy"]');
-        if (span) span.textContent = t.docs_btn_copy;
+        if (span) span.textContent = pack.docs_btn_copy;
     }
 
     initTyped(lang);
@@ -386,9 +491,38 @@ function translatePage(lang) {
 
 // Доступ к переводам/текущему языку для других скриптов (например theme.js)
 window.translations = translations;
+window.t = t;
 window.getCurrentLanguage = function () {
     return document.documentElement.dataset.lang || localStorage.getItem('siteLanguage') || 'ru';
 };
+
+// === Плавная подмена текста при смене языка ===
+const I18N_FADE_MS = 200;
+
+function translatePageAnimated(lang, afterUpdate) {
+    const elements = document.querySelectorAll(
+        '[data-i18n], [data-i18n-html], [data-i18n-placeholder], [data-i18n-src], .typing, #current-flag'
+    );
+
+    const applyUpdate = () => {
+        translatePage(lang);
+        afterUpdate?.();
+    };
+
+    const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (!elements.length || reduceMotion) {
+        applyUpdate();
+        return;
+    }
+
+    elements.forEach(el => el.classList.add('i18n-fading'));
+
+    setTimeout(() => {
+        applyUpdate();
+        void document.body.offsetHeight;
+        elements.forEach(el => el.classList.remove('i18n-fading'));
+    }, I18N_FADE_MS);
+}
 
 // === Смена языка ===
 function setLanguage(lang) {
@@ -397,7 +531,7 @@ function setLanguage(lang) {
     document.documentElement.lang = lang;
     document.documentElement.dataset.lang = lang;
 
-    translatePage(lang);
+    translatePageAnimated(lang, () => updateLanguageSwitcher(lang));
     localStorage.setItem('siteLanguage', lang);
 
     // Хук для перезагрузки документации при смене языка
@@ -412,47 +546,21 @@ function setLanguage(lang) {
 }
 
 // === Toast ===
-let currentToast = null;
-
-const flagStyle = 'width:24px;height:16px;border-radius:4px;object-fit:cover;display:block;box-shadow:0 1px 4px rgba(0,0,0,0.5);flex-shrink:0;';
-
 const toastMessages = {
-    ru: `<img src="./assets/flags/flag-russia.svg" style="${flagStyle}"> Язык изменён на Русский`,
-    uk: `<img src="./assets/flags/flag-ukraine.svg" style="${flagStyle}"> Мову змінено на Українську`,
-    en: `<img src="./assets/flags/flag-united-states.svg" style="${flagStyle}"> Language changed to English`
+    ru: { flag: './assets/flags/flag-russia.svg', text: 'Язык изменён на Русский' },
+    uk: { flag: './assets/flags/flag-ukraine.svg', text: 'Мову змінено на Українську' },
+    en: { flag: './assets/flags/flag-united-states.svg', text: 'Language changed to English' }
 };
 
 function showLanguageToast(lang) {
-    if (currentToast) currentToast.remove();
+    if (!window.toast) return;
+    const msg = toastMessages[lang];
 
-    // FIX: позиционирование (position/bottom/right + центрирование на мобильном)
-    // теперь целиком в CSS-классе .toast (см. style.css), инлайном задаём только
-    // то, что не завязано на брейкпоинты — иначе inline-стили всегда перебивали
-    // бы media query для мобильного центрирования.
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-
-    toast.innerHTML = toastMessages[lang] || 'Language changed';
-    document.body.appendChild(toast);
-    currentToast = toast;
-
-    setTimeout(() => {
-        toast.classList.add('toast-show');
-        toast.style.opacity = '1';
-    }, 10);
-
-    setTimeout(() => {
-        if (currentToast === toast) {
-            toast.classList.remove('toast-show');
-            toast.style.opacity = '0';
-            setTimeout(() => {
-                if (currentToast === toast) {
-                    toast.remove();
-                    currentToast = null;
-                }
-            }, 350);
-        }
-    }, 2600);
+    window.toast.add({
+        title: msg ? msg.text : 'Language changed',
+        icon: msg ? msg.flag : undefined,
+        timeout: 2600
+    });
 }
 
 // === Typed ===
@@ -490,8 +598,6 @@ function createLanguageDropdown() {
 
     const dropdown = document.createElement('div');
     dropdown.className = 'language-dropdown-js';
-    // Позиционирование и backdrop оставляем через inline (нужно для fixed + JS positioning),
-    // но цвета и фон теперь полностью контролируются CSS-переменными в .language-dropdown-js и .language-option
     dropdown.style.cssText = `
         position: fixed;
         backdrop-filter: blur(16px);
@@ -503,8 +609,6 @@ function createLanguageDropdown() {
         option.className = 'language-option';
         option.dataset.lang = key;
 
-        // Убрали все hardcoded цвета и background.
-        // Теперь опции стилизуются через CSS-класс .language-option + CSS-переменные (светлая/тёмная тема)
         option.style.cssText = `
             display: flex; align-items: center; gap: 12px;
             padding: 12px 18px; cursor: pointer;
@@ -527,16 +631,12 @@ function createLanguageDropdown() {
             e.stopPropagation();
             const currentLang = document.documentElement.dataset.lang || localStorage.getItem('siteLanguage') || 'ru';
             if (key === currentLang) {
-                return; // ничего не делаем, меню остаётся открытым
+                return;
             }
             setLanguage(key);
             showLanguageToast(key);
-            updateLanguageSwitcher(key);
             closeDropdown();
         };
-
-        // Убрали onmouseenter/onmouseleave с hardcoded цветами.
-        // Теперь hover-стили берутся из CSS (уже поддерживают тему через переменные)
 
         dropdown.appendChild(option);
     });
@@ -545,7 +645,6 @@ function createLanguageDropdown() {
     return currentDropdown = dropdown;
 }
 
-// === Позиция ===
 function positionDropdown() {
     if (!currentDropdown || !currentButton) return;
     const rect = currentButton.getBoundingClientRect();
@@ -554,7 +653,6 @@ function positionDropdown() {
     currentDropdown.style.left = `${rect.left + rect.width / 2}px`;
 }
 
-// === Tracking ===
 function startTracking() {
     const loop = () => {
         if (!isDropdownOpen) return;
@@ -569,7 +667,6 @@ function stopTracking() {
     rafId = null;
 }
 
-// === OPEN / CLOSE ===
 function openDropdown(button) {
     if (!currentDropdown) createLanguageDropdown();
 
@@ -610,14 +707,13 @@ function updateLanguageSwitcher(lang) {
 
     const label = document.getElementById('lang-switcher-label');
     if (label && languages[lang]) {
-        const t = translations[lang] || translations.ru;
-        label.textContent = `${t.dropdown_language} ${languages[lang].name}`;
+        const pack = translations[lang] || translations.ru;
+        label.textContent = `${pack.dropdown_language} ${languages[lang].name}`;
     }
 
     renderInlineLangOptions(lang);
 }
 
-// === Inline language accordion (unified with the settings panel, no floating box) ===
 function renderInlineLangOptions(current) {
     const container = document.getElementById('lang-inline-list-inner');
     if (!container) return;
@@ -639,11 +735,10 @@ function renderInlineLangOptions(current) {
             e.stopPropagation();
             const currentLang = document.documentElement.dataset.lang || localStorage.getItem('siteLanguage') || 'ru';
             if (key === currentLang) {
-                return; // ничего не делаем, меню остаётся открытым
+                return;
             }
             setLanguage(key);
             showLanguageToast(key);
-            updateLanguageSwitcher(key);
             toggleInlineLangAccordion(false);
         });
 
@@ -677,9 +772,6 @@ function initLanguageSwitcher() {
     });
 }
 
-// === INIT ===
-// Скрипт подключён с defer — DOMContentLoaded уже сработал к этому моменту,
-// поэтому используем прямой вызов вместо listener'а.
 (function init() {
     const savedLang = localStorage.getItem('siteLanguage') || 'ru';
 
@@ -692,11 +784,10 @@ function initLanguageSwitcher() {
             const lang = btn.dataset.lang;
             const currentLang = document.documentElement.dataset.lang || localStorage.getItem('siteLanguage') || 'ru';
             if (lang === currentLang) {
-                return; // ничего не делаем
+                return;
             }
             setLanguage(lang);
             showLanguageToast(lang);
-            updateLanguageSwitcher(lang);
         });
     });
 

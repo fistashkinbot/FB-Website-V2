@@ -12,13 +12,26 @@
   --docs-text-strong: #18181b;
   --docs-body-text: #3f3f46;
 
+  /* ================= GLOBAL BLUR CONSTANTS ================= */
+  /* Все размытия в проекте — через эти переменные.
+     Меняешь значение здесь → обновляется везде. */
+  --blur-xs: 4px;    /* overlay backgrounds */
+  --blur-sm: 8px;    /* iOS fallback */
+  --blur-md: 16px;   /* панели, кнопки, dropdown */
+  --blur-lg: 80px;   /* mobile blob-outer */
+  --blur-xl: 120px;  /* features::after */
+  --blur-2xl: 300px; /* blob-outer (desktop) */
+  --blur-sat: 150%;  /* saturate() рядом с blur() */
+
   --docs-nav-bg: rgba(255, 255, 255, 0.75);
   --docs-nav-text: #18181b;
   --docs-nav-glow: rgba(0, 0, 0, 0.2);
+  --docs-nav-pill-border: rgba(0, 0, 0, 0.08);
   --docs-mobile-menu-bg: #ffffff;
 
   --docs-panel-bg: rgba(255, 255, 255, 0.7);
   --docs-hover-bg: rgba(0, 0, 0, 0.04);
+  --docs-hover-bg-active: rgba(192, 105, 78, 0.2);
   --docs-hover-bg-strong: rgba(0, 0, 0, 0.06);
 
   --docs-border-faint: rgba(0, 0, 0, 0.05);
@@ -86,10 +99,12 @@
   --docs-nav-bg: rgb(18, 18, 18, 0.3);
   --docs-nav-text: #fff;
   --docs-nav-glow: rgba(255, 255, 255, 0.7);
+  --docs-nav-pill-border: rgba(255, 255, 255, 0.08);
   --docs-mobile-menu-bg: #121212;
 
   --docs-panel-bg: rgba(18, 18, 18, 0.3);
   --docs-hover-bg: rgba(255, 255, 255, 0.04);
+  --docs-hover-bg-active: rgba(192, 105, 78, 0.1);
   --docs-hover-bg-strong: rgba(255, 255, 255, 0.07);
 
   --docs-border-faint: rgba(255, 255, 255, 0.05);
@@ -145,44 +160,140 @@
   --hint-warning-heading: #fef08c;
 }
 
+/* ================= ПЛАВНОЕ ПЕРЕКЛЮЧЕНИЕ ТЕМЫ (View Transitions) ================= */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+  }
+}
+
 /* ─── НАВБАР ─── */
 .docs-navbar {
   position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  padding: 5px 0 !important;
-  font-family: "Ubuntu", sans-serif;
-  background: var(--docs-nav-bg) !important;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  z-index: 9999;
-  transition: all 0.3s ease;
-  border-bottom: 1px solid var(--docs-border-faint);
-}
-.docs-navbar .max-width {
-  max-width: 1300px;
-  margin: auto;
   display: flex;
+  justify-content: center;
+  padding: calc(env(safe-area-inset-top, 0px) + 20px) 24px 0;
+  font-family: "Ubuntu", sans-serif;
+  transition: padding 0.3s ease;
+  z-index: 9999;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: transform;
+}
+.docs-navbar.sticky {
+  padding: calc(env(safe-area-inset-top, 0px) + 12px) 24px 0;
+}
+
+.docs-navbar .max-width {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  justify-content: space-between;
+  column-gap: 20px;
+  width: 100%;
+  max-width: 900px;
+  margin: auto;
+  padding: 10px 16px 12px 26px;
+  border-radius: 16px;
+  background: var(--docs-nav-bg);
+  border: 1px solid var(--docs-nav-pill-border);
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+.docs-navbar.sticky .max-width {
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.4);
+}
+.docs-navbar .logo {
+  grid-column: 1;
+  justify-self: start;
+}
+.docs-navbar .docs-nav-actions {
+  grid-column: 3;
+  justify-self: end;
 }
 .docs-navbar .logo a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   color: var(--docs-nav-text);
-  font-size: 35px;
+  font-size: 17px;
   font-weight: 600;
+  letter-spacing: -0.01em;
   text-decoration: none;
 }
 .docs-navbar .logo a span {
   color: #c0694e;
+  transition: all 0.3s ease;
 }
 
-/* Обёртка для кнопок справа (настройки + переключатель сайдбара на мобильном):
-   держит между ними фиксированный небольшой зазор и прижимает обе к правому краю,
-   вместо того чтобы каждая кнопка сама искала себе место в гриде. */
+/* ─── ПОИСК ПО ЦЕНТРУ НАВБАРА ─── */
+.docs-nav-search {
+  grid-column: 2;
+  justify-self: center;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  max-width: 280px;
+  padding: 5px 10px;
+  border-radius: 10px;
+  background: var(--docs-hover-bg);
+  border: 1px solid var(--docs-border-medium);
+  color: var(--docs-text-muted);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+  font-family: "Poppins", sans-serif;
+}
+.docs-nav-search:hover {
+  border-color: var(--docs-border-strong);
+  background: var(--docs-hover-bg-strong);
+}
+.docs-nav-search svg {
+  width: 15px;
+  height: 15px;
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+.docs-nav-search span {
+  font-size: 13px;
+  flex: 1;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.docs-nav-search kbd {
+  font-size: 10px;
+  color: var(--docs-text-muted);
+  background: var(--docs-kbd-bg);
+  border: 1px solid var(--docs-border-medium);
+  border-radius: 4px;
+  padding: 0px 4px;
+  font-family: inherit;
+  flex-shrink: 0;
+}
+
 .docs-nav-actions {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-left: auto;
+}
+
+.docs-navbar .dropdown-wrapper .btn {
+  padding: 8px 14px;
+  margin-left: 0;
+  font-size: 0.8125rem;
 }
 
 .docs-navbar .menu {
@@ -191,25 +302,27 @@
   padding: 0;
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 28px;
 }
 .docs-navbar .menu li {
   display: inline-block;
 }
 .docs-navbar .menu li a {
-  display: block;
-  color: var(--docs-nav-text);
-  font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--docs-text-muted);
+  font-size: 14px;
   font-weight: 500;
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: color 0.2s ease, filter 0.2s ease;
 }
 .docs-navbar .menu li a i {
-  margin-right: 6px;
+  margin-right: 0;
 }
 .docs-navbar .menu li a:hover {
-  color: var(--docs-nav-text);
-  filter: drop-shadow(0 0 5px var(--docs-nav-glow));
+  color: #c0694e;
+  filter: drop-shadow(0 0 5px rgba(192, 105, 78, 0.5));
 }
 .docs-navbar .menu li a.active {
   color: #c0694e;
@@ -217,7 +330,7 @@
 }
 .docs-navbar .menu-btn {
   color: var(--docs-nav-text);
-  font-size: 23px;
+  font-size: 20px;
   cursor: pointer;
   display: none;
 }
@@ -231,14 +344,14 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  border-radius: 8px;
-  font-size: 0.875rem;
+  border-radius: 10px;
+  font-size: 0.8125rem;
   font-weight: 500;
-  padding: 9px 16px;
+  padding: 8px 14px;
   border: 1px solid var(--docs-border-medium);
   background: var(--docs-panel-bg);
   backdrop-filter: blur(16px) saturate(150%);
-  -webkit-backdrop-filter: blur(16px) saturate(150%); /* FIX: iOS */
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
   color: var(--docs-nav-text);
   transition: all 0.2s ease;
   cursor: pointer;
@@ -264,21 +377,22 @@
 /* ─── ЛЕЙАУТ ─── */
 .docs-layout {
   display: flex;
-  min-height: calc(100vh - 70px);
-  margin-top: 70px;
+  min-height: calc(100vh - 92px);
+  margin-top: 92px;
 }
 
 /* ─── САЙДБАР ─── */
 .docs-sidebar {
   position: fixed;
-  top: 70px;
+  top: 92px;
   left: 0;
   bottom: 0;
   width: 268px;
-  background: var(--docs-panel-bg);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-right: 1px solid var(--docs-border-subtle);
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: transform;
   overflow-y: auto;
   overflow-x: hidden;
   z-index: 100;
@@ -337,7 +451,7 @@
 .sb-item.active {
   color: var(--docs-text-strong);
   border-left-color: var(--accent);
-  background: var(--docs-hover-bg);
+  background: var(--docs-hover-bg-active);
   animation: sb-active-border-in 0.35s ease;
 }
 
@@ -409,9 +523,33 @@
 @keyframes sb-active-border-in {
   from {
     border-left-color: transparent;
+    background: transparent;
   }
   to {
     border-left-color: var(--accent);
+    background: var(--docs-hover-bg-active);
+  }
+}
+
+/* ================= ПЛАВНОЕ ОБНОВЛЕНИЕ ПРИ СМЕНЕ ЯЗЫКА ================= */
+@keyframes doc-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.doc-fade-in {
+  animation: doc-fade-in 0.25s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .doc-fade-in {
+    animation: none;
   }
 }
 
@@ -423,7 +561,7 @@
 .sb-powered {
   display: flex;
   align-items: center;
-  gap: 90px;
+  gap: 12px; /* Изменено с 90px, чтобы аватарка и текст были рядом */
   font-size: 12px;
   color: var(--docs-text-muted);
   text-decoration: none;
@@ -436,45 +574,11 @@
   opacity: 0.5;
 }
 
-/* ─── ПОИСК В САЙДБАРЕ ─── */
-.sb-search-wrap {
-  padding: 16px 12px 6px;
-}
-.sb-search-box {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--docs-panel-bg);
-  border: 1px solid var(--docs-border-medium);
-  border-radius: 6px;
-  padding: 7px 12px;
-  cursor: pointer;
-  transition:
-    border-color 0.15s,
-    background 0.15s;
-  font-family: "Poppins", sans-serif;
-}
-.sb-search-box:hover {
-  border-color: var(--docs-border-strong);
-  background: var(--docs-hover-bg-strong);
-}
-.sb-search-box svg {
-  opacity: 0.45;
-  flex-shrink: 0;
-}
-.sb-search-box span {
-  font-size: 13.5px;
-  color: var(--docs-text-muted);
-  flex: 1;
-}
-.sb-search-box kbd {
-  font-size: 11px;
-  color: var(--docs-text-muted);
-  background: var(--docs-kbd-bg);
-  border: 1px solid var(--docs-border-medium);
-  border-radius: 4px;
-  padding: 1px 5px;
-  font-family: inherit;
+/* НОВЫЙ СТИЛЬ: Аватарка в сайдбаре доков */
+.sb-avatar-img {
+  width: 24px;
+  height: 24px;
+  object-fit: cover;
 }
 
 /* ─── ОСНОВНОЙ КОНТЕНТ ─── */
@@ -487,18 +591,30 @@
   background: var(--docs-bg);
   color: var(--docs-text-muted);
   font-family: "Poppins", sans-serif;
+  position: relative;
 }
 
 /* ─── ТУЛБАР ─── */
 .doc-toolbar {
+  position: absolute;
+  top: 20px;
+  right: 18px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
-  margin-bottom: 4px;
+  z-index: 2;
+  white-space: nowrap;
+  pointer-events: none;
 }
+.doc-toolbar > * {
+  pointer-events: auto;
+}
+
+/* ─── Кнопка копирования (premium-анимация, без градиентов) ─── */
 .doc-toolbar-btn {
-  display: flex;
+  position: relative;
+  display: inline-flex;
   align-items: center;
   gap: 6px;
   padding: 5px 11px;
@@ -508,16 +624,160 @@
   background: none;
   border: 1px solid var(--docs-border-medium);
   cursor: pointer;
-  transition:
-    color 0.15s,
-    border-color 0.15s,
-    background 0.15s;
+  overflow: hidden;
   font-family: "Poppins", sans-serif;
+  isolation: isolate;
+  transform: translateZ(0);
+  transition:
+    color 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.16s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .doc-toolbar-btn:hover {
   color: var(--docs-text-strong);
   border-color: var(--docs-border-strong);
   background: var(--docs-hover-bg);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 6px 16px -6px rgba(0, 0, 0, 0.15);
+}
+
+/* Микро-нажатие — очень мягкое, без «скачка» */
+.doc-toolbar-btn:active {
+  transform: scale(0.975);
+  transition-duration: 0.08s;
+}
+
+/* ── Обёртка иконки: «окно», где иконки мягко меняются местами ── */
+.doc-copy-icon-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+/* Иконка в статике — легкое покачивание при наведении на кнопку */
+@keyframes doc-copy-icon-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-1px) rotate(-1.5deg); }
+}
+.doc-copy-icon {
+  position: absolute;
+  inset: 0;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+  will-change: transform, opacity;
+  transform-origin: center;
+  transition:
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Copy: виден в обычном состоянии, уезжает вверх и растворяется при .is-copied */
+.doc-copy-icon--copy {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+.doc-toolbar-btn.is-copied .doc-copy-icon--copy {
+  transform: translateY(-16px) scale(0.85);
+  opacity: 0;
+}
+
+/* Check: спрятан снизу, выезжает и мягко «распускается» при .is-copied */
+.doc-copy-icon--check {
+  transform: translateY(16px) scale(0.7);
+  opacity: 0;
+}
+.doc-toolbar-btn.is-copied .doc-copy-icon--check {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+/* Пружинистый «поп» галочки — мягкий, с небольшим перелётом */
+@keyframes doc-copy-check-pop {
+  0%   { transform: translateY(0) scale(0.6); }
+  45%  { transform: translateY(0) scale(1.15); }
+  70%  { transform: translateY(0) scale(0.97); }
+  100% { transform: translateY(0) scale(1); }
+}
+.doc-toolbar-btn.is-copied .doc-copy-icon--check {
+  animation: doc-copy-check-pop 0.75s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Лёгкое покачивание иконки-копии при наведении (не в состоянии is-copied) */
+.doc-toolbar-btn:not(.is-copied):hover .doc-copy-icon--copy {
+  animation: doc-copy-icon-float 1.6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+/* ── Текст кнопки: микро-сдвиг при hover ── */
+.doc-toolbar-btn > span:not(.doc-copy-icon-wrap) {
+  display: inline-block;
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.35s ease;
+}
+.doc-toolbar-btn:hover > span:not(.doc-copy-icon-wrap) {
+  transform: translateX(1px);
+}
+
+/* ── Ripple-эффект при клике: сплошной полупрозрачный круг ── */
+.doc-toolbar-ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: color-mix(in srgb, #10b981 45%, transparent);
+  pointer-events: none;
+  transform: scale(0);
+  opacity: 1;
+  z-index: 0;
+  animation: doc-copy-ripple 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes doc-copy-ripple {
+  0%   { transform: scale(0);   opacity: 0.7; }
+  60%  { opacity: 0.3; }
+  100% { transform: scale(1);   opacity: 0; }
+}
+
+/* ── Состояние «скопировано» — сплошной зелёный, без переливов ── */
+.doc-toolbar-btn.is-copied {
+  color: #10b981;
+  border-color: color-mix(in srgb, #10b981 50%, transparent);
+  background: color-mix(in srgb, #10b981 10%, transparent);
+}
+
+/* Мягкий пульс свечения — двухфазный, длинный, без резкости */
+@keyframes doc-copy-btn-pulse {
+  0%   { box-shadow: 0 0 0 0   color-mix(in srgb, #10b981 38%, transparent); }
+  40%  { box-shadow: 0 0 0 6px color-mix(in srgb, #10b981 10%, transparent); }
+  75%  { box-shadow: 0 0 0 9px color-mix(in srgb, #10b981 3%, transparent); }
+  100% { box-shadow: 0 0 0 12px color-mix(in srgb, #10b981 0%, transparent); }
+}
+.doc-toolbar-btn.is-copied {
+  animation: doc-copy-btn-pulse 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Отключение анимации при prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .doc-toolbar-btn,
+  .doc-copy-icon,
+  .doc-toolbar-btn > span:not(.doc-copy-icon-wrap) {
+    transition: none !important;
+  }
+  .doc-toolbar-btn.is-copied,
+  .doc-toolbar-btn.is-copied .doc-copy-icon--check,
+  .doc-toolbar-btn:not(.is-copied):hover .doc-copy-icon--copy,
+  .doc-toolbar-ripple {
+    animation: none !important;
+  }
+  .doc-toolbar-btn:active {
+    transform: none;
+  }
 }
 
 .doc-last-updated {
@@ -532,12 +792,10 @@
 /* ─── TOC ─── */
 .docs-toc {
   position: fixed;
-  top: 70px;
+  top: 92px;
   right: 0;
   bottom: 0;
   width: 220px;
-  border-left: 1px solid var(--docs-border-subtle);
-  background: var(--docs-panel-bg);
   padding: 18px 18px 40px;
   overflow-y: auto;
   scrollbar-width: thin;
@@ -642,86 +900,555 @@
   font-weight: 500;
 }
 
-/* ─── ПОИСКОВЫЙ МОДАЛ ─── */
+/* ================= ПОИСКОВЫЙ МОДАЛ (улучшенный визуал) ================= */
+
 .doc-search-overlay {
-  display: none;
+  display: flex;
   position: fixed;
   inset: 0;
   background: var(--docs-overlay-bg);
   z-index: 500;
   align-items: flex-start;
   justify-content: center;
-  padding-top: 100px;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  padding: 96px 20px 40px;
+  backdrop-filter: blur(8px) saturate(140%);
+  -webkit-backdrop-filter: blur(8px) saturate(140%);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+    visibility 0s linear 0.22s;
 }
 .doc-search-overlay.open {
-  display: flex;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+    visibility 0s linear 0s;
 }
+.doc-search-overlay.closing {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ─── Модальное окно ─── */
 .doc-search-modal {
-  width: 600px;
-  max-width: 90vw;
+  width: 640px;
+  max-width: 100%;
   background: var(--docs-panel-bg);
   border: 1px solid var(--docs-border-medium);
-  border-radius: 10px;
+  border-radius: 14px;
   overflow: hidden;
-  box-shadow: 0 24px 80px var(--docs-modal-shadow);
+  box-shadow:
+    0 0 0 1px var(--docs-border-faint),
+    0 20px 60px var(--docs-modal-shadow),
+    0 8px 20px var(--docs-modal-shadow);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  opacity: 0;
+  transform: translateY(-14px) scale(0.97);
+  transition:
+    opacity 0.26s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.26s cubic-bezier(0.16, 1, 0.3, 1);
 }
+.doc-search-overlay.open .doc-search-modal {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.doc-search-overlay.closing .doc-search-modal {
+  opacity: 0;
+  transform: translateY(-10px) scale(0.98);
+  transition:
+    opacity 0.18s cubic-bezier(0.4, 0, 1, 1),
+    transform 0.18s cubic-bezier(0.4, 0, 1, 1);
+}
+
+/* ─── Строка поиска ─── */
 .doc-search-row {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   padding: 14px 18px;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--docs-search-row-border);
+}
+.doc-search-row svg {
+  flex-shrink: 0;
+  opacity: 0.55;
+  color: var(--docs-text-muted);
+  width: 18px;
+  height: 18px;
 }
 #doc-s-inp {
   flex: 1;
   background: none;
   border: none;
   outline: none;
-  font-size: 15px;
+  font-size: 15.5px;
+  line-height: 1.4;
   color: var(--docs-text-strong);
   font-family: "Poppins", sans-serif;
+  padding: 2px 0;
 }
 #doc-s-inp::placeholder {
   color: var(--docs-text-muted);
+  opacity: 0.85;
 }
+#doc-s-inp::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.doc-search-kbd {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 6px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--docs-text-muted);
+  background: var(--docs-kbd-bg);
+  border: 1px solid var(--docs-border-medium);
+  border-radius: 5px;
+  font-family: "Poppins", sans-serif;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+/* ─── Список результатов ─── */
 .doc-search-res {
-  max-height: 380px;
+  max-height: min(60vh, 480px);
   overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 14px 8px 12px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--docs-scrollbar-thumb) transparent;
 }
+.doc-search-res::-webkit-scrollbar {
+  width: 6px;
+}
+.doc-search-res::-webkit-scrollbar-thumb {
+  background: var(--docs-scrollbar-thumb);
+  border-radius: 3px;
+}
+.doc-search-res::-webkit-scrollbar-thumb:hover {
+  background: var(--docs-border-strong);
+}
+
+.doc-s-group-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 12px 14px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--docs-text-muted);
+  font-family: "Ubuntu", sans-serif;
+  opacity: 0.85;
+}
+.doc-s-group-head::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--docs-search-row-border);
+  margin-left: 4px;
+}
+.doc-s-group-head + .doc-s-item {
+  margin-top: 4px;
+}
+
 .doc-s-item {
-  padding: 11px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 9px 12px;
+  margin: 1px 0;
+  border-radius: 8px;
   cursor: pointer;
-  border-bottom: 1px solid var(--docs-search-row-border);
-  transition: background 0.12s;
+  border: 1px solid transparent;
+  transition:
+    background 0.12s ease,
+    border-color 0.12s ease,
+    transform 0.12s ease;
 }
-.doc-s-item:hover {
+.doc-s-item:hover,
+.doc-s-item:focus-visible {
   background: var(--docs-search-item-hover);
+  border-color: var(--docs-border-subtle);
+  outline: none;
 }
+
+.doc-s-item.doc-s-item-heading {
+  position: relative;
+  padding-left: 42px;
+  min-height: 36px;
+}
+.doc-s-item.doc-s-item-heading .doc-s-anchor-icon {
+  position: absolute;
+  left: 12px;
+  top: 9px;
+  width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--docs-text-muted);
+  background: var(--docs-hover-bg);
+  border: 1px solid var(--docs-border-subtle);
+  border-radius: 5px;
+  pointer-events: none;
+  font-family: "Ubuntu", sans-serif;
+  transition: color 0.12s ease, background 0.12s ease, border-color 0.12s ease;
+}
+.doc-s-item.doc-s-item-heading:hover .doc-s-anchor-icon {
+  color: var(--accent);
+  background: var(--docs-hover-bg-active);
+  border-color: var(--accent);
+}
+
 .doc-s-item-title {
   font-size: 13.5px;
   font-weight: 500;
+  line-height: 1.35;
   color: var(--docs-text-strong);
   font-family: "Poppins", sans-serif;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 .doc-s-item-sec {
-  font-size: 12px;
+  font-size: 11.5px;
   color: var(--docs-text-muted);
-  margin-top: 2px;
   font-family: "Poppins", sans-serif;
+  opacity: 0.85;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
+
+.doc-s-page-group {
+  margin: 4px 0 2px;
+  padding: 4px 0 6px;
+  border-radius: 10px;
+}
+.doc-s-page-group + .doc-s-page-group {
+  border-top: 1px solid var(--docs-search-row-border);
+  padding-top: 6px;
+  margin-top: 2px;
+}
+
+.doc-s-page-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 6px 12px 4px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.12s ease;
+}
+.doc-s-page-head:hover {
+  background: var(--docs-search-item-hover);
+}
+.doc-s-page-title {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--docs-text-strong);
+  font-family: "Ubuntu", sans-serif;
+}
+.doc-s-page-sec {
+  font-size: 11px;
+  color: var(--docs-text-muted);
+  font-family: "Poppins", sans-serif;
+  padding: 1px 7px;
+  background: var(--docs-hover-bg);
+  border: 1px solid var(--docs-border-subtle);
+  border-radius: 999px;
+  line-height: 1.4;
+}
+
+.doc-s-item.doc-s-item-nested {
+  padding: 7px 12px 7px 42px;
+  margin-left: 0;
+}
+.doc-s-item.doc-s-item-nested .doc-s-item-title {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--docs-body-text);
+}
+.doc-s-item.doc-s-item-nested:hover .doc-s-item-title {
+  color: var(--docs-text-strong);
+}
+.doc-s-item.doc-s-item-nested .doc-s-anchor-icon {
+  top: 8px;
+  width: 18px;
+  height: 18px;
+  font-size: 10px;
+  background: transparent;
+  border-color: transparent;
+  color: var(--docs-text-muted);
+}
+.doc-s-item.doc-s-item-nested:hover .doc-s-anchor-icon {
+  color: var(--accent);
+  background: var(--docs-hover-bg-active);
+  border-color: var(--accent);
+}
+
+.doc-s-hl {
+  background: rgba(192, 105, 78, 0.22);
+  color: inherit;
+  border-radius: 3px;
+  padding: 0 2px;
+  font-weight: 600;
+}
+.dark .doc-s-hl {
+  background: rgba(224, 160, 112, 0.22);
+}
+
+.doc-s-item.doc-s-item--active {
+  background: var(--docs-search-item-hover);
+  border-color: var(--docs-border-subtle);
+}
+.doc-s-page-head.doc-s-item--active {
+  background: var(--docs-search-item-hover);
+}
+
+.doc-s-item.doc-s-item-heading.doc-s-item--active .doc-s-anchor-icon,
+.doc-s-item.doc-s-item-nested.doc-s-item--active .doc-s-anchor-icon {
+  color: var(--accent);
+  background: var(--docs-hover-bg-active);
+  border-color: var(--accent);
+}
+
+.doc-s-item.doc-s-item-nested.doc-s-item--active .doc-s-item-title {
+  color: var(--docs-text-strong);
+}
+
 .doc-s-empty {
-  padding: 28px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 40px 24px 44px;
   text-align: center;
   color: var(--docs-text-muted);
   font-size: 13.5px;
   font-family: "Poppins", sans-serif;
-  background: var(--docs-panel-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  animation: doc-s-item-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.doc-s-empty svg {
+  width: 26px;
+  height: 26px;
+  opacity: 0.4;
+  color: var(--docs-text-muted);
+}
+.doc-s-empty-title {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--docs-body-text);
+}
+.doc-s-empty-hint {
+  font-size: 12px;
+  opacity: 0.75;
+}
+.doc-s-empty-kbd {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+}
+.doc-s-empty-kbd kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--docs-text-muted);
+  background: var(--docs-kbd-bg);
+  border: 1px solid var(--docs-border-medium);
+  border-radius: 4px;
+  font-family: "Poppins", sans-serif;
+}
+
+@keyframes doc-s-item-in {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.doc-s-item-anim {
+  animation: doc-s-item-in 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--s-delay, 0ms);
+}
+
+@media (max-width: 900px) {
+  .doc-toolbar {
+    position: static;
+    pointer-events: auto;
+    justify-content: flex-end;
+    margin-bottom: 4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .doc-search-overlay,
+  .doc-search-modal {
+    transition: none !important;
+  }
+  .doc-s-item-anim,
+  .doc-s-empty {
+    animation: none !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .doc-search-overlay {
+    padding: calc(84px + env(safe-area-inset-top, 0px)) 12px 16px;
+    align-items: flex-start;
+  }
+  .doc-search-modal {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 16px;
+    box-shadow:
+      0 0 0 1px var(--docs-border-faint),
+      0 12px 40px var(--docs-modal-shadow),
+      0 4px 12px var(--docs-modal-shadow);
+  }
+  .doc-search-row {
+    padding: 14px 16px;
+    gap: 10px;
+    min-height: 52px;
+  }
+  .doc-search-row svg {
+    width: 20px;
+    height: 20px;
+  }
+  #doc-s-inp {
+    font-size: 16px;
+    padding: 4px 0;
+  }
+  .doc-search-kbd {
+    display: none !important;
+  }
+  .doc-search-res {
+    max-height: min(72vh, 560px);
+    padding: 14px 6px 10px;
+  }
+  .doc-s-group-head {
+    padding: 14px 10px 14px;
+    font-size: 10px;
+  }
+  .doc-s-group-head + .doc-s-item {
+    margin-top: 6px;
+  }
+  .doc-s-item {
+    padding: 11px 12px;
+    min-height: 46px;
+    border-radius: 10px;
+  }
+  .doc-s-item-title {
+    font-size: 14.5px;
+    line-height: 1.35;
+  }
+  .doc-s-item-sec {
+    font-size: 12px;
+  }
+  .doc-s-item.doc-s-item-heading,
+  .doc-s-item.doc-s-item-nested {
+    padding-left: 46px;
+  }
+  .doc-s-item.doc-s-item-heading .doc-s-anchor-icon {
+    left: 12px;
+    top: 12px;
+    width: 22px;
+    height: 22px;
+    font-size: 12px;
+  }
+  .doc-s-item.doc-s-item-nested .doc-s-anchor-icon {
+    top: 11px;
+    width: 20px;
+    height: 20px;
+    font-size: 11px;
+  }
+  .doc-s-item.doc-s-item-nested {
+    padding: 9px 12px 9px 46px;
+  }
+  .doc-s-item.doc-s-item-nested .doc-s-item-title {
+    font-size: 14px;
+  }
+  .doc-s-page-head {
+    padding: 8px 12px 6px;
+    gap: 6px;
+  }
+  .doc-s-page-title {
+    font-size: 12.5px;
+  }
+  .doc-s-page-sec {
+    font-size: 10.5px;
+    padding: 1px 8px;
+  }
+  .doc-s-page-group {
+    padding: 4px 0;
+  }
+
+  .doc-s-empty {
+    padding: 34px 20px 38px;
+    gap: 8px;
+  }
+  .doc-s-empty svg {
+    width: 30px;
+    height: 30px;
+    opacity: 0.45;
+  }
+  .doc-s-empty-title {
+    font-size: 14.5px;
+  }
+  .doc-s-empty-hint {
+    font-size: 12.5px;
+    max-width: 240px;
+    line-height: 1.45;
+  }
+  .doc-s-empty-kbd {
+    display: none !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .doc-search-overlay {
+    padding: calc(80px + env(safe-area-inset-top, 0px)) 8px 12px;
+  }
+  .doc-search-row {
+    padding: 12px 14px;
+  }
+  #doc-s-inp {
+    font-size: 15.5px;
+  }
+  .doc-s-item.doc-s-item-heading,
+  .doc-s-item.doc-s-item-nested {
+    padding-left: 42px;
+  }
+  .doc-s-item.doc-s-item-heading .doc-s-anchor-icon {
+    left: 10px;
+  }
+  .doc-s-empty-title {
+    font-size: 14px;
+  }
 }
 
 /* ─── MARKDOWN КОНТЕНТ ─── */
@@ -891,11 +1618,9 @@ pre:hover .code-copy {
 }
 
 /* ============================================
-   GitBook-style Hints (обновлённые, modern dark)
-   Замена старых .hint на .gitbook-hint + поддержка tip/working
+   GitBook-style Hints
    ============================================ */
 
-/* ─── ХИНТЫ (новый GitBook стиль) ─── */
 .gitbook-hint {
   display: flex;
   gap: 16px;
@@ -907,12 +1632,10 @@ pre:hover .code-copy {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   font-family: "Poppins", "Inter", system_ui, sans-serif;
 }
-
 .gitbook-hint:hover {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
   transform: translateY(-1px);
 }
-
 .hint-icon {
   flex-shrink: 0;
   width: 28px;
@@ -923,36 +1646,18 @@ pre:hover .code-copy {
   font-size: 18px;
   margin-top: 2px;
 }
-
 .hint-content {
   flex: 1;
   min-width: 0;
   font-size: 15px;
   margin-top: 2px;
 }
-
-.hint-content p {
-  margin-bottom: 12px;
-}
-
-.hint-content p:last-child {
-  margin-bottom: 0;
-}
-
+.hint-content p { margin-bottom: 12px; }
+.hint-content p:last-child { margin-bottom: 0; }
 .hint-content ul,
-.hint-content ol {
-  margin: 12px 0;
-  padding-left: 20px;
-}
-
-.hint-content li {
-  margin-bottom: 4px;
-}
-
-.hint-content strong {
-  font-weight: 600;
-}
-
+.hint-content ol { margin: 12px 0; padding-left: 20px; }
+.hint-content li { margin-bottom: 4px; }
+.hint-content strong { font-weight: 600; }
 .hint-content code {
   background-color: var(--docs-code-bg);
   padding: 2px 6px;
@@ -960,7 +1665,6 @@ pre:hover .code-copy {
   font-size: 13px;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
-
 .hint-content h4 {
   font-size: 1.05rem;
   font-weight: 600;
@@ -969,84 +1673,35 @@ pre:hover .code-copy {
   font-family: "Ubuntu", "Poppins", sans-serif;
 }
 
-/* Hint Type Styles - Dark theme adapted from modern GitBook */
-.gitbook-hint.hint-info {
-  background-color: var(--hint-info-bg);
-  border-color: #3b82f6;
-  color: var(--hint-info-text);
-}
-.gitbook-hint.hint-info .hint-icon {
-  color: var(--hint-info-icon);
-}
+.gitbook-hint.hint-info { background-color: var(--hint-info-bg); border-color: #3b82f6; color: var(--hint-info-text); }
+.gitbook-hint.hint-info .hint-icon { color: var(--hint-info-icon); }
 .gitbook-hint.hint-info .hint-content h4,
-.gitbook-hint.hint-info strong {
-  color: var(--hint-info-heading);
-}
+.gitbook-hint.hint-info strong { color: var(--hint-info-heading); }
 
-.gitbook-hint.hint-tip {
-  background-color: var(--hint-tip-bg);
-  border-color: #10b981;
-  color: var(--hint-tip-text);
-}
-.gitbook-hint.hint-tip .hint-icon {
-  color: var(--hint-tip-icon);
-}
+.gitbook-hint.hint-tip { background-color: var(--hint-tip-bg); border-color: #10b981; color: var(--hint-tip-text); }
+.gitbook-hint.hint-tip .hint-icon { color: var(--hint-tip-icon); }
 .gitbook-hint.hint-tip .hint-content h4,
-.gitbook-hint.hint-tip strong {
-  color: var(--hint-tip-heading);
-}
+.gitbook-hint.hint-tip strong { color: var(--hint-tip-heading); }
 
-.gitbook-hint.hint-danger {
-  background-color: var(--hint-danger-bg);
-  border-color: #ef4444;
-  color: var(--hint-danger-text);
-}
-.gitbook-hint.hint-danger .hint-icon {
-  color: var(--hint-danger-icon);
-}
+.gitbook-hint.hint-danger { background-color: var(--hint-danger-bg); border-color: #ef4444; color: var(--hint-danger-text); }
+.gitbook-hint.hint-danger .hint-icon { color: var(--hint-danger-icon); }
 .gitbook-hint.hint-danger .hint-content h4,
-.gitbook-hint.hint-danger strong {
-  color: var(--hint-danger-heading);
-}
+.gitbook-hint.hint-danger strong { color: var(--hint-danger-heading); }
 
-.gitbook-hint.hint-working {
-  background-color: var(--hint-working-bg);
-  border-color: #8b5cf6;
-  color: var(--hint-working-text);
-}
-.gitbook-hint.hint-working .hint-icon {
-  color: var(--hint-working-icon);
-}
+.gitbook-hint.hint-working { background-color: var(--hint-working-bg); border-color: #8b5cf6; color: var(--hint-working-text); }
+.gitbook-hint.hint-working .hint-icon { color: var(--hint-working-icon); }
 .gitbook-hint.hint-working .hint-content h4,
-.gitbook-hint.hint-working strong {
-  color: var(--hint-working-heading);
-}
+.gitbook-hint.hint-working strong { color: var(--hint-working-heading); }
 
-.gitbook-hint.hint-success {
-  background-color: var(--hint-success-bg);
-  border-color: #10b981;
-  color: var(--hint-success-text);
-}
-.gitbook-hint.hint-success .hint-icon {
-  color: var(--hint-success-icon);
-}
+.gitbook-hint.hint-success { background-color: var(--hint-success-bg); border-color: #10b981; color: var(--hint-success-text); }
+.gitbook-hint.hint-success .hint-icon { color: var(--hint-success-icon); }
 .gitbook-hint.hint-success .hint-content h4,
-.gitbook-hint.hint-success strong {
-  color: var(--hint-success-heading);
-}
+.gitbook-hint.hint-success strong { color: var(--hint-success-heading); }
 
-.gitbook-hint.hint-warning {
-  background-color: var(--hint-warning-bg);
-  border-color: #eab308;
-  color: var(--hint-warning-text);
-}
-.gitbook-hint.hint-warning .hint-icon {
-  color: var(--hint-warning-icon);
-}
+.gitbook-hint.hint-warning { background-color: var(--hint-warning-bg); border-color: #eab308; color: var(--hint-warning-text); }
+.gitbook-hint.hint-warning .hint-icon { color: var(--hint-warning-icon); }
 .gitbook-hint.hint-warning .hint-content h4,
-.gitbook-hint.hint-warning strong {
-  color: var(--hint-warning-heading);
-}
+.gitbook-hint.hint-warning strong { color: var(--hint-warning-heading); }
 
 /* ─── СПИННЕР ─── */
 .doc-spinner {
@@ -1059,9 +1714,7 @@ pre:hover .code-copy {
   margin: 80px auto;
 }
 @keyframes doc-spin {
-  to {
-    transform: rotate(360deg);
-  }
+  to { transform: rotate(360deg); }
 }
 
 /* ─── ОВЕРЛЕЙ САЙДБАРА (мобайл) ─── */
@@ -1071,46 +1724,58 @@ pre:hover .code-copy {
   inset: 0;
   background: var(--docs-overlay-bg);
   z-index: 99;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 /* ─── АДАПТИВ ─── */
 @media (max-width: 1120px) {
-  .docs-toc {
-    display: none;
-  }
-  .docs-main {
-    margin-right: 0;
-  }
+  .docs-toc { display: none; }
+  .docs-main { margin-right: 0; }
 }
 
 @media (max-width: 768px) {
   .docs-sidebar {
-    transform: translateX(-100%);
+    top: auto;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    max-height: 78vh;
+    border-radius: 20px 20px 0 0;
+    padding-top: 10px;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    box-shadow: 0 -12px 40px var(--docs-shadow-strong);
   }
-  .docs-sidebar.open {
-    transform: none;
-    box-shadow: 4px 0 32px var(--docs-shadow-strong);
-  }
-  .doc-sb-overlay.open {
+  .docs-sidebar::before {
+    content: "";
     display: block;
+    width: 36px;
+    height: 4px;
+    margin: 0 auto 10px;
+    border-radius: 3px;
+    background: var(--docs-border-medium);
+    flex-shrink: 0;
   }
-  .docs-main {
-    margin-left: 0;
-    padding: 28px 20px 60px;
+  .docs-sidebar.open { transform: none; }
+  .doc-sb-overlay.open { display: block; }
+  .docs-main { margin-left: 0; padding: 28px 20px 60px; }
+  .page-nav { flex-direction: column; }
+  .docs-nav-search {
+    max-width: none;
+    width: auto;
+    padding: 8px;
   }
-  .page-nav {
-    flex-direction: column;
-  }
-  .sb-search-box span {
-    font-size: 12px;
-  }
-  .sb-search-box kbd {
-    display: none;
-  }
+  .docs-nav-search span,
+  .docs-nav-search kbd { display: none; }
   .docs-navbar .menu {
     display: none;
     position: fixed;
-    top: 56px;
+    top: 84px;
     left: 0;
     width: 100%;
     background: var(--docs-mobile-menu-bg);
@@ -1118,30 +1783,49 @@ pre:hover .code-copy {
     padding: 20px;
     border-bottom: 1px solid var(--docs-border-medium);
   }
-  .docs-navbar .menu.open {
-    display: flex;
-  }
-  .docs-navbar .menu li {
-    display: block;
-    text-align: center;
-  }
-  .docs-navbar .menu li a {
-    margin: 10px 0;
-    font-size: 20px;
-  }
-  .docs-navbar .docs-mob-toggle {
-    display: flex;
-  }
-  .docs-navbar .menu-btn {
-    display: block;
-  }
+  .docs-navbar .menu.open { display: flex; }
+  .docs-navbar .menu li { display: block; text-align: center; }
+  .docs-navbar .menu li a { margin: 10px 0; font-size: 20px; }
+  .docs-navbar .docs-mob-toggle { display: flex; }
+  .docs-navbar .menu-btn { display: block; }
 }
 
 @media (max-width: 500px) {
-  .docs-main {
-    padding: 16px 12px 40px;
+  .docs-main { padding: 16px 12px 40px; }
+  .doc-toolbar { flex-wrap: wrap; }
+}
+
+@supports (-webkit-touch-callout: none) {
+  .docs-navbar .max-width {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
-  .doc-toolbar {
-    flex-wrap: wrap;
-  }
+}
+
+/* ================= DOCS CONTENT SKELETON ================= */
+.doc-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 4px 0;
+}
+.doc-skeleton .sk-shimmer { border-radius: 6px; }
+.doc-sk-h1 { width: 55%; height: 32px; margin-bottom: 6px; }
+.doc-sk-h2 { width: 38%; height: 22px; margin-top: 20px; }
+.doc-sk-h3 { width: 28%; height: 18px; margin-top: 8px; }
+.doc-sk-line { height: 14px; }
+.doc-sk-w100 { width: 100%; }
+.doc-sk-w90  { width: 90%;  }
+.doc-sk-w70  { width: 70%;  }
+.doc-sk-w50  { width: 50%;  }
+.doc-sk-code { width: 100%; height: 100px; margin-top: 10px; border-radius: 8px; }
+.doc-sk-hint { width: 100%; height: 64px; margin-top: 8px; border-radius: 12px; }
+
+@media (max-width: 768px) {
+  .doc-skeleton { gap: 11px; }
+  .doc-sk-h1 { width: 75%; height: 26px; }
+  .doc-sk-h2 { width: 55%; height: 18px; }
+  .doc-sk-h3 { width: 40%; height: 15px; }
+  .doc-sk-code { height: 80px; }
+  .doc-sk-hint { height: 56px; }
 }

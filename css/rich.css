@@ -1,0 +1,124 @@
+/* =====================================================================
+   RICH — аддитивный слой «чуть менее минимализма»
+   Подключать ПОСЛЕДНИМ (после style.css / toast.css / owl / aos).
+   Только CSS, без новых текстов в HTML → i18n (RU/UK/EN) не затронут.
+   Удалить файл (и строку <link>) = вернуться к исходному виду.
+   ===================================================================== */
+
+:root {
+  --rc-accent: 192, 105, 78;            /* rgb акцента #c0694e */
+  --rc-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --rc-dot: rgba(127, 127, 127, 0.16);  /* цвет точек фоновой сетки */
+}
+
+/* Градиентный акцент на названии бота */
+.home .home-content .text-2 {
+  background: linear-gradient(115deg, var(--hero-text) 25%, #e08a6a 70%, #c0694e 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+/* =====================================================================
+   СЕКЦИИ
+   ===================================================================== */
+
+/* Мягкие цветные «пятна» + точечная сетка на фоне секций */
+.features,
+.status-section,
+.contributors {
+  background-image:
+    radial-gradient(var(--rc-dot) 1px, transparent 1.9px),
+    radial-gradient(var(--rc-dot) 1px, transparent 1px),
+    radial-gradient(var(--rc-dot) 1px, transparent 1px);
+  background-size: auto, auto, 28px 28px;
+  background-repeat: no-repeat, no-repeat, repeat;
+}
+
+/* =====================================================================
+   ФУТЕР
+   ===================================================================== */
+
+footer {
+  position: relative;
+  background-image:
+    radial-gradient(55% 90% at 50% 0%, rgba(var(--rc-accent), 0.10), transparent 70%);
+  background-repeat: no-repeat;
+}
+/* Светящаяся линия на стыке с контентом */
+footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: min(70%, 900px);
+  height: 1px;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, transparent, rgba(var(--rc-accent), 0.8), transparent);
+  box-shadow: 0 0 18px rgba(var(--rc-accent), 0.6);
+}
+
+/* =====================================================================
+   МЕЛОЧИ
+   ===================================================================== */
+
+.scroll-up-btn {
+  box-shadow: 0 10px 26px -10px rgba(var(--rc-accent), 0.7);
+}
+
+::selection {
+  background: rgba(var(--rc-accent), 0.25);
+}
+
+html {
+  scrollbar-color: rgba(var(--rc-accent), 0.4) transparent;
+}
+
+/* =====================================================================
+   МОБИЛЬНЫЕ
+   ===================================================================== */
+
+@media (max-width: 600px) {
+  .home .home-content .text-1 > span {
+    font-size: 14px;
+    padding: 5px 12px 5px 10px;
+  }
+  .card .box::after {
+    font-size: 36px;
+  }
+  .card .text {
+    padding-right: 44px;
+  }
+  section .title > i {
+    margin-right: 8px;
+  }
+}
+
+/* iOS Safari: без тяжёлых теней/сдвигов на тач-экранах */
+.is-ios-safari .card:hover,
+.is-ios-safari .cardd:hover {
+  box-shadow: none;
+}
+
+/* Уважаем системную настройку «уменьшить движение» */
+@media (prefers-reduced-motion: reduce) {
+  .home .home-content .text-1 > span::before {
+    animation: none;
+  }
+  .card,
+  .card::after,
+  .card .box::after,
+  .btn-commands,
+  .btn-commands::after,
+  .social-link {
+    transition: none !important;
+  }
+  .card:hover,
+  .btn-commands:hover,
+  .social-link:hover {
+    transform: none !important;
+  }
+}

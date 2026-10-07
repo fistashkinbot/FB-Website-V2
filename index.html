@@ -22,13 +22,14 @@
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta
-      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
       name="viewport"
     />
     <title>FistashkinBot</title>
 
     <!-- Стили — грузятся параллельно, не блокируют -->
     <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/toast.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
@@ -60,6 +61,33 @@
       defer
     ></script>
     <script src="./js/aos/aos.js" defer></script>
+    <script>
+      (function () {
+        var ua = navigator.userAgent;
+        var platform = navigator.platform || "";
+        var maxTouch = navigator.maxTouchPoints || 0;
+
+        // iPhone / iPad / iPod + iPad в режиме "desktop site" (iPadOS 13+ маскируется под Mac)
+        var isIOS =
+          /iPad|iPhone|iPod/.test(ua) ||
+          (platform === "MacIntel" && maxTouch > 1);
+
+        // Все не-Safari браузеры на iOS — у них в UA есть свой маркер
+        var isOtherIOSBrowser =
+          /CriOS/.test(ua) ||   // Chrome iOS
+          /FxiOS/.test(ua) ||   // Firefox iOS
+          /EdgiOS/.test(ua) ||  // Edge iOS
+          /OPiOS/.test(ua) ||   // Opera iOS
+          /GSA/.test(ua);       // Google Search App
+
+        var isIOSSafari = isIOS && !isOtherIOSBrowser;
+
+        if (isIOSSafari) {
+          document.documentElement.classList.add("is-ios-safari");
+        }
+      })();
+    </script>
+    <script src="./js/ablur.js" defer></script>
 
     <!-- Meta -->
     <meta name="theme-color" content="#C0694E" />
@@ -87,9 +115,13 @@
     </div>
 
     <nav class="navbar">
+      <ablur-layer layers="5" base-blur="22" end-at="72" flip></ablur-layer>
       <div class="max-width">
         <div class="logo">
-          <a href="#home">Fistashkin<span></span></a>
+          <a href="#home">
+            <img src="assets/fistashkin.ico" alt="Fistashkin Avatar" class="nav-avatar" />
+            Fistashkin<span></span>
+          </a>
         </div>
         <ul class="menu">
           <li>
@@ -124,8 +156,7 @@
           </button>
 
           <div id="dropdown-menu" class="dropdown">
-            <!-- Пункты навигации: видны только на мобильном (см. .dropdown-mobile-nav
-                 в style.css), на десктопе скрыты — там навигация уже видна в .navbar .menu -->
+            <!-- Пункты навигации: видны только на мобильном -->
             <div class="dropdown-mobile-nav">
               <div class="dropdown-label" data-i18n="dropdown_navigation"></div>
               <a href="#home" class="dropdown-item">
@@ -169,82 +200,36 @@
     </nav>
 
     <section class="home" id="home">
-      <div class="blob-outer-container">
-        <div class="blob-inner-container">
-          <div class="blob"></div>
-        </div>
-      </div>
+      <canvas id="blobCanvas"></canvas>
       <div class="max-width">
         <div class="home-content">
-          <div class="text-1">
-            <span data-i18n="home_content_text_1"></span>
+          <div data-aos="fade-down" data-aos-duration="1000" data-aos-once="true">
+            <div class="text-1">
+              <span data-i18n="home_content_text_1"></span>
+            </div>
+            <div class="text-2">
+              <span data-i18n="home_content_text_2"></span>
+            </div>
+            <div class="text-3">
+              <span data-i18n="home_content_text_3"></span
+              ><span class="typing"></span>
+            </div>
+            <!-- FIX: window.open() → обычная ссылка, iOS Safari блокирует попапы -->
+            <a
+              href="https://discord.com/api/oauth2/authorize?client_id=991338113630752928&permissions=8&scope=applications.commands%20bot"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-commands"
+            >
+              <i class="fab fa-discord"> </i><span data-i18n="home_cta_button"></span>
+            </a>
           </div>
-          <div class="text-2">
-            <span data-i18n="home_content_text_2"></span>
-          </div>
-          <div class="text-3">
-            <span data-i18n="home_content_text_3"></span
-            ><span class="typing"></span>
-          </div>
-          <!-- FIX: window.open() → обычная ссылка, iOS Safari блокирует попапы -->
-          <a
-            href="https://discord.com/api/oauth2/authorize?client_id=991338113630752928&permissions=8&scope=applications.commands%20bot"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <button class="this-is-pain">
-              <i class="fab fa-discord"></i
-              ><span data-i18n="home_cta_button"></span>
-              <div class="star-1">
-                <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd" viewBox="0 0 784.11 815.53" xmlns:xlink="http://www.w3.org/1999/xlink">
-                  <g id="Layer_x0020_1">
-                    <path class="fil0" d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"></path>
-                  </g>
-                </svg>
-              </div>
-              <div class="star-2">
-                <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd" viewBox="0 0 784.11 815.53" xmlns:xlink="http://www.w3.org/1999/xlink">
-                  <g id="Layer_x0020_1">
-                    <path class="fil0" d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"></path>
-                  </g>
-                </svg>
-              </div>
-              <div class="star-3">
-                <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd" viewBox="0 0 784.11 815.53" xmlns:xlink="http://www.w3.org/1999/xlink">
-                  <g id="Layer_x0020_1">
-                    <path class="fil0" d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"></path>
-                  </g>
-                </svg>
-              </div>
-              <div class="star-4">
-                <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd" viewBox="0 0 784.11 815.53" xmlns:xlink="http://www.w3.org/1999/xlink">
-                  <g id="Layer_x0020_1">
-                    <path class="fil0" d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"></path>
-                  </g>
-                </svg>
-              </div>
-              <div class="star-5">
-                <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd" viewBox="0 0 784.11 815.53" xmlns:xlink="http://www.w3.org/1999/xlink">
-                  <g id="Layer_x0020_1">
-                    <path class="fil0" d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"></path>
-                  </g>
-                </svg>
-              </div>
-              <div class="star-6">
-                <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd" viewBox="0 0 784.11 815.53" xmlns:xlink="http://www.w3.org/1999/xlink">
-                  <g id="Layer_x0020_1">
-                    <path class="fil0" d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"></path>
-                  </g>
-                </svg>
-              </div>
-            </button>
-          </a>
         </div>
       </div>
     </section>
 
     <section class="features" id="features">
-      <div data-aos="fade-down" data-aos-duration="1000" data-aos-once="true">
+      <div data-aos="fade-up" data-aos-duration="1000" data-aos-once="true">
         <div class="max-width">
           <h2 class="title">
             <i class="fas fa-tools"></i>
@@ -269,22 +254,40 @@
                 <p data-i18n="features_card3_text"></p>
               </div>
             </div>
-            <div class="card dm-glow-card glow-reactions">
+            <div class="card dm-glow-card glow-automod">
               <div class="box">
                 <div class="text" data-i18n="features_card4_title"></div>
                 <p data-i18n="features_card4_text"></p>
               </div>
             </div>
-            <div class="card dm-glow-card glow-games">
+            <div class="card dm-glow-card glow-privaterooms">
               <div class="box">
                 <div class="text" data-i18n="features_card5_title"></div>
                 <p data-i18n="features_card5_text"></p>
               </div>
             </div>
-            <div class="card dm-glow-card glow-utils">
+            <div class="card dm-glow-card glow-audit">
               <div class="box">
                 <div class="text" data-i18n="features_card6_title"></div>
                 <p data-i18n="features_card6_text"></p>
+              </div>
+            </div>
+            <div class="card dm-glow-card glow-reactions">
+              <div class="box">
+                <div class="text" data-i18n="features_card7_title"></div>
+                <p data-i18n="features_card7_text"></p>
+              </div>
+            </div>
+            <div class="card dm-glow-card glow-chatbot">
+              <div class="box">
+                <div class="text" data-i18n="features_card8_title"></div>
+                <p data-i18n="features_card8_text"></p>
+              </div>
+            </div>
+            <div class="card dm-glow-card glow-games">
+              <div class="box">
+                <div class="text" data-i18n="features_card9_title"></div>
+                <p data-i18n="features_card9_text"></p>
               </div>
             </div>
           </div>
@@ -293,7 +296,7 @@
     </section>
 
     <section class="contributors" id="contributors">
-      <div data-aos="fade-down" data-aos-duration="1000" data-aos-once="true">
+      <div data-aos="fade-up" data-aos-duration="1000" data-aos-once="true">
         <div class="max-width">
           <h2 class="title">
             <i class="fas fa-users"></i>
@@ -348,13 +351,54 @@
       </div>
     </section>
 
+    <!-- Секция статуса (Таймер) -->
+    <section class="status-section" id="status">
+      <div data-aos="fade-up" data-aos-duration="1000" data-aos-once="true">
+        <div class="max-width">
+            <h2 class="title">
+                <span data-i18n="status_title_1"></span><br>
+                <span data-i18n="status_title_2"></span>
+            </h2>
+            
+            <div class="countdown-wrapper">
+                <div class="countdown-container">
+                    <div class="countdown-item">
+                        <span class="number" id="days">00</span>
+                        <span class="label" data-i18n="status_days"></span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="number" id="hours">00</span>
+                        <span class="label" data-i18n="status_hours"></span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="number" id="minutes">00</span>
+                        <span class="label" data-i18n="status_minutes"></span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="number" id="seconds">00</span>
+                        <span class="label" data-i18n="status_seconds"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="status-text" data-i18n-html="status_text"></div>
+            <!-- НОВЫЙ БЛОК: Картинка -->
+            <div class="status-image-wrapper">
+                <img id="status-image" data-i18n-src="status_image_src" src="" alt="Stop the war">
+            </div>
+        </div>
+    </section>
+
     <footer>
       <div class="footer-top">
         <div class="container">
           <div class="footer-brand">
-            <a href="#" class="logo">
-              <img src="assets/logo.svg" alt="FistashkinBot Logo" />
-            </a>
+            <!-- НОВЫЙ БЛОК: Аватарка и имя рядом -->
+            <div class="footer-brand-header">
+              <img src="assets/fistashkin.ico" alt="FistashkinBot Logo" class="footer-avatar-img" />
+              <span class="footer-brand-name">Fistashkin</span>
+            </div>
+            
             <p class="footer-brand-text" data-i18n="footer_not_affiliated"></p>
             <h3 class="h4 social-title" data-i18n="footer_social_title"></h3>
             <ul class="social-list">
@@ -483,7 +527,9 @@
     </footer>
 
     <!-- Scripts в конце body — не блокируют рендер -->
+    <script src="./js/toast.js" defer></script>
     <script src="./js/i18n.js" defer></script>
+    <script src="./js/blobs.js" defer></script>
     <script src="./js/check_status.js" defer></script>
     <script src="./js/script.js" defer></script>
     <script src="./js/particles.js" defer></script>
@@ -504,9 +550,10 @@
           }, 400);
         }
       }
+      document.addEventListener("DOMContentLoaded", hideLoader);
       window.addEventListener("load", hideLoader);
       window.addEventListener("pageshow", hideLoader);
-      setTimeout(hideLoader, 3500);
+      setTimeout(hideLoader, 1500);
     </script>
 
     <!-- FIX: docs ссылки -->
@@ -528,6 +575,54 @@
           AOS.init({ duration: 1000, once: true });
         }
       });
+    </script>
+
+    <script>
+        // Ждем, пока вся страница загрузится
+        document.addEventListener("DOMContentLoaded", () => {
+            console.log("Скрипт таймера запущен!"); // Это сообщение появится в консоли (F12)
+
+            // Целевая дата: 1 января 2027 года
+            const targetDate = new Date("2027-06-28T00:00:00").getTime();
+
+            // Проверяем, есть ли элементы на странице
+            const daysEl = document.getElementById("days");
+            if (!daysEl) {
+                console.error("ОШИБКА: Элемент с id='days' не найден! Проверьте HTML.");
+                return;
+            }
+
+            // Запускаем интервал (каждую секунду)
+            setInterval(function() {
+                const now = new Date().getTime();
+                const distance = targetDate - now;
+
+                // Если время вышло
+                if (distance < 0) {
+                    document.getElementById("days").innerText = "00";
+                    document.getElementById("hours").innerText = "00";
+                    document.getElementById("minutes").innerText = "00";
+                    document.getElementById("seconds").innerText = "00";
+                    return;
+                }
+
+                // Вычисления
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                // Функция добавления нуля (например, 5 -> 05)
+                const formatNumber = (num) => String(num).padStart(2, '0');
+
+                // Обновляем цифры на экране
+                document.getElementById("days").innerText = formatNumber(days);
+                document.getElementById("hours").innerText = formatNumber(hours);
+                document.getElementById("minutes").innerText = formatNumber(minutes);
+                document.getElementById("seconds").innerText = formatNumber(seconds);
+
+            }, 1000); // 1000 миллисекунд = 1 секунда
+        });
     </script>
   </body>
 </html>

@@ -4,12 +4,13 @@
     <meta charset="utf-8" />
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
     />
     <title>Документация — FistashkinBot</title>
 
     <!-- Глобальные стили (фон, эффекты, шрифты) -->
     <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/toast.css" />
 
     <!-- Стили документации -->
     <link rel="stylesheet" href="./css/docs.css" />
@@ -31,6 +32,35 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
     />
+    <link rel="stylesheet" type="text/css" href="./js/aos/aos.css" />
+    <script>
+      (function () {
+        var ua = navigator.userAgent;
+        var platform = navigator.platform || "";
+        var maxTouch = navigator.maxTouchPoints || 0;
+
+        // iPhone / iPad / iPod + iPad в режиме "desktop site" (iPadOS 13+ маскируется под Mac)
+        var isIOS =
+          /iPad|iPhone|iPod/.test(ua) ||
+          (platform === "MacIntel" && maxTouch > 1);
+
+        // Все не-Safari браузеры на iOS — у них в UA есть свой маркер
+        var isOtherIOSBrowser =
+          /CriOS/.test(ua) ||   // Chrome iOS
+          /FxiOS/.test(ua) ||   // Firefox iOS
+          /EdgiOS/.test(ua) ||  // Edge iOS
+          /OPiOS/.test(ua) ||   // Opera iOS
+          /GSA/.test(ua);       // Google Search App
+
+        var isIOSSafari = isIOS && !isOtherIOSBrowser;
+
+        if (isIOSSafari) {
+          document.documentElement.classList.add("is-ios-safari");
+        }
+      })();
+    </script>
+    <script src="./js/ablur.js" defer></script>
+    
 
     <link rel="icon" href="assets/fistashkin.ico" />
     <meta name="theme-color" content="#C0694E" />
@@ -52,9 +82,28 @@
 
     <!-- ── НАВБАР ── -->
     <nav class="docs-navbar">
+      <ablur-layer layers="5" base-blur="22" end-at="72" flip></ablur-layer>
       <div class="max-width">
         <div class="logo">
-          <a href="./index.html">Fistashkin<span></span></a>
+          <a href="./index.html">
+            <img src="assets/fistashkin.ico" alt="Fistashkin Avatar" class="nav-avatar" />
+            Fistashkin<span></span>
+          </a>
+        </div>
+        <div class="docs-nav-search" onclick="openDocSearch()">
+          <svg
+            width="14"
+            height="14"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" />
+          </svg>
+          <span data-i18n="docs_search_placeholder">Поиск...</span>
+          <kbd>/</kbd>
         </div>
         <div class="docs-nav-actions">
           <div class="dropdown-wrapper">
@@ -63,8 +112,6 @@
             </button>
 
             <div id="dropdown-menu" class="dropdown">
-              <!-- Пункты навигации: видны только на мобильном (см. .dropdown-mobile-nav
-                   в style.css), на десктопе скрыты — там навигация уже видна в .navbar .menu -->
               <div class="dropdown-mobile-nav">
                 <a href="./index.html" class="dropdown-item">
                   <i class="fas fa-home"></i>
@@ -143,27 +190,10 @@
 
       <!-- САЙДБАР -->
       <aside class="docs-sidebar" id="docs-sidebar">
-        <div class="sb-search-wrap">
-          <div class="sb-search-box" onclick="openDocSearch()">
-            <svg
-              width="14"
-              height="14"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              viewBox="0 0 24 24"
-            >
-              <circle cx="11" cy="11" r="8" />
-              <path d="m21 21-4.35-4.35" />
-            </svg>
-            <span data-i18n="docs_search_placeholder">Поиск...</span>
-            <kbd>/</kbd>
-          </div>
-        </div>
         <div class="sb-nav-body" id="sb-nav-body"></div>
         <div class="sb-footer">
           <a href="./index.html" class="sb-powered">
-            <img src="assets/logo.svg" alt="FistashkinBot Logo" />
+            <img src="assets/fistashkin.ico" alt="FistashkinBot Logo" class="sb-avatar-img" />
             <span data-i18n="docs_sidebar_made_with"></span>
           </a>
         </div>
@@ -229,11 +259,20 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="./js/aos/aos.js" defer></script>
+    <script src="./js/toast.js" defer></script>
     <script src="./js/i18n.js" defer></script>
 
     <!-- ── ЛОГИКА ДОКУМЕНТАЦИИ ── -->
     <script src="./js/docs.js"></script>
     <script src="./js/theme.js" defer></script>
     <script src="./js/dropdown.js" defer></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        if (typeof AOS !== "undefined") {
+          AOS.init({ duration: 1000, once: true });
+        }
+      });
+    </script>
   </body>
 </html>

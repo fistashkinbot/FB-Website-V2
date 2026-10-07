@@ -1,0 +1,421 @@
+/* =====================================================================
+   REFINE — тонкая доводка существующего визуала.
+   Подключать ПОСЛЕДНИМ: style.css → toast.css → docs.css → polish.css → ЭТОТ.
+   Ничего не удаляет и не переопределяет глобально — только сглаживает.
+   ===================================================================== */
+
+/* ---------- 1. Токены ---------- */
+:root {
+  --rf-radius-sm: 8px;
+  --rf-radius:    12px;
+  --rf-radius-lg: 16px;
+
+  --rf-ease:      cubic-bezier(0.2, 0.8, 0.2, 1);
+  --rf-ease-out:  cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Многослойные мягкие тени — «дорогие», не чёрные пятна */
+  --rf-shadow-sm:
+    0 1px 1px rgba(0, 0, 0, 0.03),
+    0 1px 3px rgba(0, 0, 0, 0.05);
+  --rf-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 4px 12px -4px rgba(0, 0, 0, 0.10),
+    0 12px 28px -12px rgba(0, 0, 0, 0.12);
+  --rf-shadow-lg:
+    0 1px 2px rgba(0, 0, 0, 0.05),
+    0 8px 24px -8px rgba(0, 0, 0, 0.14),
+    0 24px 56px -20px rgba(0, 0, 0, 0.18);
+
+  --rf-border-faint:  rgba(0, 0, 0, 0.05);
+  --rf-border-subtle: rgba(0, 0, 0, 0.08);
+  --rf-border-strong: rgba(0, 0, 0, 0.14);
+}
+
+.dark {
+  --rf-border-faint:  rgba(255, 255, 255, 0.045);
+  --rf-border-subtle: rgba(255, 255, 255, 0.07);
+  --rf-border-strong: rgba(255, 255, 255, 0.13);
+
+  /* В тёмной — тени глубже и чернее, но всё ещё мягкие */
+  --rf-shadow-sm:
+    0 1px 1px rgba(0, 0, 0, 0.2),
+    0 1px 3px rgba(0, 0, 0, 0.3);
+  --rf-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.25),
+    0 4px 12px -4px rgba(0, 0, 0, 0.4),
+    0 12px 28px -12px rgba(0, 0, 0, 0.5);
+  --rf-shadow-lg:
+    0 1px 2px rgba(0, 0, 0, 0.3),
+    0 8px 24px -8px rgba(0, 0, 0, 0.55),
+    0 24px 56px -20px rgba(0, 0, 0, 0.7);
+}
+
+/* ---------- 2. Типографика: единый, спокойный ритм ---------- */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+  letter-spacing: -0.003em;
+}
+
+/* Заголовки — плотнее, «премиальнее» */
+.home .home-content .text-2 {
+  letter-spacing: -0.035em;
+  line-height: 1.04;
+}
+
+section .title {
+  letter-spacing: -0.022em;
+  line-height: 1.2;
+}
+section .title > i {
+  opacity: 0.9;
+}
+
+.card .text,
+.contributors .carousel .cardd .text {
+  letter-spacing: -0.01em;
+}
+
+.card p,
+.footer-brand-text {
+  line-height: 1.65;
+}
+
+/* Переносы — где уместно */
+h1, h2, h3, .title, .card .text { text-wrap: balance; }
+p, .card p { text-wrap: pretty; }
+
+/* ---------- 3. Навбар: тоньше, аккуратнее ---------- */
+.navbar .max-width,
+.docs-navbar .max-width {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  border-radius: var(--rf-radius-lg);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.06),
+    0 8px 24px -12px rgba(0, 0, 0, 0.35);
+  transition:
+    background-color 0.35s var(--rf-ease),
+    box-shadow 0.35s var(--rf-ease),
+    padding 0.35s var(--rf-ease),
+    border-color 0.35s var(--rf-ease);
+}
+.navbar.sticky .max-width,
+.docs-navbar.sticky .max-width {
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.06),
+    0 12px 32px -14px rgba(0, 0, 0, 0.45);
+}
+html:not(.dark) .navbar .max-width,
+html:not(.dark) .docs-navbar .max-width {
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.03),
+    0 8px 20px -12px rgba(0, 0, 0, 0.10);
+}
+html:not(.dark) .navbar.sticky .max-width,
+html:not(.dark) .docs-navbar.sticky .max-width {
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 12px 28px -14px rgba(0, 0, 0, 0.14);
+}
+
+/* Меню — чуток плотнее и деликатнее */
+.navbar .menu li a,
+.docs-navbar .menu li a {
+  font-weight: 450;
+  transition: color 0.2s var(--rf-ease);
+}
+.navbar .menu li a:hover,
+.docs-navbar .menu li a:hover {
+  filter: none;
+}
+
+/* Активная ссылка — тонкая точка снизу */
+.navbar .menu li a.active-link::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--accent);
+  transform: translateX(-50%);
+}
+
+/* ---------- 4. Hero: чуть больше воздуха ---------- */
+.home .home-content .text-1 { letter-spacing: 0.001em; }
+
+.home .home-content .text-3 {
+  letter-spacing: -0.01em;
+}
+
+.btn-commands {
+  letter-spacing: -0.005em;
+  border-radius: var(--rf-radius);
+  transition:
+    transform 0.35s var(--rf-ease),
+    box-shadow 0.35s var(--rf-ease),
+    background-color 0.3s var(--rf-ease),
+    border-color 0.3s var(--rf-ease),
+    color 0.3s var(--rf-ease);
+}
+
+/* ---------- 5. Секции: чуть больше воздуха ---------- */
+section { padding: 112px 0; }
+@media (max-width: 690px) { section { padding: 88px 0; } }
+
+section .title { margin-bottom: 56px; }
+@media (max-width: 690px) { section .title { margin-bottom: 40px; } }
+
+/* ---------- 6. Карточки: мягче, дороже ---------- */
+.card,
+.contributors .carousel .cardd {
+  border-radius: var(--rf-radius-lg);
+  border-color: var(--rf-border-subtle);
+  transition:
+    transform 0.4s var(--rf-ease-out),
+    border-color 0.3s var(--rf-ease),
+    box-shadow 0.4s var(--rf-ease-out),
+    background-color 0.3s var(--rf-ease);
+}
+
+@media (hover: hover) {
+  .card:hover,
+  .contributors .carousel .cardd:hover {
+    transform: translateY(-3px);
+    border-color: var(--rf-border-strong);
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.03),
+      0 12px 32px -16px rgba(0, 0, 0, 0.28),
+      0 0 0 1px rgba(192, 105, 78, 0.06);
+  }
+  html:not(.dark) .card:hover,
+  html:not(.dark) .contributors .carousel .cardd:hover {
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.03),
+      0 12px 28px -18px rgba(0, 0, 0, 0.14),
+      0 0 0 1px rgba(192, 105, 78, 0.10);
+  }
+}
+
+/* Внутренний ритм карточки */
+.card { padding: 30px 26px; }
+.card .text { margin-bottom: 10px; }
+.card p { font-size: 14.5px; line-height: 1.65; }
+
+/* Аватарки команды — тоньше кольцо, аккуратнее масштаб */
+.contributors .carousel .cardd img {
+  border-width: 1px;
+  transition: box-shadow 0.35s var(--rf-ease), transform 0.4s var(--rf-ease-out);
+}
+
+/* ---------- 7. Кнопки и мелкие элементы ---------- */
+.btn,
+.scroll-up-btn {
+  border-radius: var(--rf-radius);
+  transition:
+    background-color 0.2s var(--rf-ease),
+    border-color 0.2s var(--rf-ease),
+    color 0.2s var(--rf-ease),
+    transform 0.25s var(--rf-ease-out);
+}
+@media (hover: hover) {
+  .btn:hover { transform: translateY(-1px); }
+}
+
+.badge {
+  font-weight: 550;
+  letter-spacing: 0.005em;
+  padding: 4px 11px;
+}
+
+/* Точки карусели — спокойнее */
+.owl-dot {
+  height: 8px;
+  width: 8px;
+  border-width: 1px;
+  transition: all 0.25s var(--rf-ease);
+}
+.owl-dot.active {
+  width: 26px;
+}
+
+/* ---------- 8. Футер: воздух и линии ---------- */
+footer { border-top: 1px solid var(--rf-border-faint); }
+.footer-top { padding: 96px 0 72px; }
+
+.footer-item-title,
+.social-title {
+  letter-spacing: 0.01em;
+  margin-bottom: 18px;
+}
+
+.footer-link {
+  transition: color 0.2s var(--rf-ease);
+}
+.footer-link:hover { transform: none; }
+
+.social-link {
+  border-radius: var(--rf-radius-sm);
+  transition:
+    background-color 0.2s var(--rf-ease),
+    color 0.2s var(--rf-ease);
+}
+
+/* ---------- 9. Документация: воздух и читаемость ---------- */
+#doc-content {
+  line-height: 1.75;
+  font-size: 14.5px;
+}
+#doc-content h1 { letter-spacing: -0.025em; line-height: 1.15; }
+#doc-content h2 {
+  letter-spacing: -0.015em;
+  margin-top: 3em;
+  padding-bottom: 0.5em;
+}
+#doc-content h3 { letter-spacing: -0.01em; margin-top: 2.2em; }
+#doc-content p { margin-bottom: 1em; }
+#doc-content :is(h1, h2, h3, h4) { scroll-margin-top: 100px; }
+
+#doc-content pre {
+  border-radius: var(--rf-radius);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 8px 24px -20px rgba(0, 0, 0, 0.3);
+  padding: 20px 22px;
+}
+#doc-content table {
+  border-radius: var(--rf-radius);
+  font-size: 13.5px;
+}
+#doc-content th,
+#doc-content td {
+  padding: 11px 16px;
+}
+
+/* Сайдбар — спокойные состояния */
+.sb-item,
+.sb-child,
+.sb-group-toggle {
+  border-radius: var(--rf-radius-sm);
+  transition:
+    background-color 0.18s var(--rf-ease),
+    color 0.18s var(--rf-ease);
+}
+.sb-item.active,
+.sb-child.active {
+  background: var(--docs-hover-bg);
+  border-left-width: 3px;
+}
+
+/* Пагинация внизу страницы */
+.page-nav-btn {
+  border-radius: var(--rf-radius);
+  padding: 16px 20px;
+  transition:
+    transform 0.3s var(--rf-ease-out),
+    border-color 0.25s var(--rf-ease),
+    box-shadow 0.3s var(--rf-ease-out);
+}
+@media (hover: hover) {
+  .page-nav-btn:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.04),
+      0 12px 28px -18px rgba(0, 0, 0, 0.28);
+  }
+}
+
+/* Поиск */
+.doc-search-modal {
+  border-radius: var(--rf-radius-lg);
+  box-shadow:
+    0 0 0 1px var(--rf-border-faint),
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 24px 64px -24px rgba(0, 0, 0, 0.4);
+}
+.doc-s-item {
+  border-radius: var(--rf-radius-sm);
+  transition: background-color 0.15s var(--rf-ease);
+}
+
+/* Хинты — аккуратнее */
+.gitbook-hint {
+  border-radius: var(--rf-radius);
+  padding: 16px 22px;
+}
+.gitbook-hint:hover {
+  transform: translateY(-1px);
+}
+
+/* Кнопка копирования */
+.doc-toolbar-btn {
+  border-radius: var(--rf-radius-sm);
+  transition:
+    color 0.25s var(--rf-ease),
+    border-color 0.25s var(--rf-ease),
+    background-color 0.25s var(--rf-ease),
+    box-shadow 0.25s var(--rf-ease);
+}
+.doc-toolbar-btn:hover {
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 6px 16px -8px rgba(0, 0, 0, 0.18);
+}
+
+/* ---------- 10. Тост — тоньше ---------- */
+.toast-card {
+  border-radius: var(--rf-radius);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.06),
+    0 12px 32px -12px rgba(0, 0, 0, 0.4);
+}
+
+/* ---------- 11. Дропдаун — аккуратнее ---------- */
+.dropdown {
+  border-radius: var(--rf-radius);
+  box-shadow:
+    0 0 0 1px var(--rf-border-faint),
+    0 1px 2px rgba(0, 0, 0, 0.05),
+    0 16px 40px -16px rgba(0, 0, 0, 0.35);
+}
+.dropdown-item {
+  border-radius: var(--rf-radius-sm);
+  transition: background-color 0.15s var(--rf-ease);
+}
+
+/* ---------- 12. Фокус — единый, аккуратный ---------- */
+a:focus-visible,
+button:focus-visible,
+.card:focus-visible,
+.cardd:focus-visible,
+.dropdown-item:focus-visible,
+.sb-item:focus-visible,
+.sb-child:focus-visible,
+.toc-link:focus-visible,
+.page-nav-btn:focus-visible {
+  outline: 2px solid rgba(192, 105, 78, 0.65);
+  outline-offset: 3px;
+  border-radius: var(--rf-radius-sm);
+}
+
+/* ---------- 13. Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .cardd,
+  .page-nav-btn,
+  .btn,
+  .btn-commands {
+    transition: none !important;
+  }
+  .card:hover,
+  .cardd:hover,
+  .page-nav-btn:hover,
+  .btn:hover,
+  .btn-commands:hover {
+    transform: none !important;
+  }
+}
