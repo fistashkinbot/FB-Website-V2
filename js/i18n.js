@@ -138,7 +138,7 @@ const translations = {
         status_text: `
             На данный момент я (главный разработчик) пережил сложный этап в своей жизни и проект был перенесен. Но я и моя команда сейчас понемногу пытаемся продолжать работать над ним!
         `,
-        status_image_src: "./assets/stop-war-ru.jpg",
+        status_image_src: "assets/stop-war-ru.jpg",
     },
     uk: {
         // Мета-теги
@@ -277,7 +277,7 @@ const translations = {
         status_text: `
             На даний момент я (головний розробник) пережив складний етап у своєму житті, і проєкт було перенесено. Але я та моя команда зараз потроху намагаємося продовжувати працювати над ним!
         `,
-        status_image_src: "./assets/stop-war-ru.jpg",
+        status_image_src: "assets/stop-war-ru.jpg",
     },
     en: {
         // Meta tags
@@ -415,7 +415,7 @@ const translations = {
         status_text: `
             At the moment I (the lead developer) have been through a difficult period in my life and the project was postponed. But my team and I are now slowly trying to keep working on it!
         `,
-        status_image_src: "./assets/stop-war-en.jpg",
+        status_image_src: "assets/stop-war-en.jpg",
     }
 };
 
